@@ -12,7 +12,7 @@ This is a standard full stack JavaScript app build with `yarn` and organized wit
 Frontend and backend are found in `packages/client` and `packages/server`, respectively.
 
 ** Start developing:
-1. Make sure you have an `eslint` plugin installed for your editor of choice.
+1. Make sure you have `yarn` [[https://classic.yarnpkg.com/en/docs/install/#debian-stable][installed globally]] and an `eslint` plugin installed for your editor of choice.
 2. Run `yarn install` in the root directory to install all dependencies. Do not run it in the `client` or `server` directories - this is a bit annoying to clean up.
 3. Run `yarn start` in the root directory to start up the hot reloading process.
 
