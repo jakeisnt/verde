@@ -1,6 +1,11 @@
 module.exports = {
-  extends: ["airbnb", "airbnb/hooks", "eslint-config-prettier"],
-  plugins: ["prettier"],
+  extends: [
+    "airbnb",
+    "airbnb/hooks",
+    "eslint-config-prettier",
+    "plugin:workspaces/recommended",
+  ],
+  plugins: ["prettier", "workspaces"],
   root: true,
   rules: {
     "prettier/prettier": [

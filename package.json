@@ -1,35 +1,16 @@
 {
-  "name": "react-turn-based-game",
-  "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@xstate/react": "1.3.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-jss": "10.6.0",
-    "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.3",
-    "web-vitals": "1.0.1",
-    "xstate": "4.17.0"
-  },
+  "name": "react-turn-based-game",
+  "version": "0.0.0",
+  "workspaces": ["packages/*"],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "client": "yarn workspace client start",
+    "server": "yarn workspace server start",
+    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "lint": "eslint . --fix"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "concurrently": "6.0.0"
   },
   "devDependencies": {
     "eslint": "7.11.0",
@@ -40,6 +21,7 @@
     "eslint-plugin-prettier": "3.3.1",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "1.7.0",
+    "eslint-plugin-workspaces": "0.6.2",
     "prettier": "2.2.1"
   }
 }
