@@ -1,0 +1,21 @@
+#+TITLE: Build a React Turn-Based Game!
+
+This sets out to be a complete starter kit for building React and Node.js turn-based games.
+
+* (Desired) Features
+- Create and join rooms
+- See all players within your current room
+- Pass the turn to the next player in the room
+- Reset room after game is finished
+
+* Technologies
+** Front-end
+- React functional components for templating and structure
+- XState for global state management
+- CSS-in-JS
+** Backend
+- Express API with websocket extensions
+** Ops
+- All-in-one, strongly opinionated EsLint + Prettier linting and fixing
+- create-react-app for deployments
+- Optional Nix build system
