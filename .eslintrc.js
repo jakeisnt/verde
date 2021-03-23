@@ -8,8 +8,6 @@ module.exports = {
       {
         singleQuote: false,
         printWidth: 80,
-        arrowParens: "avoid",
-        trailingComma: "none",
         endOfLine: "auto",
       },
     ],
@@ -20,6 +18,8 @@ module.exports = {
     "react/jsx-closing-tag-location": "off",
     "react/no-array-index-key": "warn",
     "@typescript-eslint/indent": "off",
+    "no-unused-vars": "warn",
+    "react/button-has-type": "warn",
 
     // personal preference
     "react/jsx-props-no-spreading": "off",
