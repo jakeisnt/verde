@@ -17,5 +17,5 @@ This sets out to be a complete starter kit for building React and Node.js turn-b
 - Express API with websocket extensions
 ** Ops
 - All-in-one, strongly opinionated EsLint + Prettier linting and fixing
-- create-react-app for deployments
+- some sort of deployment infrastructure
 - Optional Nix build system

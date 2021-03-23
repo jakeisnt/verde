@@ -1,6 +1,7 @@
 module.exports = {
-  extends: ["airbnb", "eslint-config-prettier"],
+  extends: ["airbnb", "airbnb/hooks", "eslint-config-prettier"],
   plugins: ["prettier"],
+  root: true,
   rules: {
     "prettier/prettier": [
       "error",
@@ -8,7 +9,7 @@ module.exports = {
         singleQuote: false,
         printWidth: 80,
         arrowParens: "avoid",
-        trailingComma: "all",
+        trailingComma: "none",
         endOfLine: "auto",
       },
     ],
