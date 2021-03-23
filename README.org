@@ -7,15 +7,23 @@ This sets out to be a complete starter kit for building React and Node.js turn-b
 - See all players within your current room
 - Pass the turn to the next player in the room
 - Reset room after game is finished
+* Development
+This is a full stack Javascript app, so it's not terribly complicated.
+Frontend and backend are found in `packages/client` and `packages/server`, respectively.
+
+** Start developing:
+1. Make sure you have an `eslint` plugin installed for your editor of choice.
+2. Run `yarn install` in the root directory to install all dependencies. Do not run it in the `client` or `server` directories - this is a bit annoying to clean up.
+3. Run `yarn start` in the root directory to start up the hot reloading process.
 
 * Technologies
 ** Front-end
-- React functional components for templating and structure
-- XState for global state management
-- CSS-in-JS
+- React functional components for templating and structure. Industry standard.
+- XState for global state management. This is excellent for game development.
+- CSS-in-JS: This is my personal preference, but it's not something we have to use.
 ** Backend
-- Express API with websocket extensions
+- Express API with websocket extensions. I think it's best to use websockets and in-memory data as much as we can, because there isn't much of a reason to create accounts and persist data yet (IMO).
 ** Ops
-- All-in-one, strongly opinionated EsLint + Prettier linting and fixing
-- some sort of deployment infrastructure
-- Optional Nix build system
+- All-in-one, strongly opinionated EsLint + Prettier linting and fixing. Feel free to convert errors into warnings if something is annoying you.
+- Some sort of deployment infrastructure
+- Nix infrastructure (as needed)
