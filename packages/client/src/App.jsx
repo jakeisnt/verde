@@ -1,5 +1,4 @@
 import "./App.css";
-import { Machine } from "xstate";
 import { useMachine } from "@xstate/react";
 import logo from "./logo.svg";
 import { lightMachine, updatedAction } from "./state";
