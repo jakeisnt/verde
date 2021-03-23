@@ -18,11 +18,11 @@ Frontend and backend are found in `packages/client` and `packages/server`, respe
 
 * Technologies
 ** Front-end
-- [React](https://reactjs.org/) functional components for templating and structure. Industry standard.
-- [XState](https://xstate.js.org/) for state management, local and global. This is excellent for game development.
-- CSS-in-JS [(JSS)](https://cssinjs.org/?v=v10.6.0): This is my personal preference, but it's not something we have to use.
+- [[React][https://reactjs.org/]] functional components for templating and structure. Industry standard.
+- [[XState][https://xstate.js.org/]] for state management, local and global. This is excellent for game development.
+- CSS-in-JS [[(JSS)][https://cssinjs.org/?v=v10.6.0]]: This is my personal preference, but it's not something we have to use.
 ** Backend
-- [Express API](http://expressjs.com/) with [websocket extensions](https://github.com/HenningM/express-ws). I think it's best to use websockets and in-memory data as much as we can, because there isn't much of a reason to create accounts and persist data yet (IMO).
+- [[Express API][http://expressjs.com/]] with [[websocket extensions][https://github.com/HenningM/express-ws]]. I think it's best to use websockets and in-memory data as much as we can, because there isn't much of a reason to create accounts and persist data yet (IMO).
 ** Ops
 - All-in-one, strongly opinionated ESLint + Prettier linting and fixing. Feel free to convert errors into warnings if something is annoying you.
 - Some sort of deployment infrastructure
