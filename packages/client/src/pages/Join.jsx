@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import useStyles from "./styles";
 
 function Join() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const history = useHistory();
+  const classes = useStyles();
 
   const joinLobby = () =>
     fetch(`/room/get?${new URLSearchParams({ name })}`)
@@ -14,9 +16,10 @@ function Join() {
       .catch(() => setError(`room "${name}" does not exist`));
 
   return (
-    <div className="Home">
+    <div className={classes.home}>
       <input
         type="text"
+        className={classes.box}
         value={name}
         onKeyUp={(e) => {
           if (e.key === "Enter") {
@@ -25,11 +28,10 @@ function Join() {
         }}
         onInput={(e) => setName(e.target.value.toUpperCase())}
       />
-      <br />
-      <button type="button" onClick={joinLobby}>
+      <button type="button" className={classes.box} onClick={joinLobby}>
         Join Lobby
       </button>
-      {error && <p>{error}</p>}
+      {error && <div className={classes.errorBox}>{error}</div>}
     </div>
   );
 }

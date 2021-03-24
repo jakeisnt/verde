@@ -1,22 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { createUseStyles, useTheme } from "react-jss";
-
-const useStyles = createUseStyles((theme) => ({
-  home: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    maxWidth: "50%",
-    margin: "auto",
-  },
-  button: {
-    padding: "1em",
-    margin: "1em",
-    border: `2px solid ${theme.black}`,
-    color: theme.black,
-    backgroundColor: theme.white,
-  },
-}));
+import useStyles from "./styles";
 
 function Home() {
   const history = useHistory();
@@ -29,12 +12,12 @@ function Home() {
 
   return (
     <div className={classes.home}>
-      <button type="button" className={classes.button} onClick={getNewRoom}>
+      <button type="button" className={classes.box} onClick={getNewRoom}>
         Create Room
       </button>
       <button
         type="button"
-        className={classes.button}
+        className={classes.box}
         onClick={() => history.push("/join")}
       >
         Join Room

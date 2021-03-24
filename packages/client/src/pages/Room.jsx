@@ -1,11 +1,13 @@
 import { useParams } from "react-router-dom";
+import useStyles from "./styles";
 
 function Room() {
   const { name } = useParams();
+  const classes = useStyles();
 
   return (
-    <div className="Room">
-      <p>this is room {name}</p>
+    <div className={classes.room}>
+      <div className={classes.box}>This is room {name}</div>
     </div>
   );
 }
