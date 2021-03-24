@@ -28,6 +28,8 @@ module.exports = {
 
     // personal preference
     "react/jsx-props-no-spreading": "off",
+    "no-bitwise": "off",
+    "no-console": "off",
 
     // react 17 doesn't need to import it : )
     "react/react-in-jsx-scope": "off",
