@@ -1,9 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
 import { theme } from "../theme";
-import Home from "./component/Home";
-import Room from "./component/Room";
-import Join from "./component/Join";
+import { Home, Room, Join } from "./pages";
 
 function App() {
   return (
