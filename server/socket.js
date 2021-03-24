@@ -1,13 +1,10 @@
 const ws = require("ws");
+const wss = new ws.Server({ noServer: true });
 
-function startSocketServer(server) {
-  const wsServer = new ws.Server({ server });
-  wsServer.on("connection", (socket) => {
-    console.log("Connected to a socket!");
-    socket.on("message", (message) => {
-      console.log(message);
-    });
+function onUpgrade(request, socket, head) {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit("connection", ws);
   });
 }
 
-module.exports = startSocketServer;
+module.exports = onUpgrade;
