@@ -7,7 +7,7 @@ function Join() {
   const history = useHistory();
 
   const joinLobby = () =>
-    fetch(`http://localhost:4000/room/get?${new URLSearchParams({ name })}`)
+    fetch(`/room/get?${new URLSearchParams({ name })}`)
       .then((res) => res.json())
       .then((res) => history.push(`/room/${res.name}`))
       .then(() => setError(""))

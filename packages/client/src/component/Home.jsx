@@ -4,7 +4,7 @@ function Home() {
   const history = useHistory();
 
   const getNewRoom = () =>
-    fetch("http://localhost:4000/room/new")
+    fetch("/room/new")
       .then((res) => res.json())
       .then((res) => history.push(`/room/${res.name}`));
 
