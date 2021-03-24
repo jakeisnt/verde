@@ -10,11 +10,11 @@ function Join() {
   const classes = useStyles();
 
   const joinLobby = () =>
-    fetch(`/room/get?${new URLSearchParams({ name })}`)
+    fetch(`/room/join?${new URLSearchParams({ name, username })}`)
       .then((res) => res.json())
       .then((res) => history.push(`/room/${res.name}`))
       .then(() => setError(""))
-      .catch(() => setError(`room "${name}" does not exist`));
+      .catch(() => setError(`Room "${name}" does not exist`));
 
   return (
     <div className={classes.home}>

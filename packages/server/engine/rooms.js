@@ -25,10 +25,16 @@ class Rooms {
     return name.join("");
   }
 
-  createRoom() {
+  createRoom(username) {
     const name = this.nextName();
-    const room = { name: name };
+    const room = { name: name, creator: username, users: [username] };
     this.rooms[name] = room;
+    return room;
+  }
+
+  addUserToRoom(username, roomname) {
+    const room = this.getRoom(roomname);
+    if (room) room.users.push(username);
     return room;
   }
 

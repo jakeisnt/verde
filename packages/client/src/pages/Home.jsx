@@ -8,7 +8,7 @@ function Home() {
   const classes = useStyles();
 
   const getNewRoom = () =>
-    fetch("/room/new")
+    fetch(`/room/new?${new URLSearchParams({ username })}`)
       .then((res) => res.json())
       .then((res) => history.push(`/room/${res.name}`));
 
