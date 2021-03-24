@@ -5,6 +5,7 @@ import useStyles from "./styles";
 function Join() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const history = useHistory();
   const classes = useStyles();
 
@@ -20,7 +21,15 @@ function Join() {
       <input
         type="text"
         className={classes.box}
+        value={username}
+        placeholder="Enter a username"
+        onInput={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="text"
+        className={classes.box}
         value={name}
+        placeholder="Enter a room ID"
         onKeyUp={(e) => {
           if (e.key === "Enter") {
             joinLobby();
