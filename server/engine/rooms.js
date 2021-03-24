@@ -7,6 +7,8 @@ function hash(x) {
   return h;
 }
 
+const Websocket = require("ws");
+
 class Rooms {
   constructor(len = 4) {
     this.len = len;

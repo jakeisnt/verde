@@ -1,11 +1,20 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import { useEffect, useState, useMemo } from "react";
 import useStyles from "./styles";
 
 function Room() {
   const [users, setUsers] = useState([]);
   const { name } = useParams();
   const classes = useStyles();
+  //
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
+    `ws://localhost:4000/?${new URLSearchParams({ name })}`,
+    {
+      onOpen: () => console.log("socket opened"),
+      shouldReconnect: (closeEvent) => true,
+    }
+  );
 
   useEffect(
     () =>
