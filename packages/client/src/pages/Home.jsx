@@ -1,7 +1,16 @@
 import { useHistory } from "react-router-dom";
+import { createUseStyles, useTheme } from "react-jss";
+
+const useStyles = createUseStyles({
+  home: {
+    display: "flex",
+    flexDirection: "row",
+  },
+});
 
 function Home() {
   const history = useHistory();
+  const classes = useStyles();
 
   const getNewRoom = () =>
     fetch("/room/new")
@@ -9,7 +18,7 @@ function Home() {
       .then((res) => history.push(`/room/${res.name}`));
 
   return (
-    <div className="Home">
+    <div className={classes.home}>
       <button type="button" onClick={getNewRoom}>
         Create Room
       </button>

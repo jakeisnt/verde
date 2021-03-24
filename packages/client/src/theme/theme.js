@@ -6,4 +6,4 @@ const theme = {
   black: "black",
 };
 
-export { theme };
+export default theme;
