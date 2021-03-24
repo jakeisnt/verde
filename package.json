@@ -2,7 +2,7 @@
   "private": true,
   "name": "react-turn-based-game",
   "version": "0.0.0",
-  "workspaces": ["packages/*"],
+  "workspaces": ["client", "server"],
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
