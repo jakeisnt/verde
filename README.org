@@ -13,7 +13,7 @@ Frontend and backend are found in `packages/client` and `packages/server`, respe
 
 ** Start developing:
 1. Make sure you have `yarn` [[https://classic.yarnpkg.com/en/docs/install/#debian-stable][installed globally]] and an [[https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint][`eslint`]] plugin installed for your editor of choice.
-2. Run `yarn install` in the root directory to install all dependencies. Do not run it in the `client` or `server` directories - this is a bit annoying to clean up.
+2. Run `yarn install` in the root directory of the entire project to install all dependencies.
 3. Run `yarn start` in the root directory to start up the hot reloading process.
 
 * Technologies
