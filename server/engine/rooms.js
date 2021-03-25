@@ -27,7 +27,7 @@ class Rooms {
 
   createRoom(username) {
     const name = this.nextName();
-    const room = { name: name, creator: username, users: [username] };
+    const room = { name, creator: username, users: [username] };
     this.rooms[name] = room;
     return room;
   }

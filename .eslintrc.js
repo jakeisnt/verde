@@ -33,5 +33,8 @@ module.exports = {
 
     // react 17 doesn't need to import it : )
     "react/react-in-jsx-scope": "off",
+
+    // this just doesn't work
+    "workspaces/no-absolute-imports": "off",
   },
 };
