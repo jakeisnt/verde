@@ -18,6 +18,12 @@ function Profile() {
         className={classes.box}
         value={name}
         placeholder="Enter a new name"
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            setUserName(name);
+            setName("");
+          }
+        }}
         onInput={(e) => setName(e.target.value)}
       />
       <button

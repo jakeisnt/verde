@@ -28,8 +28,7 @@ class Users {
 
   createUser() {
     const id = this.nextId();
-    const user = { id: id, name: "user" + id };
-    this.count++;
+    const user = { id, name: `user${id}` };
     this.users[id] = user;
     return user;
   }

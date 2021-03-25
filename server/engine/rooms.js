@@ -32,7 +32,7 @@ class Rooms {
     const user = users.getUser(userId);
     if (!user) return null;
     const name = this.nextName();
-    const room = { name: name, users: [userId] };
+    const room = { name, users: [userId] };
     this.rooms[name] = room;
     return room;
   }

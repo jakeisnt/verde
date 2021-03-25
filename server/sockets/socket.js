@@ -15,9 +15,9 @@ function makeRoomSocket(name) {
         console.log(
           `Sending socket message associated with type "${message.type}"`
         );
-        socket.clients.forEach((client) => {
-          if (client.readyState === ws.OPEN) {
-            client.send(
+        socket.clients.forEach((cli) => {
+          if (cli.readyState === ws.OPEN) {
+            cli.send(
               JSON.stringify(socketActions[message.type](message, name))
             );
           }
