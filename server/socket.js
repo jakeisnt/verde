@@ -8,24 +8,26 @@ const socketServers = {};
 
 function makeSocket(name) {
   const socket = new ws.Server({ noServer: true });
-  socket.on("connection", (ws) => {
-    console.log("received a new connection!");
-  });
-  socket.on("message", (msg) => {
-    console.log(`received ${msg}`);
-    const message = JSON.parse(msg);
-    switch (message.type) {
-      case "new-user":
-        console.log("Received a new user", message);
-        socket.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(rooms.getRoom(name));
-          }
-        });
-        break;
-      default:
-        console.log(`"${message.type}" is not a valid socket message type.`);
-    }
+  socket.on("connection", (ws, request, client) => {
+    ws.on("message", (msg) => {
+      const message = JSON.parse(msg);
+      switch (message.type) {
+        case "new-user":
+          console.log("Received a new user", message);
+          socket.clients.forEach((client) => {
+            console.log(`trying to send ${msg}`);
+            if (client.readyState === ws.OPEN) {
+              console.log(`sending ${msg}`);
+              client.send(
+                JSON.stringify(rooms.addUserToRoom(message.username, name))
+              );
+            }
+          });
+          break;
+        default:
+          console.log(`"${message.type}" is not a valid socket message type.`);
+      }
+    });
   });
   return socket;
 }
