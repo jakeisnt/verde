@@ -1,5 +1,5 @@
 /* All of the machinery required to work our websockets. */
-const ws = require("ws");
+const WebSocket = require("ws");
 const url = require("url");
 const querystring = require("querystring");
 const socketActions = require("./socketActions");
@@ -7,8 +7,8 @@ const socketActions = require("./socketActions");
 const socketServers = {};
 
 function makeSocket(name) {
-  const socket = new ws.Server({ noServer: true });
-  socket.on("connection", (ws, request, client) => {
+  const socket = new WebSocket.Server({ noServer: true });
+  socket.on("connection", (ws) => {
     ws.on("message", (msg) => {
       const message = JSON.parse(msg);
       if (message.type && message.type in socketActions) {
@@ -32,7 +32,7 @@ function makeSocket(name) {
 
 // Called when an HTTP request is elevated to a WebSocket connection.
 function onUpgrade(request, socket, head) {
-  const room = querystring.parse(url.parse(request.url).query).room;
+  const { room } = querystring.parse(url.parse(request.url).query);
 
   if (!socketServers[room]) {
     socketServers[room] = makeSocket(room);
