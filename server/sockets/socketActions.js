@@ -11,7 +11,7 @@
  * The first parameter to the function is the message object received
  * and the second is the code for the room the message was sent to.
  * */
-const rooms = require("./engine/rooms");
+const rooms = require("../engine/rooms");
 
 const socketActions = {
   "new-user": (message, room) => rooms.getRoom(room),
