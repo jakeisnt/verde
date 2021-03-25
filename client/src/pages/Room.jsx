@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 import BackButton from "../components/BackButton";
+import WSConnectionStatus from "../components/WSConnectionStatus";
 
 function Room() {
   const [error, setError] = useState(null);
@@ -42,15 +43,19 @@ function Room() {
   }, [myUser, room, sendMessage, readyState]);
 
   return (
-    <div className={classes.room}>
-      <BackButton text="Exit" />
-      <div className={classes.box}>
-        {error || (room && `This is room ${room.name}.`)}
+    <>
+      <div className={classes.room}>
+        <BackButton text="Exit" />
+        <div className={classes.box}>
+          {error || (room && `This is room ${room.name}.`)}
+        </div>
+        <div className={classes.box}>
+          {users &&
+            users.map((user) => user && <p key={user.id}>{user.name}</p>)}
+        </div>
       </div>
-      <div className={classes.box}>
-        {users && users.map((user) => user && <p key={user.id}>{user.name}</p>)}
-      </div>
-    </div>
+      <WSConnectionStatus state={readyState} />
+    </>
   );
 }
 

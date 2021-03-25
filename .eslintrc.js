@@ -31,10 +31,15 @@ module.exports = {
     "react/no-array-index-key": "warn",
     "@typescript-eslint/indent": "off",
 
-    // shouldn't be errors
+    // should be warnings for faster development
     "no-unused-vars": "warn",
     "react/button-has-type": "warn",
     "operator-assignment": "warn",
+    "import/order": "warn",
+    "arrow-body-style": "off",
+    "react/prop-types": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/interactive-supports-focus": "warn",
 
     // personal preference
     "react/jsx-props-no-spreading": "off",

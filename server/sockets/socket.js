@@ -4,6 +4,27 @@ const url = require("url");
 const querystring = require("querystring");
 const socketActions = require("./socketActions");
 
+// function ping() {
+//   ws.send(JSON.stringify({ type: "ping" }));
+//   tm = setTImeout(function () {}, 5000);
+// }
+
+// function pong() {
+//   clearTimeout(tm);
+// }
+
+// socket.onopen = () => {
+//   setInterval(ping, 30000);
+// };
+
+// socket.onmessage = (e) => {
+//   let msg = e.data;
+//   if (msg.type === "pong") {
+//     pong();
+//     return;
+//   }
+// };
+
 const socketServers = {};
 
 function makeRoomSocket(name) {
