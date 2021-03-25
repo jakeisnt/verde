@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useCookies } from "react-cookie";
 
 /** Returns a stateful user value, and functions to update its properties. */
@@ -29,16 +29,19 @@ function useUser() {
   }, [cookies, setCookie]);
 
   /** Requests to rename the user. */
-  const setUserName = (name) => {
-    if (user) {
-      const params = new URLSearchParams({ id: user.id, name });
-      fetch(`/users/setName?${params}`, { method: "PUT" })
-        .then((res) => res.json())
-        .then((res) => {
-          setUser(res);
-        });
-    }
-  };
+  const setUserName = useCallback(
+    (name) => {
+      if (user) {
+        const params = new URLSearchParams({ id: user.id, name });
+        fetch(`/users/setName?${params}`, { method: "PUT" })
+          .then((res) => res.json())
+          .then((res) => {
+            setUser(res);
+          });
+      }
+    },
+    [user]
+  );
 
   return { user, setUserName };
 }

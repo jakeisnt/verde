@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import useUser from "../api/users";
 import useStyles from "./styles";
@@ -7,11 +8,14 @@ function Home() {
   const history = useHistory();
   const classes = useStyles();
 
-  const getNewRoom = () =>
-    user &&
-    fetch(`/room/new?${new URLSearchParams({ userId: user.id })}`)
-      .then((res) => res.json())
-      .then((room) => history.push(`/room/${room.name}`));
+  const getNewRoom = useCallback(
+    () =>
+      user &&
+      fetch(`/room/new?${new URLSearchParams({ userId: user.id })}`)
+        .then((res) => res.json())
+        .then((room) => history.push(`/room/${room.name}`)),
+    [user, history]
+  );
 
   return (
     <div className={classes.home}>

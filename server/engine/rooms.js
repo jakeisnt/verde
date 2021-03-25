@@ -31,21 +31,29 @@ class Rooms {
     const user = users.getUser(userId);
     if (!user) return null;
     const name = this.nextName();
-    const room = { name: name, creator: user, users: { userId: user } };
+    const room = { name: name, users: [userId] };
     this.rooms[name] = room;
-    return room;
-  }
-
-  addUserToRoom(name, userId) {
-    const user = users.getUser(userId);
-    if (!user) return null;
-    const room = this.getRoom(name);
-    if (room) room.users[userId] = user;
     return room;
   }
 
   getRoom(name) {
     return name in this.rooms ? this.rooms[name] : null;
+  }
+
+  joinRoom(name, userId) {
+    const user = users.getUser(userId);
+    if (!user) return null;
+    const room = this.getRoom(name);
+    if (room && !room.users.includes(userId)) {
+      room.users.push(userId);
+    }
+    return room;
+  }
+
+  getUsers(name) {
+    const room = this.getRoom(name);
+    if (!room) return null;
+    return room.users.map((userId) => users.getUser(userId));
   }
 }
 

@@ -14,7 +14,7 @@
 const rooms = require("../engine/rooms");
 
 const socketActions = {
-  "new-user": (message, room) => rooms.getRoom(room),
+  "update-users": (message, room) => rooms.getUsers(room),
 };
 
 module.exports = socketActions;

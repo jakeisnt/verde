@@ -5,40 +5,48 @@ import useUser from "../api/users";
 import useStyles from "./styles";
 
 function Room() {
-  const { name: room } = useParams();
+  const [error, setError] = useState(null);
+  const { name: roomName } = useParams();
   const { user: myUser } = useUser();
-  const [{ users, creator }, setRoom] = useState({});
+  const [room, setRoom] = useState(null);
+  const [users, setUsers] = useState(null);
   const classes = useStyles();
 
-  const { sendMessage, lastJsonMessage: roomObj, readyState } = useWebSocket(
-    `ws://localhost:4000/?${new URLSearchParams({ room })}`,
+  const { sendMessage, lastJsonMessage: lastUsers, readyState } = useWebSocket(
+    `ws://localhost:4000/?${new URLSearchParams({ room: roomName })}`,
     {
-      onOpen: () => console.log(`WebSocket connection to room ${room} opened`),
+      onOpen: () =>
+        console.log(`WebSocket connection to room ${roomName} opened`),
       shouldReconnect: () => true,
     }
   );
 
-  useMemo(() => roomObj && setRoom(roomObj), [roomObj]);
+  useMemo(() => lastUsers && setUsers(lastUsers), [lastUsers]);
 
   useEffect(() => {
-    if (readyState === ReadyState.OPEN && myUser) {
-      sendMessage(JSON.stringify({ type: "new-user" }));
+    if (myUser) {
+      const params = new URLSearchParams({ name: roomName, userId: myUser.id });
+      fetch(`/room/join?${params}`, { method: "PUT" })
+        .then((res) => res.json())
+        .then((res) => setRoom(res))
+        .then(() => setError(null))
+        .catch(() => setError(`Room "${roomName}" does not exist`));
     }
-  }, [myUser, sendMessage, readyState]);
+  }, [myUser, roomName]);
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN && myUser && room) {
+      sendMessage(JSON.stringify({ type: "update-users" }));
+    }
+  }, [myUser, room, sendMessage, readyState]);
 
   return (
     <div className={classes.room}>
       <div className={classes.box}>
-        This is room {room}
-        <br />
-        <br />
-        Created by {creator && creator.name}
+        {error || (room && `This is room ${room.name}.`)}
       </div>
       <div className={classes.box}>
-        {users &&
-          Object.entries(users).map(([userId, user]) => (
-            <p key={userId}>{user.name}</p>
-          ))}
+        {users && users.map((user) => user && <p key={user.id}>{user.name}</p>)}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ const socketActions = require("./socketActions");
 
 const socketServers = {};
 
-function makeSocket(name) {
+function makeRoomSocket(name) {
   const socket = new ws.Server({ noServer: true });
   socket.on("connection", (ws, request, client) => {
     ws.on("message", (msg) => {
@@ -35,7 +35,7 @@ function onUpgrade(request, socket, head) {
   const room = querystring.parse(url.parse(request.url).query).room;
 
   if (!socketServers[room]) {
-    socketServers[room] = makeSocket(room);
+    socketServers[room] = makeRoomSocket(room);
     console.log(`Created socket for room ${room}`);
   } else {
     console.log(`Using socket for room ${room}`);
