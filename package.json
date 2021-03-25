@@ -2,17 +2,18 @@
   "private": true,
   "name": "react-turn-based-game",
   "version": "0.0.0",
-  "workspaces": ["client", "server"],
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "lint": "eslint . --fix"
   },
-  "dependencies": {
-    "concurrently": "6.0.0"
-  },
   "devDependencies": {
+    "concurrently": "6.0.0",
     "eslint": "7.11.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-prettier": "8.1.0",

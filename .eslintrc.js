@@ -23,8 +23,11 @@ module.exports = {
     "react/jsx-closing-tag-location": "off",
     "react/no-array-index-key": "warn",
     "@typescript-eslint/indent": "off",
+
+    // shouldn't be errors
     "no-unused-vars": "warn",
     "react/button-has-type": "warn",
+    "operator-assignment": "warn",
 
     // personal preference
     "react/jsx-props-no-spreading": "off",
@@ -33,5 +36,8 @@ module.exports = {
 
     // react 17 doesn't need to import it : )
     "react/react-in-jsx-scope": "off",
+
+    // this just doesn't work
+    "workspaces/no-absolute-imports": "off",
   },
 };
