@@ -15,6 +15,13 @@ export default createUseStyles((theme) => ({
     maxWidth: "50%",
     margin: "auto",
   },
+  profile: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    maxWidth: "50%",
+    margin: "auto",
+  },
   box: {
     padding: "1em",
     margin: "1em",

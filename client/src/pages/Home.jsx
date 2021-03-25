@@ -31,6 +31,13 @@ function Home() {
       >
         Join Room
       </button>
+      <button
+        type="button"
+        className={classes.box}
+        onClick={() => history.push("/profile")}
+      >
+        Profile
+      </button>
     </div>
   );
 }
