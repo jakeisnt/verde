@@ -22,7 +22,7 @@ Frontend and backend are found in `packages/client` and `packages/server`, respe
 - [[https://xstate.js.org/][XState]] for state management, local and global. This is excellent for game development.
 - CSS-in-JS [[https://cssinjs.org/?v=v10.6.0][(JSS)]]: This is my personal preference, but it's not something we have to use.
 ** Backend
-- [[http://expressjs.com/][Express API]] with [[https://github.com/HenningM/express-ws][websocket extensions]]. I think it's best to use websockets and in-memory data as much as we can, because there isn't much of a reason to create accounts and persist data yet (IMO).
+- [[http://expressjs.com/][Express API]] with websockets. I think it's best to use websockets and in-memory data as much as we can, because there isn't much of a reason to create accounts and persist data yet (IMO).
 ** Ops
 - All-in-one, strongly opinionated ESLint + Prettier linting and fixing. Feel free to convert errors into warnings if something is annoying you.
 - Some sort of deployment infrastructure

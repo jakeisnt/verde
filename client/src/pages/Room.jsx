@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useEffect, useState, useMemo } from "react";
-import useUser from "../api/users";
+import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 
 function Room() {

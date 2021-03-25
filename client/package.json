@@ -10,10 +10,11 @@
     "react-jss": "10.6.0",
     "react-use-websocket": "2.5.0",
     "react-router-dom": "5.2.0",
-    "react-cookie": "4.0.3",
+    "universal-cookie": "4.0.4",
     "react-scripts": "4.0.3",
     "web-vitals": "1.0.1",
-    "xstate": "4.17.0"
+    "xstate": "4.17.0",
+    "prop-types": "15.7.2"
   },
   "scripts": {
     "start": "react-scripts start",

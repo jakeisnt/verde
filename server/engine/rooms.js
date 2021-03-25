@@ -9,9 +9,10 @@ function hash(x) {
   return h;
 }
 
+const nameLen = 4;
+
 class Rooms {
-  constructor(len = 4) {
-    this.len = len;
+  constructor() {
     this.count = Math.floor(Math.random() * 9001) | 0;
     this.rooms = {};
   }
@@ -19,11 +20,11 @@ class Rooms {
   nextName() {
     let h = hash(this.count);
     const name = [];
-    for (let i = 0; i < this.len; i++) {
+    for (let i = 0; i < nameLen; i += 1) {
       name.push(String.fromCharCode("A".charCodeAt(0) + (h % 26)));
-      h /= 26;
+      h = (h / 26) | 0;
     }
-    this.count++;
+    this.count += 1;
     return name.join("");
   }
 

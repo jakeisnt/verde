@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useUser from "../api/users";
+import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 
 function Profile() {
