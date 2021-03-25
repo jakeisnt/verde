@@ -12,6 +12,9 @@ function makeSocket(name) {
     ws.on("message", (msg) => {
       const message = JSON.parse(msg);
       if (message.type && message.type in socketActions) {
+        console.log(
+          `Sending socket message associated with type ${message.type}`
+        );
         socket.clients.forEach((client) => {
           if (client.readyState === ws.OPEN) {
             client.send(
