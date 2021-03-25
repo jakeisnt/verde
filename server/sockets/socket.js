@@ -32,7 +32,11 @@ function makeRoomSocket(name) {
 
 // Called when an HTTP request is elevated to a WebSocket connection.
 function onUpgrade(request, socket, head) {
+<<<<<<< HEAD
   const { room } = querystring.parse(url.parse(request.url).query);
+=======
+  const room = querystring.parse(url.parse(request.url).query).room;
+>>>>>>> 24162ca (make socket folder and add docs)
 
   if (!socketServers[room]) {
     socketServers[room] = makeRoomSocket(room);
