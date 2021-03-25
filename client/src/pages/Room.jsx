@@ -12,10 +12,10 @@ function Room() {
   const [users, setUsers] = useState(null);
   const classes = useStyles();
   //
-  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
-    `ws://localhost:4000/?${new URLSearchParams({ name })}`,
+  const { sendMessage, lastMessage, readyState } = useWebSocket(
+    `ws://localhost:4000/?${new URLSearchParams({ room: name })}`,
     {
-      onOpen: () => console.log("socket opened"),
+      onOpen: () => console.log(`WebSocket connection to room ${name} opened`),
       shouldReconnect: (closeEvent) => true,
     }
   );
