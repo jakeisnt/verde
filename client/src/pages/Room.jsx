@@ -8,7 +8,7 @@ function Room() {
   const [{ users, creator }, setRoom] = useState({});
   const classes = useStyles();
 
-  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
+  const { sendMessage, lastJsonMessage: roomObj, readyState } = useWebSocket(
     `ws://localhost:4000/?${new URLSearchParams({ room })}`,
     {
       onOpen: () => console.log(`WebSocket connection to room ${room} opened`),
@@ -16,7 +16,7 @@ function Room() {
     }
   );
 
-  useMemo(() => lastJsonMessage && setRoom(lastJsonMessage), [lastJsonMessage]);
+  useMemo(() => roomObj && setRoom(roomObj), [roomObj]);
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN) {
