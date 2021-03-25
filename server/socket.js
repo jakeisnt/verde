@@ -1,8 +1,8 @@
+/* All of the machinery required to work our websockets. */
 const ws = require("ws");
 const url = require("url");
 const querystring = require("querystring");
-const wss = new ws.Server({ noServer: true });
-const rooms = require("./engine/rooms");
+const socketActions = require("./socketActions");
 
 const socketServers = {};
 
@@ -11,21 +11,16 @@ function makeSocket(name) {
   socket.on("connection", (ws, request, client) => {
     ws.on("message", (msg) => {
       const message = JSON.parse(msg);
-      switch (message.type) {
-        case "new-user":
-          console.log("Received a new user", message);
-          socket.clients.forEach((client) => {
-            console.log(`trying to send ${msg}`);
-            if (client.readyState === ws.OPEN) {
-              console.log(`sending ${msg}`);
-              client.send(
-                JSON.stringify(rooms.addUserToRoom(message.username, name))
-              );
-            }
-          });
-          break;
-        default:
-          console.log(`"${message.type}" is not a valid socket message type.`);
+      if (message.type && message.type in socketActions.keys()) {
+        socket.clients.forEach((client) => {
+          if (client.readyState === ws.OPEN) {
+            client.send(
+              JSON.stringify(socketActions[message.type](message, name))
+            );
+          }
+        });
+      } else {
+        console.log(`"${message.type}" is not a valid socket message type.`);
       }
     });
   });
