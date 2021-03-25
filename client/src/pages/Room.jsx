@@ -1,25 +1,41 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import { useEffect, useState, useMemo } from "react";
 import useStyles from "./styles";
 
 function Room() {
-  const [users, setUsers] = useState([]);
-  const { name } = useParams();
+  const { name: room, username } = useParams();
+  const [{ users, creator }, setRoom] = useState({});
   const classes = useStyles();
 
-  useEffect(
-    () =>
-      fetch(`/room/get?${new URLSearchParams({ name })}`)
-        .then((res) => res.json())
-        .then((res) => setUsers(res.users)),
-    [name]
+  const { sendMessage, lastJsonMessage: roomObj, readyState } = useWebSocket(
+    `ws://localhost:4000/?${new URLSearchParams({ room })}`,
+    {
+      onOpen: () => console.log(`WebSocket connection to room ${room} opened`),
+      shouldReconnect: () => true,
+    }
   );
+
+  useMemo(() => roomObj && setRoom(roomObj), [roomObj]);
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      sendMessage(JSON.stringify({ type: "new-user", username }));
+    }
+  }, [username, sendMessage, readyState]);
 
   return (
     <div className={classes.room}>
-      <div className={classes.box}>This is room {name}</div>
       <div className={classes.box}>
-        {users && users.length && users.map((user) => <p key={user}>{user}</p>)}
+        This is room {room}
+        <br />
+        <br />
+        Created by {creator}
+      </div>
+      <div className={classes.box}>
+        {users && users.length
+          ? users.map((user) => <p key={user}>{user}</p>)
+          : null}
       </div>
     </div>
   );
