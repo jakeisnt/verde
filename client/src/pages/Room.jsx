@@ -5,27 +5,29 @@ import useStyles from "./styles";
 
 function Room() {
   const [users, setUsers] = useState([]);
-  const { name } = useParams();
+  const { name, username } = useParams();
   const classes = useStyles();
-  //
-  const { sendMessage, lastMessage, readyState } = useWebSocket(
+
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
     `ws://localhost:4000/?${new URLSearchParams({ room: name })}`,
     {
       onOpen: () => console.log(`WebSocket connection to room ${name} opened`),
-      shouldReconnect: (closeEvent) => true,
+      shouldReconnect: () => true,
     }
   );
 
-  useMemo(() => setUsers((u) => u.concat(lastMessage)), [lastMessage]);
+  useMemo(() => lastJsonMessage && setUsers(lastJsonMessage.users), [
+    lastJsonMessage,
+  ]);
 
   useEffect(() => {
-    fetch(`/room/get?${new URLSearchParams({ name })}`)
-      .then((res) => res.json())
-      .then((res) => setUsers((u) => res.users));
     if (readyState === ReadyState.OPEN) {
-      sendMessage("jake");
+      sendMessage(JSON.stringify({ type: "new-user", username }));
+      console.log("message has been sent");
     }
-  }, [users, name, sendMessage, readyState]);
+  }, [username, sendMessage, readyState]);
+
+  console.log("these are the users", users);
 
   return (
     <div className={classes.room}>

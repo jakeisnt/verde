@@ -10,7 +10,7 @@ function Home() {
   const getNewRoom = () =>
     fetch(`/room/new?${new URLSearchParams({ username })}`)
       .then((res) => res.json())
-      .then((res) => history.push(`/room/${res.name}`));
+      .then((res) => history.push(`/room/${res.name}/user/${username}`));
 
   return (
     <div className={classes.home}>
