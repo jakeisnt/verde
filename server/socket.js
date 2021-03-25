@@ -11,7 +11,6 @@ function makeSocket(name) {
   socket.on("connection", (ws, request, client) => {
     ws.on("message", (msg) => {
       const message = JSON.parse(msg);
-      console.log(Object.keys(socketActions));
       if (message.type && message.type in socketActions) {
         socket.clients.forEach((client) => {
           if (client.readyState === ws.OPEN) {
