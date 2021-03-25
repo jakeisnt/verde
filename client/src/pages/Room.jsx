@@ -13,7 +13,11 @@ function Room() {
   const [users, setUsers] = useState(null);
   const classes = useStyles();
 
-  const { sendMessage, lastJsonMessage: lastUsers, readyState } = useWebSocket(
+  const {
+    sendJsonMessage,
+    lastJsonMessage: lastUsers,
+    readyState,
+  } = useWebSocket(
     `ws://localhost:4000/?${new URLSearchParams({ room: roomName })}`,
     {
       onOpen: () =>
@@ -37,9 +41,9 @@ function Room() {
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN && myUser && room) {
-      sendMessage(JSON.stringify({ type: "update-users" }));
+      sendJsonMessage({ type: "update-users" });
     }
-  }, [myUser, room, sendMessage, readyState]);
+  }, [myUser, room, sendJsonMessage, readyState]);
 
   return (
     <>
