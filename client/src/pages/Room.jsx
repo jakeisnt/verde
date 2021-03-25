@@ -4,8 +4,8 @@ import { useEffect, useState, useMemo } from "react";
 import useStyles from "./styles";
 
 function Room() {
-  const [users, setUsers] = useState([]);
   const { name, username } = useParams();
+  const [users, setUsers] = useState([name]);
   const classes = useStyles();
 
   const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
@@ -26,8 +26,6 @@ function Room() {
       console.log("message has been sent");
     }
   }, [username, sendMessage, readyState]);
-
-  console.log("these are the users", users);
 
   return (
     <div className={classes.room}>
