@@ -12,7 +12,7 @@ function Join() {
   const joinLobby = () =>
     fetch(`/room/join?${new URLSearchParams({ name, username })}`)
       .then((res) => res.json())
-      .then((res) => history.push(`/room/${res.name}`))
+      .then((res) => history.push(`/room/${res.name}/user/${username}`))
       .then(() => setError(""))
       .catch(() => setError(`Room "${name}" does not exist`));
 

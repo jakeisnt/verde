@@ -12,7 +12,7 @@ router.get("/new", (req, res) => {
 router.get("/get", (req, res) => {
   const room = rooms.getRoom(req.query.name);
   if (room === null) {
-    res.status(404).send("room not found");
+    res.status(404).send("Room not found");
   } else {
     res.json(room);
   }
