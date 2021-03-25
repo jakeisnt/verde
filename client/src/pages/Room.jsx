@@ -17,14 +17,12 @@ function Room() {
     sendJsonMessage,
     lastJsonMessage: lastUsers,
     readyState,
-  } = useWebSocket(
-    `ws://localhost:4000/?${new URLSearchParams({ room: roomName })}`,
-    {
-      onOpen: () =>
-        console.log(`WebSocket connection to room ${roomName} opened`),
-      shouldReconnect: () => true,
-    }
-  );
+  } = useWebSocket(`ws://localhost:4000/`, {
+    queryParams: { room: roomName },
+    onOpen: () =>
+      console.log(`WebSocket connection to room ${roomName} opened`),
+    shouldReconnect: () => true,
+  });
 
   useMemo(() => lastUsers && setUsers(lastUsers), [lastUsers]);
 

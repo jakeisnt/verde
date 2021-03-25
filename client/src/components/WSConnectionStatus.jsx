@@ -28,9 +28,9 @@ const connStyles = createUseStyles((theme) => ({
   },
   connMessage: ({ status }) => ({
     display: status === Status.ERR ? "block" : "none",
-    border: `2px solid ${theme[status]}`,
-    padding: "1em 0.5em",
-    margin: "2em",
+    // border: `2px solid ${theme[status]}`,
+    marginLeft: "2em",
+    paddingTop: "1em",
   }),
   connMessageWrapper: {
     flexGrow: 1,
