@@ -17,11 +17,11 @@ class Rooms {
   nextName() {
     let h = hash(this.count);
     const name = [];
-    for (let i = 0; i < this.len; i++) {
+    for (let i = 0; i < this.len; i += 1) {
       name.push(String.fromCharCode("A".charCodeAt(0) + (h % 26)));
       h /= 26;
     }
-    this.count++;
+    this.count += 1;
     return name.join("");
   }
 
