@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useEffect, useState, useMemo } from "react";
+import useUser from "../api/users";
 import useStyles from "./styles";
 
 function Room() {
-  const { name: room, username } = useParams();
+  const { name: room } = useParams();
+  const { user: myUser } = useUser();
   const [{ users, creator }, setRoom] = useState({});
   const classes = useStyles();
 
@@ -19,10 +21,10 @@ function Room() {
   useMemo(() => roomObj && setRoom(roomObj), [roomObj]);
 
   useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      sendMessage(JSON.stringify({ type: "new-user", username }));
+    if (readyState === ReadyState.OPEN && myUser) {
+      sendMessage(JSON.stringify({ type: "new-user" }));
     }
-  }, [username, sendMessage, readyState]);
+  }, [myUser, sendMessage, readyState]);
 
   return (
     <div className={classes.room}>
@@ -30,12 +32,13 @@ function Room() {
         This is room {room}
         <br />
         <br />
-        Created by {creator}
+        Created by {creator && creator.name}
       </div>
       <div className={classes.box}>
-        {users && users.length
-          ? users.map((user) => <p key={user}>{user}</p>)
-          : null}
+        {users &&
+          Object.entries(users).map(([userId, user]) => (
+            <p key={userId}>{user.name}</p>
+          ))}
       </div>
     </div>
   );

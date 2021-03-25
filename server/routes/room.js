@@ -5,7 +5,7 @@ const router = express.Router();
 
 /* GET new room. */
 router.get("/new", (req, res, next) => {
-  res.json(rooms.createRoom(req.query.username));
+  res.json(rooms.createRoom(req.query.userId));
 });
 
 /* GET current room. */
@@ -20,7 +20,7 @@ router.get("/get", (req, res, next) => {
 
 /* JOIN current room. */
 router.get("/join", (req, res, next) => {
-  const room = rooms.addUserToRoom(req.query.username, req.query.name);
+  const room = rooms.addUserToRoom(req.query.name, req.query.userId);
   if (room === null) {
     res.status(404).send("Room not found");
   } else {

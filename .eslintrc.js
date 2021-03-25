@@ -1,4 +1,11 @@
 module.exports = {
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
+  },
   extends: [
     "airbnb",
     "airbnb/hooks",

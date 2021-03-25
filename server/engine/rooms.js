@@ -1,3 +1,5 @@
+const users = require("./users");
+
 /** Bijective hash on 32-bit ints */
 function hash(x) {
   let h = x;
@@ -25,16 +27,20 @@ class Rooms {
     return name.join("");
   }
 
-  createRoom(username) {
+  createRoom(userId) {
+    const user = users.getUser(userId);
+    if (!user) return null;
     const name = this.nextName();
-    const room = { name: name, creator: username, users: [username] };
+    const room = { name: name, creator: user, users: { userId: user } };
     this.rooms[name] = room;
     return room;
   }
 
-  addUserToRoom(username, roomname) {
-    const room = this.getRoom(roomname);
-    if (room) room.users.push(username);
+  addUserToRoom(name, userId) {
+    const user = users.getUser(userId);
+    if (!user) return null;
+    const room = this.getRoom(name);
+    if (room) room.users[userId] = user;
     return room;
   }
 

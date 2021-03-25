@@ -9,7 +9,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Switch>
-            <Route path="/room/:name/user/:username">
+            <Route path="/room/:name">
               <Room />
             </Route>
             <Route path="/join">

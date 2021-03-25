@@ -1,30 +1,25 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import useUser from "../api/users";
 import useStyles from "./styles";
 
 function Join() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const { user } = useUser();
   const history = useHistory();
   const classes = useStyles();
 
   const joinLobby = () =>
-    fetch(`/room/join?${new URLSearchParams({ name, username })}`)
+    user &&
+    fetch(`/room/join?${new URLSearchParams({ name, userId: user.id })}`)
       .then((res) => res.json())
-      .then((res) => history.push(`/room/${res.name}/user/${username}`))
+      .then((room) => history.push(`/room/${room.name}`))
       .then(() => setError(""))
       .catch(() => setError(`Room "${name}" does not exist`));
 
   return (
     <div className={classes.home}>
-      <input
-        type="text"
-        className={classes.box}
-        value={username}
-        placeholder="Enter a username"
-        onInput={(e) => setUsername(e.target.value)}
-      />
       <input
         type="text"
         className={classes.box}
