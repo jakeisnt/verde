@@ -6,19 +6,6 @@ import useStyles from "./styles";
 import BackButton from "../components/BackButton";
 import WSConnectionStatus from "../components/WSConnectionStatus";
 
-// const getSocketUrl = useCallback(
-//   () =>
-//     getUser().then(
-//       ({ id }) =>
-//         `ws:localhost:4000/${new URLSearchParams({
-//           room: roomName,
-//           userId: id,
-//         })}`
-//     ),
-//   [roomName]
-// );
-//
-
 function makeUrl(room, userId) {
   return `ws://localhost:4000/${new URLSearchParams({ userId, room })}`;
 }
