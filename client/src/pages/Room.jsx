@@ -10,7 +10,18 @@ import WSConnectionStatus from "../components/WSConnectionStatus";
 
 function makeUrl(room, userId) {
   return `ws://localhost:4000/?${new URLSearchParams({ room, userId })}`;
-}
+// const getSocketUrl = useCallback(
+//   () =>
+//     getUser().then(
+//       ({ id }) =>
+//         `ws:localhost:4000/${new URLSearchParams({
+//           room: roomName,
+//           userId: id,
+//         })}`
+//     ),
+//   [roomName]
+// );
+//
 
 function Room() {
   const [error, setError] = useState(null);
@@ -45,6 +56,20 @@ function Room() {
     [roomName]
   );
 
+  function getSocketUrl() {
+    const timeout = 10000;
+    const delay = 30;
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      (function waitForUser() {
+        if (myUser) resolve(makeUrl(roomName, myUser.id));
+        else if (timeout && Date.now() - start >= timeout)
+          reject(new Error("User lookup timed out"));
+        else setTimeout(waitForUser, delay);
+      })();
+    });
+  }
+
   const {
     sendJsonMessage,
     lastMessage,
@@ -67,12 +92,6 @@ function Room() {
       }
     }
   }, [lastJsonMessage, setUsers, setInactives]);
-
-  // useEffect(() => {
-  //   if (readyState == ReadyState.OPEN && sendJsonMessage) {
-  //     sendJsonMessage({ type: "updateUsers" });
-  //   }
-  // }, [readyState, sendJsonMessage]);
 
   return (
     <>
