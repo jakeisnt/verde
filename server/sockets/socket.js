@@ -23,35 +23,53 @@ function isJSON(str) {
   return true;
 }
 
-const KEEP_ALIVE_INTERVAL = 5000; // 5 seconds
+/*
+ * On every connection:
+ * - See if an existing connection with that user id already exists
+ *   - if it's live, add that connection to the list of connection that user has
+ *   - if it's dead, move the user to being live, add a connection, and notify the room
+ *
+ * On every disconnect:
+ * - Find the user who had that connection
+ * - Remove the connection from the user
+ * - If the user has no more connections:
+ *   - Move the user to a 'disconnected' array
+ *   - Notify every client of this disconnect
+ */
+
+const PING_INTERVAL = 30000;
 
 // Given a room name, make a socket for the room and add listeners.
 function makeRoomSocket(name) {
   const socket = new WebSocket.Server({ noServer: true });
   socket.on("connection", (ws, request, client) => {
-    function ping(client) {
-      if (ws.readyState === Status.OPEN) {
-        ws.send("__ping__");
-      } else {
-        console.log(`Connection has been closed for client ${client}`);
-        ws.send(socketActions.disconnect(client, name));
-      }
-    }
+    const { room, userId } = querystring.parse(url.parse(request.url).query);
 
-    function pong(client) {
-      console.log(`Server ${client} is still active`);
-      clearTimeout(keepAlive);
-      setTimeout(() => {
-        ping(client), KEEP_ALIVE_INTERVAL;
+    socketActions.connect(room, userId);
+
+    ws.isAlive = true;
+    ws.on("pong", () => {
+      this.isAlive = true;
+    });
+
+    const interval = setInterval(() => {
+      ws.clients.forEach((client) => {
+        if (client.isAlive === false) {
+          socketActions.disconnect(room, userId);
+          return client.terminate();
+        }
+        client.isAlive = false;
+        client.ping(() => {});
       });
-    }
+    }, PING_INTERVAL);
+
+    ws.on("close", () => {
+      clearInterval(interval);
+    });
 
     ws.on("message", (msg) => {
       if (isJSON(msg)) {
         const message = JSON.parse(msg);
-        if (message.keepAlive !== undefined) {
-          pong(message.keepAlive.toLowerCase());
-        }
         if (message.type && message.type in socketActions) {
           console.log(
             `Sending socket message associated with type "${message.type}"`
@@ -74,14 +92,10 @@ function makeRoomSocket(name) {
 
 // Called when an HTTP request is elevated to a WebSocket connection.
 function onUpgrade(request, socket, head) {
-  const { room } = querystring.parse(url.parse(request.url).query);
+  const { room, userId } = querystring.parse(url.parse(request.url).query);
 
   if (!socketServers[room]) {
-    socketServers[room] = {
-      socket: makeRoomSocket(room),
-      users: [],
-      keepAlive: null,
-    };
+    socketServers[room] = makeRoomSocket(room);
     console.log(`Created socket for room ${room}`);
   } else {
     console.log(`Using socket for room ${room}`);
