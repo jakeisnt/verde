@@ -9,19 +9,8 @@ import BackButton from "../components/BackButton";
 import WSConnectionStatus from "../components/WSConnectionStatus";
 
 function makeUrl(room, userId) {
-  return `ws://localhost:4000/?${new URLSearchParams({ room, userId })}`;
-// const getSocketUrl = useCallback(
-//   () =>
-//     getUser().then(
-//       ({ id }) =>
-//         `ws:localhost:4000/${new URLSearchParams({
-//           room: roomName,
-//           userId: id,
-//         })}`
-//     ),
-//   [roomName]
-// );
-//
+  return `ws://localhost:4000/${new URLSearchParams({ userId, room })}`;
+}
 
 function Room() {
   const [error, setError] = useState(null);
