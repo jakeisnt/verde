@@ -8,7 +8,6 @@ const useStyles = createUseStyles((theme) => ({
     backgroundColor: theme.white,
     color: theme.black,
     textAlign: "left",
-    fontWeight: "bold",
   },
 }));
 
@@ -22,7 +21,7 @@ function BackButton({ text }) {
       className={classes.backButton}
       onClick={() => history.push(`/`)}
     >
-      {`<-- ${text}`}
+      {`↩ ${text}`}
     </button>
   );
 }
