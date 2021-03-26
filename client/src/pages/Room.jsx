@@ -13,9 +13,11 @@ function Room() {
   const classes = useStyles();
 
   console.log(myUser);
+  console.log(room);
 
   const {
     sendJsonMessage,
+    lastMessage,
     lastJsonMessage: lastRoom,
     readyState,
   } = useWebSocket(`ws://localhost:4000/`, {
@@ -24,6 +26,8 @@ function Room() {
       console.log(`WebSocket connection to room ${roomName} opened`),
     shouldReconnect: () => true,
   });
+  console.log(lastMessage);
+  console.log(lastRoom);
 
   useMemo(() => lastRoom && setRoom(lastRoom), [lastRoom]);
 

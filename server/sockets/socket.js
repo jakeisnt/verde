@@ -52,19 +52,21 @@ function makeRoomSocket(name) {
       this.isAlive = true;
     });
 
-    const interval = setInterval(() => {
-      ws.clients.forEach((client) => {
-        if (client.isAlive === false) {
-          socketActions.disconnect(room, userId);
-          return client.terminate();
-        }
-        client.isAlive = false;
-        client.ping(() => {});
-      });
+    ws.interval = setInterval(() => {
+      if (ws.clients) {
+        ws.clients.forEach((client) => {
+          if (client.isAlive === false) {
+            socketActions.disconnect(room, userId);
+            return client.terminate();
+          }
+          client.isAlive = false;
+          client.ping(() => {});
+        });
+      }
     }, PING_INTERVAL);
 
     ws.on("close", () => {
-      clearInterval(interval);
+      clearInterval(ws.interval);
     });
 
     ws.on("message", (msg) => {
