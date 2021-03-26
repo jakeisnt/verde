@@ -48,4 +48,16 @@ export default createUseStyles((theme) => ({
     border: `2px solid ${theme.red}`,
     backgroundColor: theme.white,
   },
+  title: {
+    fontSize: "4em",
+    textAlign: "center",
+  },
+  fakePic: {
+    border: `2px solid ${theme.black}`,
+    width: "25vw",
+    height: "25vh",
+    textAlign: "center",
+    margin: "auto",
+    marginBottom: "2em",
+  },
 }));
