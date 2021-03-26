@@ -10,38 +10,28 @@ function Room() {
   const { name: roomName } = useParams();
   const { user: myUser } = useUser();
   const [room, setRoom] = useState(null);
-  const [users, setUsers] = useState(null);
   const classes = useStyles();
+
+  console.log(myUser);
 
   const {
     sendJsonMessage,
-    lastJsonMessage: lastUsers,
+    lastJsonMessage: lastRoom,
     readyState,
   } = useWebSocket(`ws://localhost:4000/`, {
-    queryParams: { room: roomName },
+    queryParams: { room: roomName, userId: myUser.id },
     onOpen: () =>
       console.log(`WebSocket connection to room ${roomName} opened`),
     shouldReconnect: () => true,
   });
 
-  useMemo(() => lastUsers && setUsers(lastUsers), [lastUsers]);
+  useMemo(() => lastRoom && setRoom(lastRoom), [lastRoom]);
 
-  useEffect(() => {
-    if (myUser) {
-      const params = new URLSearchParams({ name: roomName, userId: myUser.id });
-      fetch(`/room/join?${params}`, { method: "PUT" })
-        .then((res) => res.json())
-        .then((res) => setRoom(res))
-        .then(() => setError(null))
-        .catch(() => setError(`Room "${roomName}" does not exist`));
-    }
-  }, [myUser, roomName]);
-
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN && myUser && room) {
-      sendJsonMessage({ type: "update-users" });
-    }
-  }, [myUser, room, sendJsonMessage, readyState]);
+  // useEffect(() => {
+  //   if (readyState === ReadyState.OPEN && myUser && room) {
+  //     sendJsonMessage({ type: "update-users", userId: myUser.id, roomName });
+  //   }
+  // }, [myUser, roomName, sendJsonMessage, readyState]);
 
   return (
     <>
@@ -49,9 +39,19 @@ function Room() {
         <div className={classes.box}>
           {error || (room && `This is room ${room.name}.`)}
         </div>
+        Active Users
         <div className={classes.box}>
-          {users &&
-            users.map((user) => user && <p key={user.id}>{user.name}</p>)}
+          {room &&
+            room.users &&
+            room.users.map((user) => user && <p key={user.id}>{user.name}</p>)}
+        </div>
+        Inactive Users
+        <div className={classes.box}>
+          {room &&
+            room.inactives &&
+            room.inactives.map(
+              (user) => user && <p key={user.id}>{user.name}</p>
+            )}
         </div>
       </div>
       <WSConnectionStatus state={readyState} />

@@ -29,7 +29,7 @@ const connStyles = createUseStyles((theme) => ({
   connMessage: ({ status }) => ({
     display: status === Status.ERR ? "block" : "none",
     // border: `2px solid ${theme[status]}`,
-    marginLeft: "2em",
+    marginLeft: "3em",
     paddingTop: "1em",
   }),
   connMessageWrapper: {
@@ -70,15 +70,6 @@ function WSConnectionStatus({ state, onBannerClick = () => null }) {
             {status === Status.ERR && open && (
               <div className={classes.connMessage}>
                 You&apos;ve lost your connection and may have to rejoin.
-                <button
-                  className={classes.closeButton}
-                  onClick={(e) => {
-                    setOpen(false);
-                    onBannerClick(e);
-                  }}
-                >
-                  X
-                </button>
               </div>
             )}
           </div>
