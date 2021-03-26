@@ -40,7 +40,6 @@ function Room() {
     lastJsonMessage: lastRoom,
     readyState,
   } = useWebSocket(getSocketUrl, {
-    // queryParams: { room: roomName, userId: myUser.id },
     onOpen: () =>
       console.log(`WebSocket connection to room ${roomName} opened`),
     shouldReconnect: () => true,

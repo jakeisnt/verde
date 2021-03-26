@@ -48,7 +48,7 @@ function broadcast(ws, message, roomName, userId) {
     });
   } else {
     console.log(
-      `The websocket for room ${roomName} doesn't seem to have any clients. That's probably bad`
+      `The websocket for room ${roomName} requested by ${userId} doesn't seem to have any clients. That's probably bad`
     );
   }
 }
@@ -58,8 +58,6 @@ function makeRoomSocket(name) {
   const socket = new WebSocket.Server({ noServer: true });
   socket.on("connection", (ws, request, client) => {
     const { room, userId } = querystring.parse(url.parse(request.url).query);
-
-    broadcast(ws, { type: "connect" }, room, userId);
 
     ws.isAlive = true;
     ws.on("pong", () => {
@@ -93,6 +91,7 @@ function makeRoomSocket(name) {
         } else {
           console.log(`"${message.type}" is not a valid socket message type.`);
         }
+        console.log(`${msg} is not valid JSON.`);
       }
     });
   });
