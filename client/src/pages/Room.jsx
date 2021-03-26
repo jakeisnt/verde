@@ -1,10 +1,27 @@
 import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { useEffect, useState, useMemo } from "react";
-import { useUser } from "../context/userContext";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { getUser, useUser } from "../context/userContext";
 import useStyles from "./styles";
 import BackButton from "../components/BackButton";
 import WSConnectionStatus from "../components/WSConnectionStatus";
+
+// const getSocketUrl = useCallback(
+//   () =>
+//     getUser().then(
+//       ({ id }) =>
+//         `ws:localhost:4000/${new URLSearchParams({
+//           room: roomName,
+//           userId: id,
+//         })}`
+//     ),
+//   [roomName]
+// );
+//
+
+function makeUrl(room, userId) {
+  return `ws://localhost:4000/${new URLSearchParams({ userId, room })}`;
+}
 
 function Room() {
   const [error, setError] = useState(null);
@@ -16,27 +33,33 @@ function Room() {
   console.log(myUser);
   console.log(room);
 
+  function getSocketUrl() {
+    const timeout = 10000;
+    const delay = 30;
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      (function waitForUser() {
+        if (myUser) resolve(makeUrl(roomName, myUser.id));
+        else if (timeout && Date.now() - start >= timeout)
+          reject(new Error("User lookup timed out"));
+        else setTimeout(waitForUser, delay);
+      })();
+    });
+  }
+
   const {
     sendJsonMessage,
     lastMessage,
     lastJsonMessage: lastRoom,
     readyState,
-  } = useWebSocket(`ws://localhost:4000/`, {
-    queryParams: { room: roomName, userId: myUser.id },
+  } = useWebSocket(getSocketUrl, {
+    // queryParams: { room: roomName, userId: myUser.id },
     onOpen: () =>
       console.log(`WebSocket connection to room ${roomName} opened`),
     shouldReconnect: () => true,
   });
-  console.log(lastMessage);
-  console.log(lastRoom);
 
   useMemo(() => lastRoom && setRoom(lastRoom), [lastRoom]);
-
-  // useEffect(() => {
-  //   if (readyState === ReadyState.OPEN && myUser && room) {
-  //     sendJsonMessage({ type: "update-users", userId: myUser.id, roomName });
-  //   }
-  // }, [myUser, roomName, sendJsonMessage, readyState]);
 
   return (
     <>
