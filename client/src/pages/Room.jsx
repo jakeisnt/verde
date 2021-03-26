@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { getUser, useUser } from "../context/userContext";
+import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 import BackButton from "../components/BackButton";
 import WSConnectionStatus from "../components/WSConnectionStatus";
