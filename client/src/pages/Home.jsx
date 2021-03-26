@@ -36,6 +36,13 @@ function Home() {
       >
         Profile
       </button>
+      <button
+        type="button"
+        className={classes.box}
+        onClick={() => history.push("/about")}
+      >
+        About
+      </button>
     </div>
   );
 }

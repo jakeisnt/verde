@@ -22,6 +22,14 @@ export default createUseStyles((theme) => ({
     maxWidth: "50%",
     margin: "auto",
   },
+  about: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    maxWidth: "50%",
+    margin: "auto",
+    marginTop: "2em",
+  },
   box: {
     padding: "1em",
     margin: "1em",
