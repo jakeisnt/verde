@@ -1,27 +1,25 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
+import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 
 function Home() {
-  const [username, setUsername] = useState("");
+  const { user } = useUser();
   const history = useHistory();
   const classes = useStyles();
 
-  const getNewRoom = () =>
-    fetch(`/room/new?${new URLSearchParams({ username })}`)
-      .then((res) => res.json())
-      .then((res) => history.push(`/room/${res.name}/user/${username}`));
+  const createRoom = useCallback(
+    () =>
+      user &&
+      fetch(`/room/new?${new URLSearchParams({ userId: user.id })}`)
+        .then((res) => res.json())
+        .then((room) => history.push(`/room/${room.name}`)),
+    [user, history]
+  );
 
   return (
     <div className={classes.home}>
-      <input
-        type="text"
-        className={classes.box}
-        value={username}
-        placeholder="Enter a username"
-        onInput={(e) => setUsername(e.target.value)}
-      />
-      <button type="button" className={classes.box} onClick={getNewRoom}>
+      <button type="button" className={classes.box} onClick={createRoom}>
         Create Room
       </button>
       <button
@@ -30,6 +28,13 @@ function Home() {
         onClick={() => history.push("/join")}
       >
         Join Room
+      </button>
+      <button
+        type="button"
+        className={classes.box}
+        onClick={() => history.push("/profile")}
+      >
+        Profile
       </button>
     </div>
   );

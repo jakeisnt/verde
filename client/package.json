@@ -10,9 +10,11 @@
     "react-jss": "10.6.0",
     "react-use-websocket": "2.5.0",
     "react-router-dom": "5.2.0",
+    "universal-cookie": "4.0.4",
     "react-scripts": "4.0.3",
     "web-vitals": "1.0.1",
-    "xstate": "4.17.0"
+    "xstate": "4.17.0",
+    "prop-types": "15.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,7 +23,11 @@
     "eject": "react-scripts eject"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

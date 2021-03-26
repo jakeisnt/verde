@@ -6,18 +6,18 @@ const socketActions = require("./socketActions");
 
 const socketServers = {};
 
-function makeSocket(name) {
+function makeRoomSocket(name) {
   const socket = new WebSocket.Server({ noServer: true });
-  socket.on("connection", (ws) => {
+  socket.on("connection", (ws, request, client) => {
     ws.on("message", (msg) => {
       const message = JSON.parse(msg);
       if (message.type && message.type in socketActions) {
         console.log(
           `Sending socket message associated with type "${message.type}"`
         );
-        socket.clients.forEach((client) => {
-          if (client.readyState === ws.OPEN) {
-            client.send(
+        socket.clients.forEach((cli) => {
+          if (cli.readyState === ws.OPEN) {
+            cli.send(
               JSON.stringify(socketActions[message.type](message, name))
             );
           }
@@ -35,7 +35,7 @@ function onUpgrade(request, socket, head) {
   const { room } = querystring.parse(url.parse(request.url).query);
 
   if (!socketServers[room]) {
-    socketServers[room] = makeSocket(room);
+    socketServers[room] = makeRoomSocket(room);
     console.log(`Created socket for room ${room}`);
   } else {
     console.log(`Using socket for room ${room}`);

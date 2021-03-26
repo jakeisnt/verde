@@ -1,3 +1,5 @@
+const users = require("./users");
+
 /** Bijective hash on 32-bit ints */
 function hash(x) {
   let h = x;
@@ -7,9 +9,10 @@ function hash(x) {
   return h;
 }
 
+const nameLen = 4;
+
 class Rooms {
-  constructor(len = 4) {
-    this.len = len;
+  constructor() {
     this.count = Math.floor(Math.random() * 9001) | 0;
     this.rooms = {};
   }
@@ -17,29 +20,41 @@ class Rooms {
   nextName() {
     let h = hash(this.count);
     const name = [];
-    for (let i = 0; i < this.len; i += 1) {
+    for (let i = 0; i < nameLen; i += 1) {
       name.push(String.fromCharCode("A".charCodeAt(0) + (h % 26)));
-      h /= 26;
+      h = (h / 26) | 0;
     }
     this.count += 1;
     return name.join("");
   }
 
-  createRoom(username) {
+  createRoom(userId) {
+    const user = users.getUser(userId);
+    if (!user) return null;
     const name = this.nextName();
-    const room = { name, creator: username, users: [username] };
+    const room = { name, users: [userId] };
     this.rooms[name] = room;
-    return room;
-  }
-
-  addUserToRoom(username, roomname) {
-    const room = this.getRoom(roomname);
-    if (room) room.users.push(username);
     return room;
   }
 
   getRoom(name) {
     return name in this.rooms ? this.rooms[name] : null;
+  }
+
+  joinRoom(name, userId) {
+    const user = users.getUser(userId);
+    if (!user) return null;
+    const room = this.getRoom(name);
+    if (room && !room.users.includes(userId)) {
+      room.users.push(userId);
+    }
+    return room;
+  }
+
+  getUsers(name) {
+    const room = this.getRoom(name);
+    if (!room) return null;
+    return room.users.map((userId) => users.getUser(userId));
   }
 }
 
