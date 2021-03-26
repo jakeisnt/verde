@@ -18,9 +18,9 @@ const socketActions = {
   //   rooms.joinRoom(roomName, userId),
 
   // special: called only when a client connects
-  connect: (roomName, userId) => rooms.joinRoom(roomName, userId),
+  connect: (message, roomName, userId) => rooms.joinRoom(roomName, userId),
   // special: called only when a client disconnects
-  disconnect: (roomName, userId) => rooms.leaveRoom(roomName, userId),
+  disconnect: (message, roomName, userId) => rooms.leaveRoom(roomName, userId),
 };
 
 module.exports = socketActions;

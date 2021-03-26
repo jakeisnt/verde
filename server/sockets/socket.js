@@ -39,13 +39,27 @@ function isJSON(str) {
 
 const PING_INTERVAL = 30000;
 
+function broadcast(ws, message, roomName, userId) {
+  if (ws.clients) {
+    ws.clients.forEach((cli) => {
+      if (cli.readyState === ws.OPEN) {
+        cli.send(JSON.stringify(socketActions[message.type](message, name)));
+      }
+    });
+  } else {
+    console.log(
+      `The websocket for room ${roomName} doesn't seem to have any clients. That's probably bad`
+    );
+  }
+}
+
 // Given a room name, make a socket for the room and add listeners.
 function makeRoomSocket(name) {
   const socket = new WebSocket.Server({ noServer: true });
   socket.on("connection", (ws, request, client) => {
     const { room, userId } = querystring.parse(url.parse(request.url).query);
 
-    socketActions.connect(room, userId);
+    broadcast(ws, { type: "connect" }, room, userId);
 
     ws.isAlive = true;
     ws.on("pong", () => {
@@ -56,7 +70,7 @@ function makeRoomSocket(name) {
       if (ws.clients) {
         ws.clients.forEach((client) => {
           if (client.isAlive === false) {
-            socketActions.disconnect(room, userId);
+            broadcast(ws, { type: "disconnect" }, room, userId);
             return client.terminate();
           }
           client.isAlive = false;
@@ -76,13 +90,6 @@ function makeRoomSocket(name) {
           console.log(
             `Sending socket message associated with type "${message.type}"`
           );
-          clients.forEach((cli) => {
-            if (cli.readyState === ws.OPEN) {
-              cli.send(
-                JSON.stringify(socketActions[message.type](message, name))
-              );
-            }
-          });
         } else {
           console.log(`"${message.type}" is not a valid socket message type.`);
         }
