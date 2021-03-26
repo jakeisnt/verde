@@ -51,6 +51,16 @@ class Rooms {
     return room;
   }
 
+  leaveRoom(name, userId) {
+    const user = users.getUser(userId);
+    if (!user) return null;
+    const room = this.getRoom(name);
+    if (room && room.users.includes(userId)) {
+      room.users = room.users.filter(({ userId: id }) => id !== userId);
+    }
+    return room;
+  }
+
   getUsers(name) {
     const room = this.getRoom(name);
     if (!room) return null;

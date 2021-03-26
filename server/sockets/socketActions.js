@@ -14,7 +14,9 @@
 const rooms = require("../engine/rooms");
 
 const socketActions = {
-  "update-users": (message, room) => rooms.getUsers(room),
+  "update-users": (message, roomName) => rooms.getUsers(roomName),
+  // special: called only when a client disconnects
+  disconnect: (message, roomName) => rooms.leaveRoom(roomName, message.userId),
 };
 
 module.exports = socketActions;
