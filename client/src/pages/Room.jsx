@@ -17,11 +17,7 @@ function Room() {
   const [room, setRoom] = useState(null);
   const classes = useStyles();
 
-  console.log(myUser);
-  console.log(room);
-
-  function getSocketUrl() {
-    const timeout = 10000;
+  function getSocketUrl(timeout = 10000) {
     const delay = 30;
     return new Promise((resolve, reject) => {
       const start = Date.now();
