@@ -7,6 +7,7 @@ export default createUseStyles((theme) => ({
     flexDirection: "column",
     maxWidth: "50%",
     margin: "auto",
+    marginTop: "2em",
   },
   room: {
     display: "flex",
@@ -14,6 +15,7 @@ export default createUseStyles((theme) => ({
     flexDirection: "column",
     maxWidth: "50%",
     margin: "auto",
+    marginTop: "2em",
   },
   profile: {
     display: "flex",
@@ -21,6 +23,7 @@ export default createUseStyles((theme) => ({
     flexDirection: "column",
     maxWidth: "50%",
     margin: "auto",
+    marginTop: "2em",
   },
   about: {
     display: "flex",
