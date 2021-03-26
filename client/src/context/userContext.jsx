@@ -12,8 +12,6 @@ const UserContext = createContext(null);
 
 function UserProvider({ children }) {
   const [user, setUser] = useState(null);
-  const cookies2 = new Cookies();
-  console.log(JSON.stringify(cookies2.get("userId")));
 
   // Runs once at beginning and whenever user ID cookie is updated
   useEffect(() => {
