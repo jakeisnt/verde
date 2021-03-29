@@ -24,6 +24,10 @@ function removeUser(users, userId) {
   return users.filter(({ userId: id }) => id !== userId);
 }
 
+function matchUserId(id) {
+  return ({ userId }) => userId === id;
+}
+
 class Rooms {
   constructor() {
     this.count = Math.floor(Math.random() * 9001) | 0;
@@ -47,8 +51,8 @@ class Rooms {
     const name = this.nextName();
     const room = {
       name,
-      users: [initUser(userId)],
-      inactives: [],
+      users: [],
+      inactives: [userId],
     };
     this.rooms[name] = room;
     return room;
@@ -62,23 +66,22 @@ class Rooms {
     const user = users.getUser(userId);
     if (!user) return null;
     const room = this.getRoom(name);
-    if (room) {
-      // If the user isn't in the list of active users:
-      if (!getUserIds(room.users).includes(userId)) {
-        // Add the user to the active users
-        room.users.push(initUser(userId));
-        // Remove the user from the inactive users, if they're present
-        room.inactives = removeUser(room.inactives, userId);
-      }
+    if (!room) return null;
 
-      // If the user is currently an active user,
-      else {
-        // Increment the number of connections they have
-        room.users.forEach((user) => {
-          if (user.userId === userId) user.numConnections += 1;
-        });
+    const activeIndex = room.users.findIndex(matchUserId(userId));
+    if (activeIndex >= 0) {
+      // If user is active, increment connection count
+      room.users[activeIndex].numConnections += 1;
+    } else {
+      // If user was not active, add it to the room
+      room.users.push(initUser(userId));
+      const inactiveIndex = room.inactives.indexOf(userId);
+      if (inactiveIndex >= 0) {
+        // Remove user from inactives if necessary
+        room.inactives.splice(inactiveIndex, 1);
       }
     }
+
     return room;
   }
 
@@ -86,19 +89,28 @@ class Rooms {
     const user = users.getUser(userId);
     if (!user) return null;
     const room = this.getRoom(name);
-    // If the room has the current user,
-    if (room && getUserIds(room.users).includes(userId)) {
-      // Move them to the list of inactive users
-      room.users = removeUser(room.users, userId);
-      room.inactives.push({ userId });
+    if (!room) return null;
+
+    const activeIndex = room.users.findIndex(matchUserId(userId));
+    if (activeIndex >= 0) {
+      room.users[activeIndex].numConnections -= 1;
+      if (room.users[activeIndex].numConnections == 0) {
+        // If user is active, make them inactive
+        room.users.splice(activeIndex, 1);
+        room.inactives.push(userId);
+      }
     }
+
     return room;
   }
 
   getUsers(name) {
     const room = this.getRoom(name);
     if (!room) return null;
-    return room.users.map(({ userId }) => users.getUser(userId));
+    return {
+      users: room.users.map(({ userId }) => users.getUser(userId)),
+      inactives: room.inactives.map((userId) => users.getUser(userId)),
+    };
   }
 }
 
