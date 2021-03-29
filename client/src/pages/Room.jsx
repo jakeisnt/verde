@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { useUser } from "../context/userContext";
+import { useUser, getUser } from "../context/userContext";
 import useStyles from "./styles";
 import WSConnectionStatus from "../components/WSConnectionStatus";
 
@@ -12,27 +12,40 @@ function makeUrl(room, userId) {
 function Room() {
   const [error, setError] = useState(null);
   const { name: roomName } = useParams();
-  const { user: myUser } = useUser();
+  // const { user: myUser } = useUser();
   const [room, setRoom] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [inactives, setInactives] = useState(null);
   const classes = useStyles();
 
-  function getSocketUrl(timeout = 10000) {
-    const delay = 30;
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
-      (function waitForUser() {
-        if (myUser) resolve(makeUrl(roomName, myUser.id));
-        else if (timeout && Date.now() - start >= timeout)
-          reject(new Error("User lookup timed out"));
-        else setTimeout(waitForUser, delay);
-      })();
-    });
-  }
+  // const getSocketUrl = useCallback(
+  //   (timeout = 10000) => {
+  //     if (!myUser) return null;
+  //     const delay = 1000;
+  //     return new Promise((resolve, reject) => {
+  //       const start = Date.now();
+  //       (function waitForUser() {
+  //         console.log(`myUser: ${JSON.stringify(myUser)}`);
+  //         if (myUser) {
+  //           resolve(makeUrl(roomName, myUser.id));
+  //         } else if (timeout && Date.now() - start >= timeout)
+  //           reject(new Error("User lookup timed out"));
+  //         else setTimeout(waitForUser, delay);
+  //       })();
+  //     });
+  //   },
+  //   [myUser, roomName]
+  // );
+
+  const getSocketUrl = useMemo(
+    () => getUser().then((user) => makeUrl(roomName, user.id)),
+    [roomName]
+  );
 
   const {
     sendJsonMessage,
     lastMessage,
-    lastJsonMessage: lastRoom,
+    lastJsonMessage,
     readyState,
   } = useWebSocket(getSocketUrl, {
     onOpen: () =>
@@ -40,7 +53,23 @@ function Room() {
     shouldReconnect: () => true,
   });
 
-  useMemo(() => lastRoom && setRoom(lastRoom), [lastRoom]);
+  useEffect(() => {
+    if (lastJsonMessage && setUsers) {
+      console.log(`lastJsonMessage: ${JSON.stringify(lastJsonMessage)}`);
+      if ("users" in lastJsonMessage) {
+        setUsers(lastJsonMessage.users);
+      }
+      if ("inactives" in lastJsonMessage) {
+        setInactives(lastJsonMessage.inactives);
+      }
+    }
+  }, [lastJsonMessage, setUsers, setInactives]);
+
+  // useEffect(() => {
+  //   if (readyState == ReadyState.OPEN && sendJsonMessage) {
+  //     sendJsonMessage({ type: "updateUsers" });
+  //   }
+  // }, [readyState, sendJsonMessage]);
 
   return (
     <>
@@ -50,17 +79,13 @@ function Room() {
         </div>
         Active Users
         <div className={classes.box}>
-          {room &&
-            room.users &&
-            room.users.map((user) => user && <p key={user.id}>{user.name}</p>)}
+          {users &&
+            users.map((user) => user && <p key={user.id}>{user.name}</p>)}
         </div>
         Inactive Users
         <div className={classes.box}>
-          {room &&
-            room.inactives &&
-            room.inactives.map(
-              (user) => user && <p key={user.id}>{user.name}</p>
-            )}
+          {inactives &&
+            inactives.map((user) => user && <p key={user.id}>{user.name}</p>)}
         </div>
         {/* NOTE: Navigating away in any form should implicitly leave the room. */}
         <button type="button" className={classes.box}>
