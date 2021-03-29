@@ -63,6 +63,7 @@ class Rooms {
   }
 
   joinRoom(name, userId) {
+    console.log(`${userId} is joining room ${name}`);
     const user = users.getUser(userId);
     if (!user) return null;
     const room = this.getRoom(name);

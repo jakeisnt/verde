@@ -45,9 +45,9 @@ function Room() {
     [roomName]
   );
 
-  function getSocketUrl() {
-    const timeout = 10000;
+  const getSocketUrl = useCallback(() => {
     const delay = 30;
+    const timeout = 10000;
     return new Promise((resolve, reject) => {
       const start = Date.now();
       (function waitForUser() {
@@ -57,7 +57,7 @@ function Room() {
         else setTimeout(waitForUser, delay);
       })();
     });
-  }
+  }, [roomName, myUser]);
 
   const {
     sendJsonMessage,
@@ -81,6 +81,8 @@ function Room() {
       }
     }
   }, [lastJsonMessage, setUsers, setInactives]);
+
+  console.log(lastRoom);
 
   return (
     <>
