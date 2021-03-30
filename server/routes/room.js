@@ -5,7 +5,16 @@ const router = express.Router();
 
 /* GET new room. */
 router.get("/new", (req, res) => {
-  res.json(rooms.createRoom(req.query.userId));
+  if ("capacity" in req.query) {
+    const capacity = parseInt(req.query.capacity);
+    if (capacity !== NaN) {
+      res.json(rooms.createRoom(req.query.userId, capacity));
+    } else {
+      res.json(rooms.createRoom(req.query.userId));
+    }
+  } else {
+    res.json(rooms.createRoom(req.query.userId));
+  }
 });
 
 /* GET existing room. */

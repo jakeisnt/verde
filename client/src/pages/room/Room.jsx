@@ -6,6 +6,13 @@ import { useSocket } from "../../context/socketContext";
 function Room() {
   const { error, lastMessage, roomName, sendMessage } = useSocket("users");
   const classes = useStyles();
+  const [room, setRoom] = useState(null);
+
+  useEffect(() => {
+    fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)
+      .then((res) => res.json())
+      .then((res) => setRoom(res));
+  }, [roomName, setRoom]);
 
   useEffect(() => {
     console.log(JSON.stringify(lastMessage));
@@ -20,7 +27,8 @@ function Room() {
         </div>
         {!error && lastMessage && (
           <>
-            Active Users
+            Active Users ({lastMessage.actives && lastMessage.actives.length}/
+            {room && (room.capacity >= 0 ? room.capacity : "∞")})
             <div className={classes.box}>
               {lastMessage.actives &&
                 lastMessage.actives.map(

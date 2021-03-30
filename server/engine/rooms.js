@@ -50,10 +50,10 @@ class Room {
       }
       if (this.canJoinActive()) {
         this.users.push({ userId, count: 1, status: UserStatus.ACTIVE });
+        this.numActive += 1;
       } else {
         this.users.push({ userId, count: 1, status: UserStatus.SPECTATING });
       }
-      this.numActive += 1;
     }
   }
 
@@ -68,10 +68,16 @@ class Room {
       throw new Error(`user ${userId} inactive in room ${this.name}`);
     }
     if (spectate) {
-      this.users[index].status = UserStatus.SPECTATING;
+      if (this.users[index].status == UserStatus.ACTIVE) {
+        this.users[index].status = UserStatus.SPECTATING;
+        this.numActive -= 1;
+      }
     } else if (this.canJoinActive()) {
-      this.users[index].status = UserStatus.ACTIVE;
-      this.users.push(this.users.splice(index, 1)[0]);
+      if (this.users[index].status == UserStatus.SPECTATING) {
+        this.users[index].status = UserStatus.ACTIVE;
+        this.users.push(this.users.splice(index, 1)[0]);
+        this.numActive += 1;
+      }
     }
   }
 

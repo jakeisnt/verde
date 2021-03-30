@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
 import theme from "./theme";
-import { Home, Room, Join, Profile, About } from "./pages";
+import { Home, Room, Create, Join, Profile, About } from "./pages";
 import { UserProvider } from "./context/userContext";
 
 function App() {
@@ -13,6 +13,9 @@ function App() {
             <Switch>
               <Route path="/room/:name">
                 <Room />
+              </Route>
+              <Route path="/create">
+                <Create />
               </Route>
               <Route path="/join">
                 <Join />
