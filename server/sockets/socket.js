@@ -51,10 +51,15 @@ function makeRoomSocket(name) {
           console.log(
             `Sending socket message associated with type "${message.type}"`
           );
-          socketActions[message.type](wss, message, args);
+          try {
+            socketActions[message.type](wss, message, args);
+          } catch (error) {
+            console.log(`Socket action ${msg} failed with error: ${error}`);
+          }
         } else {
           console.log(`"${message.type}" is not a valid socket message type.`);
         }
+      } else {
         console.log(`${msg} is not valid JSON.`);
       }
     });

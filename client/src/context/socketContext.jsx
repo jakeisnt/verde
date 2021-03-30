@@ -8,7 +8,7 @@ import {
 } from "react";
 import PropTypes from "prop-types";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { useUser, getUser } from "./userContext";
+import { useUser } from "./userContext";
 
 const SocketContext = createContext(null);
 
@@ -19,10 +19,13 @@ function makeUrl(room, userId) {
 function SocketProvider({ children, roomName }) {
   const [error, setError] = useState(null);
   const [lastMessages, setLastMessages] = useState({});
-  const getSocketUrl = useMemo(
-    () => getUser().then((user) => makeUrl(roomName, user.id)),
-    [roomName]
-  );
+  const { userId } = useUser();
+
+  const getSocketUrl = useCallback(() => {
+    return new Promise((resolve) => {
+      if (userId) resolve(makeUrl(roomName, userId));
+    });
+  }, [roomName, userId]);
 
   const {
     sendJsonMessage: sendMessage,
@@ -33,6 +36,7 @@ function SocketProvider({ children, roomName }) {
       console.log(`WebSocket connection to room ${roomName} opened`),
     shouldReconnect: () => true,
     onError: () => setError(`Room ${roomName} does not exist.`),
+    retryOnError: false,
   });
 
   useEffect(() => {

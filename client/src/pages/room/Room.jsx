@@ -4,7 +4,7 @@ import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
 
 function Room() {
-  const { error, lastMessage, roomName } = useSocket("users");
+  const { error, lastMessage, roomName, sendMessage } = useSocket("users");
   const classes = useStyles();
 
   useEffect(() => {
@@ -27,13 +27,6 @@ function Room() {
                   (user) => user && <p key={user.id}>{user.name}</p>
                 )}
             </div>
-            Inactive Users
-            <div className={classes.box}>
-              {lastMessage.inactives &&
-                lastMessage.inactives.map(
-                  (user) => user && <p key={user.id}>{user.name}</p>
-                )}
-            </div>
             Spectators
             <div className={classes.box}>
               {lastMessage.spectators &&
@@ -41,6 +34,27 @@ function Room() {
                   (user) => user && <p key={user.id}>{user.name}</p>
                 )}
             </div>
+            Inactive Users
+            <div className={classes.box}>
+              {lastMessage.inactives &&
+                lastMessage.inactives.map(
+                  (user) => user && <p key={user.id}>{user.name}</p>
+                )}
+            </div>
+            <button
+              type="button"
+              className={classes.box}
+              onClick={() => sendMessage && sendMessage({ type: "spectate" })}
+            >
+              Spectate
+            </button>
+            <button
+              type="button"
+              className={classes.box}
+              onClick={() => sendMessage && sendMessage({ type: "unspectate" })}
+            >
+              Unspectate
+            </button>
           </>
         )}
       </div>
