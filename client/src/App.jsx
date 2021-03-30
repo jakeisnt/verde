@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
 import theme from "./theme";
-import { Home, Room, Join, Profile } from "./pages";
+import { Home, Room, Join, Profile, About } from "./pages";
 import { UserProvider } from "./context/userContext";
 
 function App() {
@@ -19,6 +19,9 @@ function App() {
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route path="/about">
+                <About />
               </Route>
               <Route path="/">
                 <Home />

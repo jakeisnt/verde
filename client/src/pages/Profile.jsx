@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useUser } from "../context/userContext";
 import useStyles from "./styles";
+import BackButton from "../components/BackButton";
 
 function Profile() {
   const [name, setName] = useState("");
@@ -9,6 +10,7 @@ function Profile() {
 
   return (
     <div className={classes.home}>
+      <BackButton />
       <h1>Profile</h1>
       <p>Current User ID: {user && user.id}</p>
       <p>Current User Name: {user && user.name}</p>

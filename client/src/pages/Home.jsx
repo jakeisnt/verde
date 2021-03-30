@@ -19,6 +19,8 @@ function Home() {
 
   return (
     <div className={classes.home}>
+      <h1 className={classes.title}>Fun Game</h1>
+      <img alt="add logo here" className={classes.fakePic} />
       <button type="button" className={classes.box} onClick={createRoom}>
         Create Room
       </button>
@@ -35,6 +37,13 @@ function Home() {
         onClick={() => history.push("/profile")}
       >
         Profile
+      </button>
+      <button
+        type="button"
+        className={classes.box}
+        onClick={() => history.push("/about")}
+      >
+        About
       </button>
     </div>
   );

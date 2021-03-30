@@ -3,6 +3,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useEffect, useState, useMemo } from "react";
 import { useUser } from "../context/userContext";
 import useStyles from "./styles";
+import BackButton from "../components/BackButton";
 
 function Room() {
   const [error, setError] = useState(null);
@@ -42,6 +43,7 @@ function Room() {
 
   return (
     <div className={classes.room}>
+      <BackButton text="Exit" />
       <div className={classes.box}>
         {error || (room && `This is room ${room.name}.`)}
       </div>
