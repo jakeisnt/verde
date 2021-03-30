@@ -58,12 +58,7 @@ function makeRoomSocket(name) {
   wss.on("connection", (ws, request, client) => {
     const { userId } = querystring.parse(url.parse(request.url).query);
 
-    try {
-      socketActions.connect(wss, null, { roomName: name, userId });
-    } catch (error) {
-      ws.send(JSON.stringify({ error: error.message }));
-      return ws.terminate();
-    }
+    socketActions.connect(wss, null, { roomName: name, userId });
 
     ws.userId = userId;
     ws.isAlive = true;
@@ -74,11 +69,7 @@ function makeRoomSocket(name) {
 
     ws.on("close", () => {
       console.log(`User with id ${userId} left room ${name}.`);
-      try {
-        socketActions.disconnect(wss, null, { roomName: name, userId });
-      } catch (error) {
-        console.log(`disconnect failed with error: ${error.message}`);
-      }
+      socketActions.disconnect(wss, null, { roomName: name, userId });
     });
 
     ws.on("message", (msg) => {
