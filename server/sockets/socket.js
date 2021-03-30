@@ -7,14 +7,6 @@ const rooms = require("../engine/rooms");
 
 const socketServers = {};
 
-// WebSocket status indicators
-const Status = {
-  CONNECTING: 0,
-  OPEN: 1,
-  CLOSING: 2,
-  CLOSED: 3,
-};
-
 function isJSON(str) {
   try {
     JSON.parse(str);
@@ -24,31 +16,9 @@ function isJSON(str) {
   return true;
 }
 
-/*
- * On every connection:
- * - See if an existing connection with that user id already exists
- *   - if it's live, add that connection to the list of connection that user has
- *   - if it's dead, move the user to being live, add a connection, and notify the room
- *
- * On every disconnect:
- * - Find the user who had that connection
- * - Remove the connection from the user
- * - If the user has no more connections:
- *   - Move the user to a 'disconnected' array
- *   - Notify every client of this disconnect
- */
-
 const PING_INTERVAL = 10000;
 
 const MAX_INACTIVE_PINGS = 2;
-
-function broadcast(ws, message, roomName, userId) {
-  ws.clients.forEach((cli) => {
-    if (cli.readyState === ws.OPEN) {
-      cli.send(JSON.stringify(socketActions[message.type](message, name)));
-    }
-  });
-}
 
 // Given a room name, make a socket for the room and add listeners.
 function makeRoomSocket(name) {
@@ -60,6 +30,7 @@ function makeRoomSocket(name) {
 
     socketActions.connect(wss, null, { roomName: name, userId });
 
+    /* eslint-disable no-param-reassign */
     ws.userId = userId;
     ws.isAlive = true;
     ws.on("pong", () => {
@@ -89,11 +60,11 @@ function makeRoomSocket(name) {
     });
   });
 
-  var inactivePings = 0;
+  let inactivePings = 0;
 
   wss.interval = setInterval(() => {
     console.log(`Pinging clients of room ${name}...`);
-    var hasActive = false;
+    let hasActive = false;
     wss.clients.forEach((ws) => {
       if (ws.isAlive === false) {
         console.log(`User with id ${ws.userId} dropped from room ${name}.`);
@@ -101,13 +72,13 @@ function makeRoomSocket(name) {
       }
       hasActive = true;
       ws.isAlive = false;
-      ws.ping(() => {});
+      return ws.ping(() => {});
     });
     if (hasActive) {
       inactivePings = 0;
     } else {
       console.log(`Room ${name} has no active users.`);
-      inactivePings++;
+      inactivePings += 1;
     }
     if (inactivePings >= MAX_INACTIVE_PINGS) {
       console.log(`Room ${name} has had no active users for too long.`);
@@ -117,7 +88,7 @@ function makeRoomSocket(name) {
 
   wss.on("close", () => {
     console.log(`Closing WebSocket server for room ${name}.`);
-    clearInterval(wss.interval);
+    return clearInterval(wss.interval);
   });
 
   return wss;

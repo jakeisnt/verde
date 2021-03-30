@@ -16,12 +16,12 @@ function initUser(userId) {
   return { userId, numConnections: 1 };
 }
 
-function getUserIds(users) {
-  return users.map(({ userId }) => userId);
+function getUserIds(userss) {
+  return userss.map(({ userId }) => userId);
 }
 
-function removeUser(users, userId) {
-  return users.filter(({ userId: id }) => id !== userId);
+function removeUser(userss, userId) {
+  return userss.filter(({ userId: id }) => id !== userId);
 }
 
 function matchUserId(id) {
@@ -95,7 +95,7 @@ class Rooms {
     const activeIndex = room.users.findIndex(matchUserId(userId));
     if (activeIndex >= 0) {
       room.users[activeIndex].numConnections -= 1;
-      if (room.users[activeIndex].numConnections == 0) {
+      if (room.users[activeIndex].numConnections === 0) {
         // If user is active, make them inactive
         room.users.splice(activeIndex, 1);
         room.inactives.push(userId);
