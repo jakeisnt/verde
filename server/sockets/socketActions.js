@@ -23,7 +23,7 @@ function broadcast(wss, message) {
 }
 
 function updateUsers(wss, message, { roomName }) {
-  broadcast(wss, rooms.getUsers(roomName));
+  broadcast(wss, { type: "users", payload: rooms.getUsers(roomName) });
 }
 
 function connect(wss, message, { roomName, userId }) {
