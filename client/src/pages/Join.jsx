@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
 
+import BackButton from "../components/BackButton";
+
 function Join() {
   const [name, setName] = useState("");
   const history = useHistory();
@@ -9,6 +11,7 @@ function Join() {
 
   return (
     <div className={classes.home}>
+      <BackButton />
       <input
         type="text"
         className={classes.box}

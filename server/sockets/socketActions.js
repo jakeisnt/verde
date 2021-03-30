@@ -23,7 +23,7 @@ function broadcast(wss, message) {
 }
 
 function updateUsers(wss, message, { roomName }) {
-  broadcast(wss, { users: rooms.getUsers(roomName) });
+  broadcast(wss, { type: "users", payload: rooms.getUsers(roomName) });
 }
 
 function connect(wss, message, { roomName, userId }) {
@@ -53,21 +53,5 @@ const socketActions = {
   spectate,
   unspectate,
 };
-
-function socketAction() {}
-
-// const socketActions = {
-//   // "update-users": (message, roomName, userId) =>
-//   //   rooms.joinRoom(roomName, userId),
-
-//   // special: called only when a client connects
-//   connect: (message, roomName, userId) => rooms.joinRoom(roomName, userId),
-//   // special: called only when a client disconnects
-//   disconnect: (message, roomName, userId) => rooms.leaveRoom(roomName, userId),
-
-//   "update-users": (message, roomName, userId) => ({
-//     users: rooms.getUsers(roomName),
-//   }),
-// };
 
 module.exports = socketActions;

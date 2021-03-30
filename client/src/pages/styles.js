@@ -7,6 +7,7 @@ export default createUseStyles((theme) => ({
     flexDirection: "column",
     maxWidth: "50%",
     margin: "auto",
+    marginTop: "2em",
   },
   room: {
     display: "flex",
@@ -14,6 +15,7 @@ export default createUseStyles((theme) => ({
     flexDirection: "column",
     maxWidth: "50%",
     margin: "auto",
+    marginTop: "2em",
   },
   profile: {
     display: "flex",
@@ -21,6 +23,15 @@ export default createUseStyles((theme) => ({
     flexDirection: "column",
     maxWidth: "50%",
     margin: "auto",
+    marginTop: "2em",
+  },
+  about: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    maxWidth: "50%",
+    margin: "auto",
+    marginTop: "2em",
   },
   box: {
     padding: "1em",
@@ -36,5 +47,17 @@ export default createUseStyles((theme) => ({
     textAlign: "center",
     border: `2px solid ${theme.red}`,
     backgroundColor: theme.white,
+  },
+  title: {
+    fontSize: "4em",
+    textAlign: "center",
+  },
+  fakePic: {
+    border: `2px solid ${theme.black}`,
+    width: "25vw",
+    height: "25vh",
+    textAlign: "center",
+    margin: "auto",
+    marginBottom: "2em",
   },
 }));

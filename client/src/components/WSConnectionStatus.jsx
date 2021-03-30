@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ReadyState } from "react-use-websocket";
 import { createUseStyles } from "react-jss";
 import RippleLoader from "./RippleLoader";
+import { useSocket } from "../context/socketContext";
 
 const Status = {
   ERR: "error",
@@ -48,7 +49,8 @@ const connStyles = createUseStyles((theme) => ({
 }));
 
 /** Status message to display if websocket connections aren't working out. */
-function WSConnectionStatus({ state, onBannerClick = () => null }) {
+function WSConnectionStatus({ onBannerClick = () => null }) {
+  const { socketState: state } = useSocket();
   const status = connectionStatus[state];
   const classes = connStyles({ status });
   const [open, setOpen] = useState(false);
