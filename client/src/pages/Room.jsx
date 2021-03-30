@@ -5,6 +5,7 @@ import { useUser, getUser } from "../context/userContext";
 import useStyles from "./styles";
 import BackButton from "../components/BackButton";
 import WSConnectionStatus from "../components/WSConnectionStatus";
+import BackButton from "../components/BackButton";
 
 function makeUrl(room, userId) {
   return `ws://localhost:4000/?${new URLSearchParams({ room, userId })}`;
@@ -89,10 +90,6 @@ function Room() {
           {inactives &&
             inactives.map((user) => user && <p key={user.id}>{user.name}</p>)}
         </div>
-        {/* NOTE: Navigating away in any form should implicitly leave the room. */}
-        <button type="button" className={classes.box}>
-          Leave Room
-        </button>
       </div>
       <WSConnectionStatus state={readyState} />
     </>
