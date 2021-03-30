@@ -23,7 +23,7 @@ function broadcast(wss, message) {
 }
 
 function updateUsers(wss, message, { roomName }) {
-  broadcast(wss, rooms.getUsers(roomName));
+  broadcast(wss, { users: rooms.getUsers(roomName) });
 }
 
 function connect(wss, message, { roomName, userId }) {
@@ -36,11 +36,25 @@ function disconnect(wss, message, { roomName, userId }) {
   updateUsers(wss, message, { roomName });
 }
 
+function spectate(wss, message, { roomName, userId }) {
+  rooms.setStatus(roomName, userId, true);
+  updateUsers(wss, message, { roomName });
+}
+
+function unspectate(wss, message, { roomName, userId }) {
+  rooms.setStatus(roomName, userId, false);
+  updateUsers(wss, message, { roomName });
+}
+
 const socketActions = {
   connect,
   disconnect,
   updateUsers,
+  spectate,
+  unspectate,
 };
+
+function socketAction() {}
 
 // const socketActions = {
 //   // "update-users": (message, roomName, userId) =>

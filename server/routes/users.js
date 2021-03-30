@@ -15,21 +15,19 @@ router.get("/new", (req, res, next) => {
 
 /* GET existing user. */
 router.get("/get", (req, res, next) => {
-  const user = users.getUser(req.query.id);
-  if (user === null) {
-    res.status(404).send("user not found");
-  } else {
-    res.json(user);
+  try {
+    res.json(users.getUser(req.query.id));
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 });
 
 /* PUT user name. */
 router.put("/setName", (req, res, next) => {
-  const user = users.setName(req.query.id, req.query.name);
-  if (user === null) {
-    res.status(404).send("user not found");
-  } else {
-    res.json(user);
+  try {
+    res.json(users.setName(req.query.id, req.query.name));
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 });
 

@@ -42,10 +42,10 @@ const PING_INTERVAL = 10000;
 
 const MAX_INACTIVE_PINGS = 2;
 
-function broadcast(ws, message, roomName, userId) {
-  ws.clients.forEach((cli) => {
-    if (cli.readyState === ws.OPEN) {
-      cli.send(JSON.stringify(socketActions[message.type](message, name)));
+function broadcast(wss, message) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
     }
   });
 }
@@ -58,7 +58,12 @@ function makeRoomSocket(name) {
   wss.on("connection", (ws, request, client) => {
     const { userId } = querystring.parse(url.parse(request.url).query);
 
-    socketActions.connect(wss, null, { roomName: name, userId });
+    try {
+      socketActions.connect(wss, null, { roomName: name, userId });
+    } catch (error) {
+      ws.send(JSON.stringify({ error: error.message }));
+      return ws.terminate();
+    }
 
     ws.userId = userId;
     ws.isAlive = true;
@@ -69,21 +74,31 @@ function makeRoomSocket(name) {
 
     ws.on("close", () => {
       console.log(`User with id ${userId} left room ${name}.`);
-      socketActions.disconnect(wss, null, { roomName: name, userId });
+      try {
+        socketActions.disconnect(wss, null, { roomName: name, userId });
+      } catch (error) {
+        console.log(`disconnect failed with error: ${error.message}`);
+      }
     });
 
     ws.on("message", (msg) => {
       if (isJSON(msg)) {
         const message = JSON.parse(msg);
         const args = { roomName: name, userId };
-        if (message.type && message.type in socketActions) {
-          console.log(
-            `Sending socket message associated with type "${message.type}"`
-          );
-          socketActions[message.type](wss, message, args);
+        const type = message.type;
+        if (type && type in socketActions) {
+          console.log(`Sending socket message associated with type "${type}"`);
+          try {
+            socketActions[type](wss, message, args);
+          } catch (error) {
+            console.log(
+              `socket action ${type} failed with error: ${error.message}`
+            );
+          }
         } else {
-          console.log(`"${message.type}" is not a valid socket message type.`);
+          console.log(`"${type}" is not a valid socket message type.`);
         }
+      } else {
         console.log(`${msg} is not valid JSON.`);
       }
     });
@@ -126,6 +141,13 @@ function makeRoomSocket(name) {
 // Called when an HTTP request is elevated to a WebSocket connection.
 function onUpgrade(request, socket, head) {
   const { room, userId } = querystring.parse(url.parse(request.url).query);
+
+  try {
+    rooms.getRoom(room);
+  } catch (error) {
+    socket.on("error", (err) => console.log(JSON.stringify(err)));
+    return socket.destroy(error.message);
+  }
 
   if (!socketServers[room]) {
     socketServers[room] = makeRoomSocket(room);

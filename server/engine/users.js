@@ -34,7 +34,8 @@ class Users {
   }
 
   getUser(id) {
-    return id in this.users ? this.users[id] : null;
+    if (id in this.users) return this.users[id];
+    throw new Error(`user does not exist with id ${id}`);
   }
 
   setName(id, name) {
@@ -42,7 +43,7 @@ class Users {
       this.users[id].name = name;
       return this.users[id];
     }
-    return null;
+    throw new Error(`user does not exist with id ${id}`);
   }
 }
 

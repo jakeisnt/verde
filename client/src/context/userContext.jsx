@@ -16,7 +16,7 @@ function getUser() {
     return fetch(`/users/new`)
       .then((res) => res.json())
       .then((res) => {
-        cookies.set("userId", res.id, { sameSite: true, maxAge: 86400 });
+        cookies.set("userId", res.id, { sameSite: "lax", maxAge: 86400 });
         return res;
       });
   }

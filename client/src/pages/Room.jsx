@@ -14,28 +14,10 @@ function Room() {
   const { name: roomName } = useParams();
   // const { user: myUser } = useUser();
   const [room, setRoom] = useState(null);
-  const [users, setUsers] = useState(null);
+  const [actives, setActives] = useState(null);
   const [inactives, setInactives] = useState(null);
+  const [spectators, setSpectators] = useState(null);
   const classes = useStyles();
-
-  // const getSocketUrl = useCallback(
-  //   (timeout = 10000) => {
-  //     if (!myUser) return null;
-  //     const delay = 1000;
-  //     return new Promise((resolve, reject) => {
-  //       const start = Date.now();
-  //       (function waitForUser() {
-  //         console.log(`myUser: ${JSON.stringify(myUser)}`);
-  //         if (myUser) {
-  //           resolve(makeUrl(roomName, myUser.id));
-  //         } else if (timeout && Date.now() - start >= timeout)
-  //           reject(new Error("User lookup timed out"));
-  //         else setTimeout(waitForUser, delay);
-  //       })();
-  //     });
-  //   },
-  //   [myUser, roomName]
-  // );
 
   const getSocketUrl = useMemo(
     () => getUser().then((user) => makeUrl(roomName, user.id)),
@@ -51,25 +33,19 @@ function Room() {
     onOpen: () =>
       console.log(`WebSocket connection to room ${roomName} opened`),
     shouldReconnect: () => true,
+    onError: () => setError(`Room ${roomName} does not exist.`),
   });
 
   useEffect(() => {
-    if (lastJsonMessage && setUsers) {
+    if (lastJsonMessage) {
       console.log(`lastJsonMessage: ${JSON.stringify(lastJsonMessage)}`);
       if ("users" in lastJsonMessage) {
-        setUsers(lastJsonMessage.users);
-      }
-      if ("inactives" in lastJsonMessage) {
-        setInactives(lastJsonMessage.inactives);
+        setActives(lastJsonMessage.users.actives);
+        setInactives(lastJsonMessage.users.inactives);
+        setSpectators(lastJsonMessage.users.spectators);
       }
     }
-  }, [lastJsonMessage, setUsers, setInactives]);
-
-  // useEffect(() => {
-  //   if (readyState == ReadyState.OPEN && sendJsonMessage) {
-  //     sendJsonMessage({ type: "updateUsers" });
-  //   }
-  // }, [readyState, sendJsonMessage]);
+  }, [lastJsonMessage, setActives, setInactives, setSpectators]);
 
   return (
     <>
@@ -77,22 +53,53 @@ function Room() {
         <div className={classes.box}>
           {error || (room && `This is room ${room.name}.`)}
         </div>
-        Active Users
-        <div className={classes.box}>
-          {users &&
-            users.map((user) => user && <p key={user.id}>{user.name}</p>)}
-        </div>
-        Inactive Users
-        <div className={classes.box}>
-          {inactives &&
-            inactives.map((user) => user && <p key={user.id}>{user.name}</p>)}
-        </div>
-        {/* NOTE: Navigating away in any form should implicitly leave the room. */}
-        <button type="button" className={classes.box}>
-          Leave Room
-        </button>
+        {!error && (
+          <div>
+            Active Users
+            <div className={classes.box}>
+              {actives &&
+                actives.map((user) => user && <p key={user.id}>{user.name}</p>)}
+            </div>
+            Inactive Users
+            <div className={classes.box}>
+              {inactives &&
+                inactives.map(
+                  (user) => user && <p key={user.id}>{user.name}</p>
+                )}
+            </div>
+            Spectators
+            <div className={classes.box}>
+              {spectators &&
+                spectators.map(
+                  (user) => user && <p key={user.id}>{user.name}</p>
+                )}
+            </div>
+            {/* NOTE: Navigating away in any form should implicitly leave the room. */}
+            <button
+              type="button"
+              className={classes.box}
+              onClick={() =>
+                sendJsonMessage && sendJsonMessage({ type: "spectate" })
+              }
+            >
+              Spectate
+            </button>
+            <button
+              type="button"
+              className={classes.box}
+              onClick={() =>
+                sendJsonMessage && sendJsonMessage({ type: "unspectate" })
+              }
+            >
+              Unspectate
+            </button>
+            <button type="button" className={classes.box}>
+              Leave Room
+            </button>
+            <WSConnectionStatus state={readyState} />
+          </div>
+        )}
       </div>
-      <WSConnectionStatus state={readyState} />
     </>
   );
 }
