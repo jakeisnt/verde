@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import useStyles from "../styles";
 import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
+import UserList from "./UserList";
 
 function Room() {
   const { error, lastMessage, roomName, sendMessage } = useSocket("users");
+  const { user: me } = useUser();
   const classes = useStyles();
   const [room, setRoom] = useState(null);
   const [roomError, setRoomError] = useState(null);
@@ -23,6 +25,18 @@ function Room() {
     console.log(JSON.stringify(lastMessage));
   }, [lastMessage]);
 
+  // This might be better served in some sort of global state solution (a provider?),
+  // but to avoid redundant computation it's best to handle here for now.
+  const userIsMod = useMemo(
+    () =>
+      me &&
+      lastMessage &&
+      me.id &&
+      lastMessage.players &&
+      lastMessage.players[0].id === me.id,
+    [user, lastMessage]
+  );
+
   return (
     <>
       <div className={classes.room}>
@@ -32,28 +46,25 @@ function Room() {
         </div>
         {!roomError && !error && lastMessage && (
           <>
-            Players ({lastMessage.players && lastMessage.players.length}/
-            {room && (room.capacity >= 0 ? room.capacity : "∞")})
-            <div className={classes.box}>
-              {lastMessage.players &&
-                lastMessage.players.map(
-                  (user) => user && <p key={user.id}>{user.name}</p>
-                )}
-            </div>
-            Spectators
-            <div className={classes.box}>
-              {lastMessage.spectators &&
-                lastMessage.spectators.map(
-                  (user) => user && <p key={user.id}>{user.name}</p>
-                )}
-            </div>
-            Inactive Users
-            <div className={classes.box}>
-              {lastMessage.inactives &&
-                lastMessage.inactives.map(
-                  (user) => user && <p key={user.id}>{user.name}</p>
-                )}
-            </div>
+            <UserList
+              users={lastMessage.players}
+              title="Players"
+              capacity={room && room.capacity}
+              userIsMod={userIsMod}
+              myId={me.id}
+            />
+            <UserList
+              users={lastMessage.spectators}
+              title="Spectators"
+              userIsMod={userIsMod}
+              myId={me.id}
+            />
+            <UserList
+              users={lastMessage.inactives}
+              title="Inactive Users"
+              userIsMod={userIsMod}
+              myId={me.id}
+            />
             <button
               type="button"
               className={classes.box}
