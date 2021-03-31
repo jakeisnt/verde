@@ -1,6 +1,6 @@
 /** Bijective hash on 32-bit ints */
-function hash(x) {
-  let h = x;
+function hashInt32(x) {
+  let h = x | 0;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = (h >> 16) ^ h;
@@ -10,13 +10,11 @@ function hash(x) {
 const idLen = 9;
 
 class Users {
-  constructor() {
-    this.count = Math.floor(Math.random() * 9001) | 0;
-    this.users = {};
-  }
+  static count = Math.floor(Math.random() * 9001) | 0;
+  static users = {};
 
-  nextId() {
-    let h = hash(this.count);
+  static nextId() {
+    let h = hashInt32(this.count);
     const id = [];
     for (let i = 0; i < idLen; i += 1) {
       id.push(`${h % 10}`);
@@ -26,27 +24,25 @@ class Users {
     return id.join("");
   }
 
-  createUser() {
+  static createUser() {
     const id = this.nextId();
     const user = { id, name: `user${id}` };
     this.users[id] = user;
     return user;
   }
 
-  getUser(id) {
+  static getUser(id) {
     if (id in this.users) return this.users[id];
-    throw new Error(`user ${id} does not exist`);
+    return undefined;
   }
 
-  setName(id, name) {
+  static setName(id, name) {
     if (id in this.users) {
       this.users[id].name = name;
       return this.users[id];
     }
-    throw new Error(`user ${id} does not exist`);
+    return undefined;
   }
 }
 
-const users = new Users();
-
-module.exports = users;
+module.exports = Users;

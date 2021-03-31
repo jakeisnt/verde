@@ -27,11 +27,11 @@ function Room() {
         </div>
         {!error && lastMessage && (
           <>
-            Active Users ({lastMessage.actives && lastMessage.actives.length}/
+            Players ({lastMessage.players && lastMessage.players.length}/
             {room && (room.capacity >= 0 ? room.capacity : "∞")})
             <div className={classes.box}>
-              {lastMessage.actives &&
-                lastMessage.actives.map(
+              {lastMessage.players &&
+                lastMessage.players.map(
                   (user) => user && <p key={user.id}>{user.name}</p>
                 )}
             </div>

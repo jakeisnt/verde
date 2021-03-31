@@ -1,9 +1,10 @@
 /* All of the machinery required to work our websockets. */
+
 const WebSocket = require("ws");
 const url = require("url");
 const querystring = require("querystring");
 const socketActions = require("./socketActions");
-const rooms = require("../engine/rooms");
+const Rooms = require("../engine/rooms");
 
 const socketServers = {};
 
@@ -51,11 +52,7 @@ function makeRoomSocket(name) {
           console.log(
             `Sending socket message associated with type "${message.type}"`
           );
-          try {
-            socketActions[message.type](wss, message, args);
-          } catch (error) {
-            console.log(`Socket action ${msg} failed with error: ${error}`);
-          }
+          socketActions[message.type](wss, message, args);
         } else {
           console.log(`"${message.type}" is not a valid socket message type.`);
         }
@@ -103,11 +100,9 @@ function makeRoomSocket(name) {
 function onUpgrade(request, socket, head) {
   const { room, userId } = querystring.parse(url.parse(request.url).query);
 
-  try {
-    rooms.getRoom(room);
-  } catch (error) {
+  if (!Rooms.getRoom(room)) {
     socket.on("error", (err) => console.log(JSON.stringify(err)));
-    return socket.destroy(error.message);
+    return socket.destroy({ error: `Room ${room} not found` });
   }
 
   if (!socketServers[room]) {

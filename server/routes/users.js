@@ -1,5 +1,5 @@
 const express = require("express");
-const users = require("../engine/users");
+const Users = require("../engine/users");
 
 const router = express.Router();
 
@@ -10,25 +10,21 @@ router.get("/", (req, res) => {
 
 /* GET new user. */
 router.get("/new", (req, res, next) => {
-  res.json(users.createUser());
+  res.json(Users.createUser());
 });
 
 /* GET existing user. */
 router.get("/get", (req, res, next) => {
-  try {
-    res.json(users.getUser(req.query.id));
-  } catch (error) {
-    res.status(404).send(error.message);
-  }
+  const user = Users.getUser(req.query.id);
+  if (user) return res.json(user);
+  res.status(404).send(`User ${req.query.id} not found`);
 });
 
 /* PUT user name. */
 router.put("/setName", (req, res, next) => {
-  try {
-    res.json(users.setName(req.query.id, req.query.name));
-  } catch (error) {
-    res.status(404).send(error.message);
-  }
+  const user = Users.setName(req.query.id, req.query.name);
+  if (user) return res.json(user);
+  res.status(404).send(`User ${req.query.id} not found`);
 });
 
 module.exports = router;

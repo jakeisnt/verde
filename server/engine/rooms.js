@@ -1,9 +1,8 @@
-const users = require("./users");
-const assert = require("assert");
+const Users = require("./users");
 
 /** Bijective hash on 32-bit ints */
-function hash(x) {
-  let h = x;
+function hashInt32(x) {
+  let h = x | 0;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = (h >> 16) ^ h;
@@ -12,133 +11,108 @@ function hash(x) {
 
 const nameLen = 4;
 
-const UserStatus = {
-  INACTIVE: 0,
-  ACTIVE: 1,
-  SPECTATING: 2,
-};
-
-function matchUserId(id) {
-  return ({ userId }) => userId === id;
+class RoomUser {
+  constructor(id, spectate = false) {
+    this.id = id;
+    this.present = true;
+    this.spectate = spectate;
+    this.count = 1;
+  }
 }
 
 class Room {
   constructor(name, capacity = -1) {
     this.name = name;
     this.capacity = capacity;
-    this.locked = false;
-    this.numActive = 0;
     this.users = [];
+    this.numPlayers = 0;
+    this.locked = false;
   }
 
-  canJoinActive() {
+  canJoinAsPlayer() {
     if (this.locked) return false;
-    return this.capacity < 0 || this.numActive < this.capacity;
+    return this.capacity < 0 || this.numPlayers < this.capacity;
   }
 
   join(userId) {
-    users.getUser(userId);
+    const index = this.users.findIndex(({ id }) => id === userId);
+    const user = index >= 0 ? this.users[index] : new RoomUser(userId);
 
-    const index = this.users.findIndex(matchUserId(userId));
-    if (index >= 0 && this.users[index].status !== UserStatus.INACTIVE) {
-      // If user is not inactive, just increase its connection count
-      this.users[index].count += 1;
+    if (index >= 0 && user.present) {
+      user.count += 1;
     } else {
-      // If user is inactive or not present, move or push it to the back
-      if (index >= 0) {
-        this.users.splice(index, 1);
-      }
-      if (this.canJoinActive()) {
-        this.users.push({ userId, count: 1, status: UserStatus.ACTIVE });
-        this.numActive += 1;
+      if (index >= 0) this.users.splice(index, 1);
+      user.present = true;
+      if (this.canJoinAsPlayer()) {
+        if (!user.spectate) this.numPlayers += 1;
       } else {
-        this.users.push({ userId, count: 1, status: UserStatus.SPECTATING });
+        user.spectate = true;
       }
+      this.users.push(user);
     }
-  }
 
-  setStatus(userId, spectate) {
-    users.getUser(userId);
-
-    const index = this.users.findIndex(matchUserId(userId));
-    if (index < 0) {
-      throw new Error(`user ${userId} not in room ${this.name}`);
-    }
-    if (this.users[index].status === UserStatus.INACTIVE) {
-      throw new Error(`user ${userId} inactive in room ${this.name}`);
-    }
-    if (spectate) {
-      if (this.users[index].status == UserStatus.ACTIVE) {
-        this.users[index].status = UserStatus.SPECTATING;
-        this.numActive -= 1;
-      }
-    } else if (this.canJoinActive()) {
-      if (this.users[index].status == UserStatus.SPECTATING) {
-        this.users[index].status = UserStatus.ACTIVE;
-        this.users.push(this.users.splice(index, 1)[0]);
-        this.numActive += 1;
-      }
-    }
+    return user;
   }
 
   leave(userId) {
-    users.getUser(userId);
+    const index = this.users.findIndex(({ id }) => id === userId);
+    if (index < 0) return undefined;
+    const user = this.users[index];
+    if (!user.present) return undefined;
 
-    const index = this.users.findIndex(matchUserId(userId));
-    if (index >= 0) {
-      if (this.users[index].status === UserStatus.INACTIVE) {
-        throw new Error(`inactive user ${userId} leaving room ${this.name}`);
-      }
-      assert(this.users[index].count > 0); // Can't happen even with bad call
-      this.users[index].count -= 1;
-      if (this.users[index].count === 0) {
-        // User actually leaves room when connection count drops to zero
-        if (this.users[index].status === UserStatus.ACTIVE) {
-          this.numActive -= 1;
-        }
-        this.users[index].status = UserStatus.INACTIVE;
-      }
-    } else {
-      throw new Error(`user ${userId} not in room ${this.name}`);
+    user.count -= 1;
+    if (user.count == 0) {
+      if (!user.spectate) this.numPlayers -= 1;
+      user.present = false;
     }
+
+    return user;
+  }
+
+  setSpectate(userId, spectate) {
+    const index = this.users.findIndex(({ id }) => id === userId);
+    if (index < 0) return undefined;
+    const user = this.users[index];
+    if (!user.present) return undefined;
+
+    if (spectate) {
+      if (!user.spectate) {
+        user.spectate = true;
+        this.numPlayers -= 1;
+      }
+    } else if (this.canJoinAsPlayer()) {
+      if (user.spectate) {
+        user.spectate = false;
+        this.users.splice(index, 1);
+        this.users.push(user);
+        this.numPlayers += 1;
+      }
+    }
+
+    return user;
   }
 
   getUsers() {
-    const userLists = {
-      actives: [],
-      inactives: [],
-      spectators: [],
-    };
-    this.users.forEach(({ userId, status }) => {
-      try {
-        const user = users.getUser(userId);
-        switch (status) {
-          case UserStatus.ACTIVE:
-            userLists.actives.push(user);
-            break;
-          case UserStatus.INACTIVE:
-            userLists.inactives.push(user);
-            break;
-          case UserStatus.SPECTATING:
-            userLists.spectators.push(user);
-            break;
-        }
-      } catch (error) {
-        console.error(`could not retrieve user ${userId}: ${error.message}`);
-      }
+    const players = [];
+    const inactives = [];
+    const spectators = [];
+    this.users.forEach(({ id, present, spectate }) => {
+      const user = Users.getUser(id);
+      if (!user) return;
+      if (!present) return inactives.push(user);
+      if (spectate) return spectators.push(user);
+      players.push(user);
     });
-    return userLists;
+    return { players, inactives, spectators };
   }
 }
 
 class Rooms {
-  constructor() {
-    this.count = Math.floor(Math.random() * 9001) | 0;
-    this.rooms = {};
-  }
+  static count = Math.floor(Math.random() * 9001) | 0;
+  static rooms = {};
 
-  nextName() {
-    let h = hash(this.count);
+  static nextName() {
+    let h = hashInt32(this.count);
     const name = [];
     for (let i = 0; i < nameLen; i += 1) {
       name.push(String.fromCharCode("A".charCodeAt(0) + (h % 26)));
@@ -148,36 +122,32 @@ class Rooms {
     return name.join("");
   }
 
-  createRoom(userId, capacity = -1) {
-    users.getUser(userId);
+  static createRoom(userId, capacity = -1) {
     const name = this.nextName();
     const room = new Room(name, capacity);
     this.rooms[name] = room;
     return room;
   }
 
-  getRoom(name) {
-    if (name in this.rooms) return this.rooms[name];
-    throw new Error(`room ${name} does not exist`);
+  static getRoom(name) {
+    return this.rooms[name];
   }
 
-  joinRoom(name, userId) {
-    this.getRoom(name).join(userId);
+  static joinRoom(name, userId) {
+    return this.getRoom(name)?.join(userId);
   }
 
-  setStatus(name, userId, spectate) {
-    this.getRoom(name).setStatus(userId, spectate);
+  static leaveRoom(name, userId) {
+    return this.getRoom(name)?.leave(userId);
   }
 
-  leaveRoom(name, userId) {
-    this.getRoom(name).leave(userId);
+  static setSpectate(name, userId, spectate) {
+    return this.getRoom(name)?.setSpectate(userId, spectate);
   }
 
-  getUsers(name) {
-    return this.getRoom(name).getUsers();
+  static getUsers(name) {
+    return this.getRoom(name)?.getUsers();
   }
 }
 
-const rooms = new Rooms();
-
-module.exports = rooms;
+module.exports = Rooms;
