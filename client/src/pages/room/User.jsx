@@ -1,35 +1,49 @@
+import PropTypes from "prop-types";
 import { useSocket } from "../../context/socketContext";
 
-function User({ id, name, myId, userIsMod }) {
+function User({ name, userId, myId, userIsMod }) {
   const { sendMessage } = useSocket();
 
   return (
     <div
-      key={`userBox-${id}`}
-      style={
-        userIsMod && {
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }
-      }
+      key={`userBox-${userId}`}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
     >
-      <p key={id}>{name}</p>
-      {userIsMod && (
-        <button
-          onClick={() =>
-            sendMessage &&
-            sendMessage({
-              type: "removeUser",
-              payload: { modId: myId, toRemoveId: id },
-            })
-          }
-        >
-          Remove Me
-        </button>
+      <p key={userId}>{name}</p>
+      {myId !== userId ? (
+        userIsMod && (
+          <button
+            type="submit"
+            onClick={() =>
+              sendMessage &&
+              sendMessage({
+                type: "banUser",
+                payload: { toBanId: userId },
+              })
+            }
+          >
+            Ban
+          </button>
+        )
+      ) : (
+        <>
+          <p>Me</p>
+          {userIsMod && <p>Mod</p>}
+        </>
       )}
     </div>
   );
 }
+
+User.propTypes = {
+  name: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  myId: PropTypes.string.isRequired,
+  userIsMod: PropTypes.bool.isRequired,
+};
 
 export default User;

@@ -16,6 +16,7 @@ class RoomUser {
     this.id = id;
     this.present = true;
     this.spectate = false;
+    this.banned = false;
     this.count = 0;
   }
 }
@@ -29,9 +30,48 @@ class Room {
     this.locked = false;
   }
 
+  getUsers() {
+    const players = [];
+    const inactives = [];
+    const banned = [];
+    const spectators = [];
+    this.users.forEach(({ id, present, spectate, banned }) => {
+      const user = Users.getUser(id);
+      if (user) {
+        if (banned) banned.push(user);
+        else if (!present) inactives.push(user);
+        else if (spectate) spectators.push(user);
+        else players.push(user);
+      }
+    });
+    return { players, inactives, spectators, banned };
+  }
+
   canJoinAsPlayer() {
     if (this.locked) return false;
     return this.capacity < 0 || this.numPlayers < this.capacity;
+  }
+
+  getCurrentPlayers() {
+    return this.users.filter(({ present, spectate }) => present && !spectate);
+  }
+
+  isModerator(userId) {
+    // The moderator is the first added active player.
+    return this.numPlayers > 0 && userId === this.getCurrentPlayers()[0];
+  }
+
+  isBanned(userId) {
+    return this.getUser(userId).banned;
+  }
+
+  getUser(userId) {
+    const index = this.users.findIndex(({ id }) => id === userId);
+    return index >= 0 ? this.users[index] : undefined;
+  }
+
+  getOrMakeUser(userId) {
+    return this.getUser(userId) || new RoomUser(userId);
   }
 
   join(userId) {
@@ -72,6 +112,14 @@ class Room {
     return user;
   }
 
+  ban(bannerId, banneeId) {
+    if (!this.isModerator(bannerId)) return undefined;
+    console.log(`User ${bannerId} is banning ${banneeId}`);
+    const bannedUser = this.users.filter(({ id }) => id === banneeId);
+    bannedUser.banned = true;
+    return bannedUser;
+  }
+
   setSpectate(userId, spectate) {
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
@@ -93,21 +141,6 @@ class Room {
     }
 
     return user;
-  }
-
-  getUsers() {
-    const players = [];
-    const inactives = [];
-    const spectators = [];
-    this.users.forEach(({ id, present, spectate }) => {
-      const user = Users.getUser(id);
-      if (user) {
-        if (!present) inactives.push(user);
-        else if (spectate) spectators.push(user);
-        else players.push(user);
-      }
-    });
-    return { players, inactives, spectators };
   }
 }
 
@@ -156,6 +189,10 @@ class Rooms {
 
   static getUsers(name) {
     return this.getRoom(name)?.getUsers();
+  }
+
+  static banUser(name, userId, toBanId) {
+    return this.getRoom(name)?.ban(userId, toBanId);
   }
 }
 

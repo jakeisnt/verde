@@ -34,6 +34,7 @@ function Room() {
       lastMessage &&
       me.id &&
       lastMessage.players &&
+      lastMessage.players[0] &&
       lastMessage.players[0].id === me.id,
     [me, lastMessage]
   );
