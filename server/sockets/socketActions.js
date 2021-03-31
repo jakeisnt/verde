@@ -12,7 +12,7 @@
  * and the second is the code for the room the message was sent to.
  * */
 const WebSocket = require("ws");
-const rooms = require("../engine/rooms");
+const Rooms = require("../engine/rooms");
 
 function broadcast(wss, message) {
   wss.clients.forEach((client) => {
@@ -23,16 +23,26 @@ function broadcast(wss, message) {
 }
 
 function updateUsers(wss, message, { roomName }) {
-  broadcast(wss, { type: "users", payload: rooms.getUsers(roomName) });
+  broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
 }
 
 function connect(wss, message, { roomName, userId }) {
-  rooms.joinRoom(roomName, userId);
+  Rooms.joinRoom(roomName, userId);
   updateUsers(wss, message, { roomName });
 }
 
 function disconnect(wss, message, { roomName, userId }) {
-  rooms.leaveRoom(roomName, userId);
+  Rooms.leaveRoom(roomName, userId);
+  updateUsers(wss, message, { roomName });
+}
+
+function spectate(wss, message, { roomName, userId }) {
+  Rooms.setSpectate(roomName, userId, true);
+  updateUsers(wss, message, { roomName });
+}
+
+function unspectate(wss, message, { roomName, userId }) {
+  Rooms.setSpectate(roomName, userId, false);
   updateUsers(wss, message, { roomName });
 }
 
@@ -40,20 +50,8 @@ const socketActions = {
   connect,
   disconnect,
   updateUsers,
+  spectate,
+  unspectate,
 };
-
-// const socketActions = {
-//   // "update-users": (message, roomName, userId) =>
-//   //   rooms.joinRoom(roomName, userId),
-
-//   // special: called only when a client connects
-//   connect: (message, roomName, userId) => rooms.joinRoom(roomName, userId),
-//   // special: called only when a client disconnects
-//   disconnect: (message, roomName, userId) => rooms.leaveRoom(roomName, userId),
-
-//   "update-users": (message, roomName, userId) => ({
-//     users: rooms.getUsers(roomName),
-//   }),
-// };
 
 module.exports = socketActions;

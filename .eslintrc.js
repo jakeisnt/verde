@@ -1,9 +1,24 @@
+const path = require("path");
+
 module.exports = {
   settings: {
     "import/resolver": {
       node: {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
+    },
+  },
+  parser: "@babel/eslint-parser",
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
+      experimentalObjectRestSpread: true,
+    },
+    babelOptions: {
+      configFile: path.join(__dirname, "babel.config.json"),
     },
   },
   extends: [
@@ -51,5 +66,7 @@ module.exports = {
 
     // this just doesn't work
     "workspaces/no-absolute-imports": "off",
+
+    "max-classes-per-file": ["error", 3],
   },
 };

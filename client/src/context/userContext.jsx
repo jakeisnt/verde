@@ -16,7 +16,7 @@ function getUser() {
     return fetch(`/users/new`)
       .then((res) => res.json())
       .then((res) => {
-        cookies.set("userId", res.id, { sameSite: true, maxAge: 86400 });
+        cookies.set("userId", res.id, { sameSite: "lax", maxAge: 86400 });
         return res;
       });
   }
@@ -30,6 +30,7 @@ function getUser() {
 }
 
 function UserProvider({ children }) {
+  const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
 
   // Runs once at beginning and whenever user ID cookie is updated
@@ -52,8 +53,14 @@ function UserProvider({ children }) {
     [user]
   );
 
+  useEffect(() => {
+    if (user && user.id !== userId) {
+      setUserId(user.id);
+    }
+  }, [user, userId]);
+
   return (
-    <UserContext.Provider value={{ user, setUserName }}>
+    <UserContext.Provider value={{ userId, user, setUserName }}>
       {children}
     </UserContext.Provider>
   );
@@ -72,4 +79,4 @@ function useUser() {
   return context;
 }
 
-export { getUser, useUser, UserProvider };
+export { useUser, UserProvider };

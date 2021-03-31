@@ -1,9 +1,10 @@
 /* All of the machinery required to work our websockets. */
+
 const WebSocket = require("ws");
 const url = require("url");
 const querystring = require("querystring");
 const socketActions = require("./socketActions");
-const rooms = require("../engine/rooms");
+const Rooms = require("../engine/rooms");
 
 const socketServers = {};
 
@@ -25,7 +26,7 @@ function makeRoomSocket(name) {
   console.log(`Opening WebSocket server for room ${name}.`);
 
   const wss = new WebSocket.Server({ noServer: true });
-  wss.on("connection", (ws, request, client) => {
+  wss.on("connection", (ws, request) => {
     const { userId } = querystring.parse(url.parse(request.url).query);
 
     socketActions.connect(wss, null, { roomName: name, userId });
@@ -55,6 +56,7 @@ function makeRoomSocket(name) {
         } else {
           console.log(`"${message.type}" is not a valid socket message type.`);
         }
+      } else {
         console.log(`${msg} is not valid JSON.`);
       }
     });
@@ -87,7 +89,10 @@ function makeRoomSocket(name) {
   }, PING_INTERVAL);
 
   wss.on("close", () => {
-    console.log(`Closing WebSocket server for room ${name}.`);
+    console.log(`Closing WebSocket server and deleting room ${name}.`);
+    wss.clients.forEach((ws) => ws.terminate());
+    Rooms.deleteRoom(name);
+    delete socketServers[name];
     return clearInterval(wss.interval);
   });
 
@@ -96,7 +101,13 @@ function makeRoomSocket(name) {
 
 // Called when an HTTP request is elevated to a WebSocket connection.
 function onUpgrade(request, socket, head) {
-  const { room, userId } = querystring.parse(url.parse(request.url).query);
+  const { room } = querystring.parse(url.parse(request.url).query);
+
+  if (!Rooms.getRoom(room)) {
+    socket.on("error", (err) => console.log(JSON.stringify(err)));
+    socket.destroy({ error: `Room ${room} not found` });
+    return;
+  }
 
   if (!socketServers[room]) {
     socketServers[room] = makeRoomSocket(room);

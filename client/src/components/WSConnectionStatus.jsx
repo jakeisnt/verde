@@ -49,7 +49,7 @@ const connStyles = createUseStyles((theme) => ({
 }));
 
 /** Status message to display if websocket connections aren't working out. */
-function WSConnectionStatus({ onBannerClick = () => null }) {
+function WSConnectionStatus() {
   const { socketState: state } = useSocket();
   const status = connectionStatus[state];
   const classes = connStyles({ status });

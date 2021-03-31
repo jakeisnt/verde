@@ -1,41 +1,123 @@
-const users = require("./users");
+const Users = require("./users");
 
 /** Bijective hash on 32-bit ints */
-function hash(x) {
-  let h = x;
+function hashInt32(x) {
+  let h = x | 0;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
-  h = (h >> 16) ^ h;
+  h ^= h >> 16;
   return h;
 }
 
 const nameLen = 4;
 
-/* Utility functions for the Rooms class. */
-function initUser(userId) {
-  return { userId, numConnections: 1 };
+class RoomUser {
+  constructor(id) {
+    this.id = id;
+    this.present = true;
+    this.spectate = false;
+    this.count = 0;
+  }
 }
 
-function getUserIds(userss) {
-  return userss.map(({ userId }) => userId);
-}
+class Room {
+  constructor(name, capacity = -1) {
+    this.name = name;
+    this.capacity = capacity;
+    this.users = [];
+    this.numPlayers = 0;
+    this.locked = false;
+  }
 
-function removeUser(userss, userId) {
-  return userss.filter(({ userId: id }) => id !== userId);
-}
+  canJoinAsPlayer() {
+    if (this.locked) return false;
+    return this.capacity < 0 || this.numPlayers < this.capacity;
+  }
 
-function matchUserId(id) {
-  return ({ userId }) => userId === id;
+  join(userId) {
+    const index = this.users.findIndex(({ id }) => id === userId);
+    const user = index >= 0 ? this.users[index] : new RoomUser(userId);
+
+    if (index >= 0 && !user.present) {
+      // Splice user (and later repush) if it was inactive
+      this.users.splice(index, 1);
+    }
+    if (index < 0 || !user.present) {
+      // Push (or repush) user if it is new or was inactive
+      if (this.canJoinAsPlayer()) {
+        if (!user.spectate) this.numPlayers += 1;
+      } else {
+        user.spectate = true;
+      }
+      this.users.push(user);
+    }
+    user.present = true;
+    user.count += 1;
+
+    return user;
+  }
+
+  leave(userId) {
+    const index = this.users.findIndex(({ id }) => id === userId);
+    if (index < 0) return undefined;
+    const user = this.users[index];
+    if (!user.present) return undefined;
+
+    user.count -= 1;
+    if (user.count === 0) {
+      if (!user.spectate) this.numPlayers -= 1;
+      user.present = false;
+    }
+
+    return user;
+  }
+
+  setSpectate(userId, spectate) {
+    const index = this.users.findIndex(({ id }) => id === userId);
+    if (index < 0) return undefined;
+    const user = this.users[index];
+    if (!user.present) return undefined;
+
+    if (spectate) {
+      if (!user.spectate) {
+        user.spectate = true;
+        this.numPlayers -= 1;
+      }
+    } else if (this.canJoinAsPlayer()) {
+      if (user.spectate) {
+        user.spectate = false;
+        this.users.splice(index, 1);
+        this.users.push(user);
+        this.numPlayers += 1;
+      }
+    }
+
+    return user;
+  }
+
+  getUsers() {
+    const players = [];
+    const inactives = [];
+    const spectators = [];
+    this.users.forEach(({ id, present, spectate }) => {
+      const user = Users.getUser(id);
+      if (user) {
+        if (!present) inactives.push(user);
+        else if (spectate) spectators.push(user);
+        else players.push(user);
+      }
+    });
+    return { players, inactives, spectators };
+  }
 }
 
 class Rooms {
-  constructor() {
-    this.count = Math.floor(Math.random() * 9001) | 0;
-    this.rooms = {};
-  }
+  static count = Math.floor(Math.random() * 9001) | 0;
 
-  nextName() {
-    let h = hash(this.count);
+  static rooms = {};
+
+  static nextName() {
+    let h = hashInt32(this.count);
     const name = [];
     for (let i = 0; i < nameLen; i += 1) {
       name.push(String.fromCharCode("A".charCodeAt(0) + (h % 26)));
@@ -45,76 +127,36 @@ class Rooms {
     return name.join("");
   }
 
-  createRoom(userId) {
-    const user = users.getUser(userId);
-    if (!user) return null;
+  static createRoom(userId, capacity = -1) {
     const name = this.nextName();
-    const room = {
-      name,
-      users: [],
-      inactives: [userId],
-    };
+    const room = new Room(name, capacity);
     this.rooms[name] = room;
     return room;
   }
 
-  getRoom(name) {
-    return name in this.rooms ? this.rooms[name] : null;
+  static deleteRoom(name) {
+    if (name in this.rooms) delete this.rooms[name];
   }
 
-  joinRoom(name, userId) {
-    console.log(`${userId} is joining room ${name}`);
-    const user = users.getUser(userId);
-    if (!user) return null;
-    const room = this.getRoom(name);
-    if (!room) return null;
-
-    const activeIndex = room.users.findIndex(matchUserId(userId));
-    if (activeIndex >= 0) {
-      // If user is active, increment connection count
-      room.users[activeIndex].numConnections += 1;
-    } else {
-      // If user was not active, add it to the room
-      room.users.push(initUser(userId));
-      const inactiveIndex = room.inactives.indexOf(userId);
-      if (inactiveIndex >= 0) {
-        // Remove user from inactives if necessary
-        room.inactives.splice(inactiveIndex, 1);
-      }
-    }
-
-    return room;
+  static getRoom(name) {
+    return this.rooms[name];
   }
 
-  leaveRoom(name, userId) {
-    const user = users.getUser(userId);
-    if (!user) return null;
-    const room = this.getRoom(name);
-    if (!room) return null;
-
-    const activeIndex = room.users.findIndex(matchUserId(userId));
-    if (activeIndex >= 0) {
-      room.users[activeIndex].numConnections -= 1;
-      if (room.users[activeIndex].numConnections === 0) {
-        // If user is active, make them inactive
-        room.users.splice(activeIndex, 1);
-        room.inactives.push(userId);
-      }
-    }
-
-    return room;
+  static joinRoom(name, userId) {
+    return this.getRoom(name)?.join(userId);
   }
 
-  getUsers(name) {
-    const room = this.getRoom(name);
-    if (!room) return null;
-    return {
-      users: room.users.map(({ userId }) => users.getUser(userId)),
-      inactives: room.inactives.map((userId) => users.getUser(userId)),
-    };
+  static leaveRoom(name, userId) {
+    return this.getRoom(name)?.leave(userId);
+  }
+
+  static setSpectate(name, userId, spectate) {
+    return this.getRoom(name)?.setSpectate(userId, spectate);
+  }
+
+  static getUsers(name) {
+    return this.getRoom(name)?.getUsers();
   }
 }
 
-const rooms = new Rooms();
-
-module.exports = rooms;
+module.exports = Rooms;
