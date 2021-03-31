@@ -1,9 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
+import { useHistory } from "react-router-dom";
 import useStyles from "../styles";
 import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
-import { useHistory } from "react-router-dom";
 import UserList from "./UserList";
 
 function Room() {

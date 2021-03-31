@@ -1,20 +1,6 @@
 import PropTypes from "prop-types";
 import { useSocket } from "../../context/socketContext";
-
-import { createUseStyles } from "react-jss";
-
-const useStyles = createUseStyles((theme) => ({
-  userBox: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  banButton: {
-    border: `2px solid ${theme.red}`,
-    padding: "auto",
-    backgroundColor: theme.white,
-  },
-}));
+import useStyles from "./styles";
 
 function User({ name, userId, myId, userIsMod }) {
   const { sendMessage } = useSocket();

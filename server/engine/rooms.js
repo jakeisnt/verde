@@ -35,7 +35,6 @@ class Room {
     const inactives = [];
     const bannedUsers = [];
     const spectators = [];
-    console.log(this.users);
     this.users.forEach(({ id, present, spectate, banned }) => {
       const user = Users.getUser(id);
       if (user) {
@@ -121,12 +120,10 @@ class Room {
 
   ban(bannerId, banneeId) {
     if (!this.isModerator(bannerId)) return undefined;
-    console.log(`User ${bannerId} is banning ${banneeId}`);
     const bannedUser = this.users.forEach((user) => {
       if (user.id === banneeId) user.banned = true;
     });
 
-    console.log("users post banning", this.users);
     return bannedUser;
   }
 
