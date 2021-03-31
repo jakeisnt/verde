@@ -11,7 +11,6 @@ function Room() {
   const { user: me } = useUser();
   const classes = useStyles();
   const [room, setRoom] = useState(null);
-  const [roomError, setRoomError] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -21,8 +20,8 @@ function Room() {
         throw new Error(`Room ${roomName} does not exist.`);
       })
       .then((res) => setRoom(res))
-      .catch((err) => setRoomError(err.message));
-  }, [roomName, setRoom, setRoomError]);
+      .catch((err) => history.push(`/home/${err.message}`));
+  }, [roomName, setRoom, history]);
 
   useEffect(() => {
     if (
@@ -58,9 +57,9 @@ function Room() {
       <div className={classes.room}>
         <BackButton text="Exit" />
         <div className={classes.box}>
-          {roomError || error || `This is room ${roomName}.`}
+          {error || `This is room ${roomName}.`}
         </div>
-        {!roomError && !error && lastMessage && (
+        {!error && lastMessage && (
           <>
             <UserList
               users={lastMessage.players}
