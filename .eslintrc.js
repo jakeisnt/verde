@@ -6,6 +6,16 @@ module.exports = {
       },
     },
   },
+  parser: "@babel/eslint-parser",
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
+      experimentalObjectRestSpread: true,
+    },
+  },
   extends: [
     "airbnb",
     "airbnb/hooks",
@@ -51,5 +61,7 @@ module.exports = {
 
     // this just doesn't work
     "workspaces/no-absolute-imports": "off",
+
+    "max-classes-per-file": ["error", 3],
   },
 };

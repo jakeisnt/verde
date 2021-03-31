@@ -3,7 +3,7 @@ function hashInt32(x) {
   let h = x | 0;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
-  h = (h >> 16) ^ h;
+  h ^= h >> 16;
   return h;
 }
 
@@ -11,6 +11,7 @@ const idLen = 9;
 
 class Users {
   static count = Math.floor(Math.random() * 9001) | 0;
+
   static users = {};
 
   static nextId() {

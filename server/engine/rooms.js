@@ -5,7 +5,7 @@ function hashInt32(x) {
   let h = x | 0;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
-  h = (h >> 16) ^ h;
+  h ^= h >> 16;
   return h;
 }
 
@@ -64,7 +64,7 @@ class Room {
     if (!user.present) return undefined;
 
     user.count -= 1;
-    if (user.count == 0) {
+    if (user.count === 0) {
       if (!user.spectate) this.numPlayers -= 1;
       user.present = false;
     }
@@ -101,10 +101,11 @@ class Room {
     const spectators = [];
     this.users.forEach(({ id, present, spectate }) => {
       const user = Users.getUser(id);
-      if (!user) return;
-      if (!present) return inactives.push(user);
-      if (spectate) return spectators.push(user);
-      players.push(user);
+      if (user) {
+        if (!present) inactives.push(user);
+        else if (spectate) spectators.push(user);
+        else players.push(user);
+      }
     });
     return { players, inactives, spectators };
   }
@@ -112,6 +113,7 @@ class Room {
 
 class Rooms {
   static count = Math.floor(Math.random() * 9001) | 0;
+
   static rooms = {};
 
   static nextName() {
