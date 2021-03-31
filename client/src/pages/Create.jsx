@@ -6,19 +6,19 @@ import useStyles from "./styles";
 import BackButton from "../components/BackButton";
 
 function Create() {
-  const { user } = useUser();
-  const [capacity, setCapacity] = useState(-1);
+  const { userId } = useUser();
+  const [capacity, setCapacity] = useState("");
   const history = useHistory();
   const classes = useStyles();
 
-  const createRoom = useCallback(
-    () =>
-      user &&
-      fetch(`/room/new?${new URLSearchParams({ userId: user.id, capacity })}`)
+  const createRoom = useCallback(() => {
+    if (userId) {
+      const cap = capacity || "-1";
+      fetch(`/room/new?${new URLSearchParams({ userId, capacity: cap })}`)
         .then((res) => res.json())
-        .then((room) => history.push(`/room/${room.name}`)),
-    [user, history, capacity]
-  );
+        .then((room) => history.push(`/room/${room.name}`));
+    }
+  }, [userId, history, capacity]);
 
   return (
     <div className={classes.home}>
@@ -27,7 +27,7 @@ function Create() {
         type="text"
         className={classes.box}
         value={capacity}
-        placeholder="Enter a room capacity"
+        placeholder="Enter a room capacity (empty for infinite)"
         onKeyUp={(e) => e.key === "Enter" && createRoom()}
         onInput={(e) => setCapacity(e.target.value.toUpperCase())}
       />
