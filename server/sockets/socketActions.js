@@ -11,10 +11,49 @@
  * The first parameter to the function is the message object received
  * and the second is the code for the room the message was sent to.
  * */
+const WebSocket = require("ws");
 const rooms = require("../engine/rooms");
 
+function broadcast(wss, message) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
+}
+
+function updateUsers(wss, message, { roomName }) {
+  broadcast(wss, { type: "users", payload: rooms.getUsers(roomName) });
+}
+
+function connect(wss, message, { roomName, userId }) {
+  rooms.joinRoom(roomName, userId);
+  updateUsers(wss, message, { roomName });
+}
+
+function disconnect(wss, message, { roomName, userId }) {
+  rooms.leaveRoom(roomName, userId);
+  updateUsers(wss, message, { roomName });
+}
+
 const socketActions = {
-  "update-users": (message, room) => rooms.getUsers(room),
+  connect,
+  disconnect,
+  updateUsers,
 };
+
+// const socketActions = {
+//   // "update-users": (message, roomName, userId) =>
+//   //   rooms.joinRoom(roomName, userId),
+
+//   // special: called only when a client connects
+//   connect: (message, roomName, userId) => rooms.joinRoom(roomName, userId),
+//   // special: called only when a client disconnects
+//   disconnect: (message, roomName, userId) => rooms.leaveRoom(roomName, userId),
+
+//   "update-users": (message, roomName, userId) => ({
+//     users: rooms.getUsers(roomName),
+//   }),
+// };
 
 module.exports = socketActions;

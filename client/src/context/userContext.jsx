@@ -10,30 +10,32 @@ import Cookies from "universal-cookie";
 
 const UserContext = createContext(null);
 
+function getUser() {
+  const cookies = new Cookies();
+  function getNewUser() {
+    return fetch(`/users/new`)
+      .then((res) => res.json())
+      .then((res) => {
+        cookies.set("userId", res.id, { sameSite: true, maxAge: 86400 });
+        return res;
+      });
+  }
+  const storedId = cookies.get("userId");
+  if (storedId !== undefined) {
+    return fetch(`/users/get?${new URLSearchParams({ id: storedId })}`)
+      .then((res) => res.json())
+      .catch(getNewUser); // If user ID in cookie is stale
+  }
+  return getNewUser();
+}
+
 function UserProvider({ children }) {
   const [user, setUser] = useState(null);
 
   // Runs once at beginning and whenever user ID cookie is updated
-  useEffect(() => {
-    const cookies = new Cookies();
-    function getNewUser() {
-      fetch(`/users/new`)
-        .then((res) => res.json())
-        .then((res) => {
-          cookies.set("userId", res.id);
-          setUser(res);
-        });
-    }
-    const storedId = cookies.get("userId");
-    if (storedId !== undefined) {
-      fetch(`/users/get?${new URLSearchParams({ id: storedId })}`)
-        .then((res) => res.json())
-        .then((res) => setUser(res))
-        .catch(getNewUser); // If user ID in cookie is stale
-    } else {
-      getNewUser();
-    }
-  }, []);
+  useEffect(() => getUser().then((res) => setUser(res)), []);
+
+  useEffect(() => console.log(`USER: ${JSON.stringify(user)}`), [user]);
 
   /** Requests to rename the user. */
   const setUserName = useCallback(
@@ -70,4 +72,4 @@ function useUser() {
   return context;
 }
 
-export { useUser, UserProvider };
+export { getUser, useUser, UserProvider };
