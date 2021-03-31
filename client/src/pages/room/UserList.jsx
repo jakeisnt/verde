@@ -1,6 +1,9 @@
 import User from "./User";
+import useStyles from "../styles";
 
 function UserList({ users, title, capacity, myId, userIsMod }) {
+  const classes = useStyles();
+
   return (
     <>
       {title} ({users && users.length}/

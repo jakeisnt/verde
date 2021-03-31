@@ -4,10 +4,19 @@ function User({ id, name, myId, userIsMod }) {
   const { sendMessage } = useSocket();
 
   return (
-    <div key={`userBox-${id}`}>
-      <p key={user.id}>{user.name}</p>
+    <div
+      key={`userBox-${id}`}
+      style={
+        userIsMod && {
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }
+      }
+    >
+      <p key={id}>{name}</p>
       {userIsMod && (
-        <div
+        <button
           onClick={() =>
             sendMessage &&
             sendMessage({
@@ -17,7 +26,7 @@ function User({ id, name, myId, userIsMod }) {
           }
         >
           Remove Me
-        </div>
+        </button>
       )}
     </div>
   );

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import useStyles from "../styles";
 import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
+import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
 
 function Room() {
@@ -34,7 +35,7 @@ function Room() {
       me.id &&
       lastMessage.players &&
       lastMessage.players[0].id === me.id,
-    [user, lastMessage]
+    [me, lastMessage]
   );
 
   return (
