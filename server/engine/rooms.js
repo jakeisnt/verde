@@ -33,18 +33,19 @@ class Room {
   getUsers() {
     const players = [];
     const inactives = [];
-    const banned = [];
+    const bannedUsers = [];
     const spectators = [];
+    console.log(this.users);
     this.users.forEach(({ id, present, spectate, banned }) => {
       const user = Users.getUser(id);
       if (user) {
-        if (banned) banned.push(user);
+        if (banned) bannedUsers.push(user);
         else if (!present) inactives.push(user);
         else if (spectate) spectators.push(user);
         else players.push(user);
       }
     });
-    return { players, inactives, spectators, banned };
+    return { players, inactives, spectators, banned: bannedUsers };
   }
 
   canJoinAsPlayer() {
@@ -58,7 +59,7 @@ class Room {
 
   isModerator(userId) {
     // The moderator is the first added active player.
-    return this.numPlayers > 0 && userId === this.getCurrentPlayers()[0];
+    return this.numPlayers > 0 && userId === this.getCurrentPlayers()[0].id;
   }
 
   isBanned(userId) {
@@ -115,8 +116,11 @@ class Room {
   ban(bannerId, banneeId) {
     if (!this.isModerator(bannerId)) return undefined;
     console.log(`User ${bannerId} is banning ${banneeId}`);
-    const bannedUser = this.users.filter(({ id }) => id === banneeId);
-    bannedUser.banned = true;
+    const bannedUser = this.users.forEach((user) => {
+      if (user.id === banneeId) user.banned = true;
+    });
+
+    console.log("users post banning", this.users);
     return bannedUser;
   }
 

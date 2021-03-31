@@ -34,7 +34,8 @@ function unspectate(wss, message, { roomName, userId }) {
 }
 
 function banUser(wss, message, { roomName, userId }) {
-  Rooms.banUser(roomName, userId, message.toBanId);
+  console.log("banning user ", message);
+  Rooms.banUser(roomName, userId, message.payload.toBanId);
   updateUsers(wss, message, { roomName });
 }
 
