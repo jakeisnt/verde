@@ -121,6 +121,7 @@ class Room {
   ban(bannerId, banneeId) {
     if (!this.isModerator(bannerId)) return undefined;
     const bannedUser = this.users.forEach((user) => {
+      /* eslint-disable-next-line no-param-reassign */
       if (user.id === banneeId) user.banned = true;
     });
 
@@ -130,7 +131,7 @@ class Room {
   setSpectate(userId, spectate) {
     // The user can take no actions in this room if they are banned
     if (this.isBanned(userId)) return undefined;
-    
+
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];
