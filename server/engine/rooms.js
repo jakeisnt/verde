@@ -63,7 +63,7 @@ class Room {
   }
 
   isBanned(userId) {
-    return this.getUser(userId).banned;
+    return this.getUser(userId)?.banned;
   }
 
   getUser(userId) {
@@ -76,6 +76,9 @@ class Room {
   }
 
   join(userId) {
+    // The user can take no actions in this room if they are banned
+    if (this.isBanned(userId)) return undefined;
+
     const index = this.users.findIndex(({ id }) => id === userId);
     const user = index >= 0 ? this.users[index] : new RoomUser(userId);
 
@@ -99,6 +102,9 @@ class Room {
   }
 
   leave(userId) {
+    // The user can take no actions in this room if they are banned
+    if (this.isBanned(userId)) return undefined;
+
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];
@@ -125,6 +131,9 @@ class Room {
   }
 
   setSpectate(userId, spectate) {
+    // The user can take no actions in this room if they are banned
+    if (this.isBanned(userId)) return undefined;
+
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];

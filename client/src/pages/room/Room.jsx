@@ -3,6 +3,7 @@ import useStyles from "../styles";
 import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
+import { useHistory } from "react-router-dom";
 import UserList from "./UserList";
 
 function Room() {
@@ -11,6 +12,7 @@ function Room() {
   const classes = useStyles();
   const [room, setRoom] = useState(null);
   const [roomError, setRoomError] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)
@@ -21,6 +23,18 @@ function Room() {
       .then((res) => setRoom(res))
       .catch((err) => setRoomError(err.message));
   }, [roomName, setRoom, setRoomError]);
+
+  useEffect(() => {
+    if (
+      lastMessage &&
+      lastMessage.banned &&
+      lastMessage.banned.map(({ id }) => id).includes(me.id)
+    )
+      history.push(
+        "/home/" +
+          encodeURIComponent(`You have been banned from room ${roomName}.`)
+      );
+  }, [lastMessage, roomName, history, me]);
 
   useEffect(() => {
     console.log(JSON.stringify(lastMessage));
