@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState } from "react";
 import useStyles from "../styles";
 import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
@@ -7,12 +7,17 @@ function Room() {
   const { error, lastMessage, roomName, sendMessage } = useSocket("users");
   const classes = useStyles();
   const [room, setRoom] = useState(null);
+  const [roomError, setRoomError] = useState(null);
 
   useEffect(() => {
     fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)
-      .then((res) => res.json())
-      .then((res) => setRoom(res));
-  }, [roomName, setRoom]);
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error(`Room ${roomName} does not exist.`);
+      })
+      .then((res) => setRoom(res))
+      .catch((err) => setRoomError(err.message));
+  }, [roomName, setRoom, setRoomError]);
 
   useEffect(() => {
     console.log(JSON.stringify(lastMessage));
@@ -23,9 +28,9 @@ function Room() {
       <div className={classes.room}>
         <BackButton text="Exit" />
         <div className={classes.box}>
-          {error || `This is room ${roomName}.`}
+          {roomError || error || `This is room ${roomName}.`}
         </div>
-        {!error && lastMessage && (
+        {!roomError && !error && lastMessage && (
           <>
             Players ({lastMessage.players && lastMessage.players.length}/
             {room && (room.capacity >= 0 ? room.capacity : "∞")})

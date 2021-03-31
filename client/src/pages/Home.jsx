@@ -1,10 +1,7 @@
-import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 
 function Home() {
-  const { user } = useUser();
   const history = useHistory();
   const classes = useStyles();
 

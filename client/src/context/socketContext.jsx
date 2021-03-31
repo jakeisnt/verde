@@ -4,10 +4,9 @@ import {
   useState,
   useCallback,
   useContext,
-  useMemo,
 } from "react";
 import PropTypes from "prop-types";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import { useUser } from "./userContext";
 
 const SocketContext = createContext(null);

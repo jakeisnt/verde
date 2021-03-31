@@ -12,11 +12,11 @@ function hashInt32(x) {
 const nameLen = 4;
 
 class RoomUser {
-  constructor(id, spectate = false) {
+  constructor(id) {
     this.id = id;
     this.present = true;
-    this.spectate = spectate;
-    this.count = 1;
+    this.spectate = false;
+    this.count = 0;
   }
 }
 
@@ -38,11 +38,12 @@ class Room {
     const index = this.users.findIndex(({ id }) => id === userId);
     const user = index >= 0 ? this.users[index] : new RoomUser(userId);
 
-    if (index >= 0 && user.present) {
-      user.count += 1;
-    } else {
-      if (index >= 0) this.users.splice(index, 1);
-      user.present = true;
+    if (index >= 0 && !user.present) {
+      // Splice user (and later repush) if it was inactive
+      this.users.splice(index, 1);
+    }
+    if (index < 0 || !user.present) {
+      // Push (or repush) user if it is new or was inactive
       if (this.canJoinAsPlayer()) {
         if (!user.spectate) this.numPlayers += 1;
       } else {
@@ -50,6 +51,8 @@ class Room {
       }
       this.users.push(user);
     }
+    user.present = true;
+    user.count += 1;
 
     return user;
   }
@@ -127,6 +130,10 @@ class Rooms {
     const room = new Room(name, capacity);
     this.rooms[name] = room;
     return room;
+  }
+
+  static deleteRoom(name) {
+    if (name in this.rooms) delete this.rooms[name];
   }
 
   static getRoom(name) {

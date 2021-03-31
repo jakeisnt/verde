@@ -89,7 +89,10 @@ function makeRoomSocket(name) {
   }, PING_INTERVAL);
 
   wss.on("close", () => {
-    console.log(`Closing WebSocket server for room ${name}.`);
+    console.log(`Closing WebSocket server and deleting room ${name}.`);
+    wss.clients.forEach((ws) => ws.terminate());
+    Rooms.deleteRoom(name);
+    delete socketServers[name];
     return clearInterval(wss.interval);
   });
 
