@@ -28,7 +28,7 @@ function Room() {
     if (
       lastMessage &&
       lastMessage.banned &&
-      lastMessage.banned.map(({ id }) => id).includes(me.id)
+      lastMessage.banned.map(({ id }) => id).includes(me.id) // better than object comparison
     )
       history.push(
         "/home/" +
