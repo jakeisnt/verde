@@ -16,6 +16,7 @@ class RoomUser {
     this.id = id;
     this.present = true;
     this.spectate = false;
+    this.banned = false;
     this.count = 0;
   }
 }
@@ -29,12 +30,54 @@ class Room {
     this.locked = false;
   }
 
+  getUsers() {
+    const players = [];
+    const inactives = [];
+    const bannedUsers = [];
+    const spectators = [];
+    this.users.forEach(({ id, present, spectate, banned }) => {
+      const user = Users.getUser(id);
+      if (user) {
+        if (banned) bannedUsers.push(user);
+        else if (!present) inactives.push(user);
+        else if (spectate) spectators.push(user);
+        else players.push(user);
+      }
+    });
+    return { players, inactives, spectators, banned: bannedUsers };
+  }
+
   canJoinAsPlayer() {
     if (this.locked) return false;
     return this.capacity < 0 || this.numPlayers < this.capacity;
   }
 
+  getCurrentPlayers() {
+    return this.users.filter(({ present, spectate }) => present && !spectate);
+  }
+
+  isModerator(userId) {
+    // The moderator is the first added active player.
+    return this.numPlayers > 0 && userId === this.getCurrentPlayers()[0].id;
+  }
+
+  isBanned(userId) {
+    return this.getUser(userId)?.banned;
+  }
+
+  getUser(userId) {
+    const index = this.users.findIndex(({ id }) => id === userId);
+    return index >= 0 ? this.users[index] : undefined;
+  }
+
+  getOrMakeUser(userId) {
+    return this.getUser(userId) || new RoomUser(userId);
+  }
+
   join(userId) {
+    // The user can take no actions in this room if they are banned
+    if (this.isBanned(userId)) return undefined;
+
     const index = this.users.findIndex(({ id }) => id === userId);
     const user = index >= 0 ? this.users[index] : new RoomUser(userId);
 
@@ -58,6 +101,9 @@ class Room {
   }
 
   leave(userId) {
+    // The user can take no actions in this room if they are banned
+    if (this.isBanned(userId)) return undefined;
+
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];
@@ -72,7 +118,20 @@ class Room {
     return user;
   }
 
+  ban(bannerId, banneeId) {
+    if (!this.isModerator(bannerId)) return undefined;
+    const bannedUser = this.users.forEach((user) => {
+      /* eslint-disable-next-line no-param-reassign */
+      if (user.id === banneeId) user.banned = true;
+    });
+
+    return bannedUser;
+  }
+
   setSpectate(userId, spectate) {
+    // The user can take no actions in this room if they are banned
+    if (this.isBanned(userId)) return undefined;
+
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];
@@ -93,21 +152,6 @@ class Room {
     }
 
     return user;
-  }
-
-  getUsers() {
-    const players = [];
-    const inactives = [];
-    const spectators = [];
-    this.users.forEach(({ id, present, spectate }) => {
-      const user = Users.getUser(id);
-      if (user) {
-        if (!present) inactives.push(user);
-        else if (spectate) spectators.push(user);
-        else players.push(user);
-      }
-    });
-    return { players, inactives, spectators };
   }
 }
 
@@ -156,6 +200,10 @@ class Rooms {
 
   static getUsers(name) {
     return this.getRoom(name)?.getUsers();
+  }
+
+  static banUser(name, userId, toBanId) {
+    return this.getRoom(name)?.ban(userId, toBanId);
   }
 }
 

@@ -67,6 +67,9 @@ module.exports = {
     // this just doesn't work
     "workspaces/no-absolute-imports": "off",
 
+    // nested template strings are not supported by js
+    "prefer-template": "warn",
+
     "max-classes-per-file": ["error", 3],
   },
 };
