@@ -6,7 +6,6 @@ import useStyles from "./styles";
 import BackButton from "../components/BackButton";
 
 function Create() {
-
   const { userId } = useUser();
   const [capacity, setCapacity] = useState("");
   const history = useHistory();
