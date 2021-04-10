@@ -43,24 +43,16 @@ function User({ name, userId, myId, userIsMod }) {
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
       <div className={classes.changeUserBox}>
-        <div
-          role="button"
-          onClick={() => !changingName && startChangingName()}
+        <input
+          type="text"
+          className={classes.smallBox}
+          value={nextName}
+          placeholder="Enter a new username"
           onKeyUp={changeNameKeyEvent}
-          tabIndex={canChangeName ? 0 : -1}
-          disabled={!canChangeName}
-        >
-          <input
-            type="text"
-            className={classes.smallBox}
-            value={nextName}
-            placeholder="Enter a new username"
-            onKeyUp={changeNameKeyEvent}
-            onInput={(e) => setNextName(e.target.value)}
-            disabled={!canChangeName && !changingName}
-            ref={editNameBoxRef}
-          />
-        </div>
+          onInput={(e) => setNextName(e.target.value)}
+          disabled={!canChangeName || !changingName}
+          ref={editNameBoxRef}
+        />
         {canChangeName && (
           <button
             type="button"
