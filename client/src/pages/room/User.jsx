@@ -10,6 +10,13 @@ function User({ name, userId, myId, userIsMod }) {
   const [changingName, toggleChangingName] = useToggle();
   const [nextName, setNextName] = useState(name);
 
+  const canChangeName = myId === userId;
+
+  // TODO:
+  // - disable changing name for people who are not you
+  // - when clicking the username box, focus the window to edit the username
+  // - show explicit change name button
+
   const changeName = useCallback(() => {
     sendMessage({ type: "changeName", payload: { name: nextName } });
     toggleChangingName();
@@ -47,7 +54,7 @@ function User({ name, userId, myId, userIsMod }) {
           key={userId}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && changeName()}
+          onKeyDown={(e) => e.key === "Enter" && startChangingName()}
           onClick={() => startChangingName()}
         >
           <p>{name}</p>
