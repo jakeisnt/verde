@@ -8,7 +8,7 @@ import useStyles from "./styles";
 function User({ name, userId, myId, userIsMod }) {
   const { sendMessage } = useSocket();
   const classes = useStyles();
-  const [changingName, toggleChangingName] = useToggle();
+  const [changingName, setChangingName] = useState(false);
   const [nextName, setNextName] = useState(name);
   const editNameBoxRef = useRef();
 
@@ -16,26 +16,37 @@ function User({ name, userId, myId, userIsMod }) {
 
   const changeName = useCallback(() => {
     sendMessage({ type: "changeName", payload: { name: nextName } });
-    toggleChangingName();
-  }, [sendMessage, nextName, toggleChangingName]);
+    setChangingName(false);
+    editNameBoxRef.current.blur();
+  }, [sendMessage, nextName, setChangingName, editNameBoxRef]);
 
   const startChangingName = useCallback(() => {
-    setNextName(name);
-    toggleChangingName();
+    setChangingName(true);
     if (editNameBoxRef.current) editNameBoxRef.current.focus();
-  }, [name, toggleChangingName]);
+  }, [setChangingName]);
 
   useEffect(() => {
     if (changingName) editNameBoxRef.current.focus();
   }, [changingName]);
+
+  const changeNameKeyEvent = useCallback(
+    (e) =>
+      e.key === "Enter" && (changingName ? changeName() : startChangingName()),
+    [changingName, changeName, startChangingName]
+  );
+
+  const changeNameEvent = useCallback(
+    () => (changingName ? changeName() : startChangingName()),
+    [changingName, changeName, startChangingName]
+  );
 
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
       <div className={classes.changeUserBox}>
         <div
           role="button"
-          onClick={() => startChangingName()}
-          onKeyUp={(e) => e.key === "Enter" && startChangingName()}
+          onClick={() => !changingName && startChangingName()}
+          onKeyUp={changeNameKeyEvent}
           tabIndex={canChangeName ? 0 : -1}
           disabled={!canChangeName}
         >
@@ -44,9 +55,9 @@ function User({ name, userId, myId, userIsMod }) {
             className={classes.smallBox}
             value={nextName}
             placeholder="Enter a new username"
-            onKeyUp={(e) => e.key === "Enter" && changeName()}
+            onKeyUp={changeNameKeyEvent}
             onInput={(e) => setNextName(e.target.value)}
-            disabled={!canChangeName || !changingName}
+            disabled={!canChangeName && !changingName}
             ref={editNameBoxRef}
           />
         </div>
@@ -55,8 +66,8 @@ function User({ name, userId, myId, userIsMod }) {
             type="button"
             tabIndex={0}
             className={classes.userSaveButton}
-            onClick={() => changeName()}
-            onKeyDown={(e) => e.key === "Enter" && changeName()}
+            onClick={changeNameEvent}
+            onKeyDown={changeNameKeyEvent}
           >
             {changingName ? "Save" : "Edit Name"}
           </button>
