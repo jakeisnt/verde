@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const Rooms = require("../engine/rooms");
+const Users = require("../engine/users");
 
 function broadcast(wss, message) {
   wss.clients.forEach((client) => {
@@ -38,6 +39,11 @@ function banUser(wss, message, { roomName, userId }) {
   updateUsers(wss, message, { roomName });
 }
 
+function changeName(wss, message, { roomName, userId }) {
+  Users.setName(userId, message.payload.name);
+  updateUsers(wss, message, { roomName });
+}
+
 const socketActions = {
   connect,
   disconnect,
@@ -45,6 +51,7 @@ const socketActions = {
   spectate,
   unspectate,
   banUser,
+  changeName,
 };
 
 module.exports = socketActions;
