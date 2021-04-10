@@ -1,26 +1,24 @@
 import { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useSocket } from "../../context/socketContext";
+import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
 
 function User({ name, userId, myId, userIsMod }) {
   const { sendMessage } = useSocket();
   const classes = useStyles();
-  const [changingName, setChangingName] = useState(false);
+  const [changingName, toggleChangingName] = useToggle();
   const [nextName, setNextName] = useState(name);
 
   const changeName = useCallback(() => {
-    // Change the current user's username
     sendMessage({ type: "changeName", payload: { name: nextName } });
-    // Reset the state of the component
-    setChangingName((b) => !b);
-    setNextName("");
-  }, [sendMessage, nextName, setChangingName, setNextName]);
+    toggleChangingName();
+  }, [sendMessage, nextName, toggleChangingName]);
 
   const startChangingName = useCallback(() => {
     setNextName(name);
-    setChangingName((b) => !b);
-  }, [name]);
+    toggleChangingName();
+  }, [name, toggleChangingName]);
 
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
@@ -44,13 +42,7 @@ function User({ name, userId, myId, userIsMod }) {
           </button>
         </>
       ) : (
-        <div
-          key={userId}
-          role="button"
-          onClick={() => {
-            setChangingName((b) => !b);
-          }}
-        >
+        <div key={userId} role="button" onClick={() => startChangingName()}>
           <p>{name}</p>
         </div>
       )}
