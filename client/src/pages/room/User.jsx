@@ -23,10 +23,10 @@ function User({ name, userId, myId, userIsMod }) {
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
       {changingName ? (
-        <>
+        <div className={classes.changeUserBox}>
           <input
             type="text"
-            className={classes.box}
+            className={classes.smallBox}
             value={nextName}
             placeholder="Enter a new username"
             onKeyUp={(e) => e.key === "Enter" && changeName()}
@@ -34,15 +34,22 @@ function User({ name, userId, myId, userIsMod }) {
           />
           <button
             type="button"
-            className={classes.box}
+            tabIndex={0}
+            className={classes.userSaveButton}
             onClick={() => changeName()}
             onKeyDown={(e) => e.key === "Enter" && changeName()}
           >
             Save
           </button>
-        </>
+        </div>
       ) : (
-        <div key={userId} role="button" onClick={() => startChangingName()}>
+        <div
+          key={userId}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && changeName()}
+          onClick={() => startChangingName()}
+        >
           <p>{name}</p>
         </div>
       )}
