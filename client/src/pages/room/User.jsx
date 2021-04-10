@@ -63,10 +63,7 @@ function User({ name, userId, myId, userIsMod }) {
           </button>
         )
       ) : (
-        <>
-          <p>Me</p>
-          {userIsMod && <p>Mod</p>}
-        </>
+        <p>Me{userIsMod && ", Mod"}</p>
       )}
     </div>
   );
