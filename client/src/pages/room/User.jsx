@@ -31,8 +31,14 @@ function User({ name, userId, myId, userIsMod }) {
 
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
-      {changingName ? (
-        <div className={classes.changeUserBox}>
+      <div className={classes.changeUserBox}>
+        <div
+          role="button"
+          onClick={() => startChangingName()}
+          onKeyUp={(e) => e.key === "Enter" && startChangingName()}
+          tabIndex={canChangeName ? 0 : -1}
+          disabled={!canChangeName}
+        >
           <input
             type="text"
             className={classes.smallBox}
@@ -40,8 +46,11 @@ function User({ name, userId, myId, userIsMod }) {
             placeholder="Enter a new username"
             onKeyUp={(e) => e.key === "Enter" && changeName()}
             onInput={(e) => setNextName(e.target.value)}
+            disabled={!canChangeName || !changingName}
             ref={editNameBoxRef}
           />
+        </div>
+        {canChangeName && (
           <button
             type="button"
             tabIndex={0}
@@ -49,36 +58,10 @@ function User({ name, userId, myId, userIsMod }) {
             onClick={() => changeName()}
             onKeyDown={(e) => e.key === "Enter" && changeName()}
           >
-            Save
+            {changingName ? "Save" : "Edit Name"}
           </button>
-        </div>
-      ) : (
-        <>
-          <div
-            role="button"
-            key={userId}
-            tabIndex={canChangeName ? 0 : null}
-            onKeyDown={(e) => e.key === "Enter" && startChangingName()}
-            onClick={() => canChangeName && startChangingName()}
-            disabled={!canChangeName}
-          >
-            <p>{name}</p>
-          </div>
-          {canChangeName && (
-            <button
-              type="button"
-              tabIndex={0}
-              className={classes.userSaveButton}
-              onClick={() => startChangingName()}
-              onKeyDown={(e) =>
-                e.key === "Enter" && canChangeName && startChangingName()
-              }
-            >
-              Edit Name
-            </button>
-          )}
-        </>
-      )}
+        )}
+      </div>
       {myId !== userId ? (
         userIsMod && (
           <button

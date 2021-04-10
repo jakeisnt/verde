@@ -5,6 +5,7 @@ export default createUseStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   changeUserBox: {
     display: "flex",
@@ -14,6 +15,7 @@ export default createUseStyles((theme) => ({
   smallBox: {
     border: `2px solid ${theme.black}`,
     padding: "0.5em 0.5em",
+    textAlign: "center",
     color: theme.black,
     backgroundColor: theme.white,
   },
