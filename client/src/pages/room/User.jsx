@@ -22,9 +22,8 @@ function User({ name, userId, myId, userIsMod }) {
   const startChangingName = useCallback(() => {
     setNextName(name);
     toggleChangingName();
-    if (editNameBoxRef && editNameBoxRef.current)
-      editNameBoxRef.current.focus();
-  }, [name, toggleChangingName, editNameBoxRef]);
+    if (editNameBoxRef.current) editNameBoxRef.current.focus();
+  }, [name, toggleChangingName]);
 
   useEffect(() => {
     if (changingName) editNameBoxRef.current.focus();
@@ -58,7 +57,7 @@ function User({ name, userId, myId, userIsMod }) {
           <div
             role="button"
             key={userId}
-            tabIndex={0}
+            tabIndex={canChangeName ? 0 : null}
             onKeyDown={(e) => e.key === "Enter" && startChangingName()}
             onClick={() => canChangeName && startChangingName()}
             disabled={!canChangeName}
