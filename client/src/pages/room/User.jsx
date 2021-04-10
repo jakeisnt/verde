@@ -47,7 +47,6 @@ function User({ name, userId, myId, userIsMod }) {
           type="text"
           className={classes.smallBox}
           value={nextName}
-          placeholder="Enter a new username"
           onKeyUp={changeNameKeyEvent}
           onInput={(e) => setNextName(e.target.value)}
           disabled={!canChangeName || !changingName}
