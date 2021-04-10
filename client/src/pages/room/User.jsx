@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+
 import PropTypes from "prop-types";
 import { useSocket } from "../../context/socketContext";
 import useToggle from "../../context/useToggle";
@@ -9,13 +10,9 @@ function User({ name, userId, myId, userIsMod }) {
   const classes = useStyles();
   const [changingName, toggleChangingName] = useToggle();
   const [nextName, setNextName] = useState(name);
+  const editNameBoxRef = useRef();
 
   const canChangeName = myId === userId;
-
-  // TODO:
-  // - disable changing name for people who are not you
-  // - when clicking the username box, focus the window to edit the username
-  // - show explicit change name button
 
   const changeName = useCallback(() => {
     sendMessage({ type: "changeName", payload: { name: nextName } });
@@ -25,7 +22,13 @@ function User({ name, userId, myId, userIsMod }) {
   const startChangingName = useCallback(() => {
     setNextName(name);
     toggleChangingName();
-  }, [name, toggleChangingName]);
+    if (editNameBoxRef && editNameBoxRef.current)
+      editNameBoxRef.current.focus();
+  }, [name, toggleChangingName, editNameBoxRef]);
+
+  useEffect(() => {
+    if (changingName) editNameBoxRef.current.focus();
+  }, [changingName]);
 
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
@@ -38,6 +41,7 @@ function User({ name, userId, myId, userIsMod }) {
             placeholder="Enter a new username"
             onKeyUp={(e) => e.key === "Enter" && changeName()}
             onInput={(e) => setNextName(e.target.value)}
+            ref={editNameBoxRef}
           />
           <button
             type="button"
@@ -50,15 +54,31 @@ function User({ name, userId, myId, userIsMod }) {
           </button>
         </div>
       ) : (
-        <div
-          key={userId}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && startChangingName()}
-          onClick={() => startChangingName()}
-        >
-          <p>{name}</p>
-        </div>
+        <>
+          <div
+            role="button"
+            key={userId}
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && startChangingName()}
+            onClick={() => canChangeName && startChangingName()}
+            disabled={!canChangeName}
+          >
+            <p>{name}</p>
+          </div>
+          {canChangeName && (
+            <button
+              type="button"
+              tabIndex={0}
+              className={classes.userSaveButton}
+              onClick={() => startChangingName()}
+              onKeyDown={(e) =>
+                e.key === "Enter" && canChangeName && startChangingName()
+              }
+            >
+              Edit Name
+            </button>
+          )}
+        </>
       )}
       {myId !== userId ? (
         userIsMod && (
