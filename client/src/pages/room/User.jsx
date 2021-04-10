@@ -29,17 +29,6 @@ function User({ name, userId, myId, userIsMod }) {
     if (changingName) editNameBoxRef.current.focus();
   }, [changingName]);
 
-  const changeNameKeyEvent = useCallback(
-    (e) =>
-      e.key === "Enter" && (changingName ? changeName() : startChangingName()),
-    [changingName, changeName, startChangingName]
-  );
-
-  const changeNameEvent = useCallback(
-    () => (changingName ? changeName() : startChangingName()),
-    [changingName, changeName, startChangingName]
-  );
-
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
       <div className={classes.changeUserBox}>
@@ -47,7 +36,10 @@ function User({ name, userId, myId, userIsMod }) {
           type="text"
           className={classes.smallBox}
           value={nextName}
-          onKeyUp={changeNameKeyEvent}
+          onKeyUp={(e) =>
+            e.key === "Enter" &&
+            (changingName ? changeName() : startChangingName())
+          }
           onInput={(e) => setNextName(e.target.value)}
           disabled={!canChangeName || !changingName}
           ref={editNameBoxRef}
@@ -57,8 +49,11 @@ function User({ name, userId, myId, userIsMod }) {
             type="button"
             tabIndex={0}
             className={classes.userSaveButton}
-            onClick={changeNameEvent}
-            onKeyDown={changeNameKeyEvent}
+            onClick={(e) => (changingName ? changeName() : startChangingName())}
+            onKeyUp={(e) =>
+              e.key === "Enter" &&
+              (changingName ? changeName() : startChangingName())
+            }
           >
             {changingName ? "Save" : "Edit Name"}
           </button>
