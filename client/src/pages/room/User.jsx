@@ -5,7 +5,7 @@ import { useSocket } from "../../context/socketContext";
 import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
 
-function User({ name, userId, myId, userIsMod, userIsSpectator }) {
+function User({ name, userId, myId, userIsMod, userIsSpectator, playerList }) {
   const { sendMessage } = useSocket();
   const classes = useStyles();
   const [changingName, setChangingName] = useState(false);
@@ -90,6 +90,19 @@ function User({ name, userId, myId, userIsMod, userIsSpectator }) {
                 Add
               </button>
             )}
+            <button
+              type="submit"
+              className={classes.addButton}
+              onClick={() =>
+                sendMessage &&
+                sendMessage({
+                  type: "nominateMod",
+                  payload: { id: userId },
+                })
+              }
+            >
+              Make Mod
+            </button>
           </>
         )
       ) : (
@@ -105,10 +118,12 @@ User.propTypes = {
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
   userIsSpectator: PropTypes.bool,
+  playerList: PropTypes.bool,
 };
 
 User.defaultProps = {
   userIsSpectator: false,
+  playerList: false,
 };
 
 export default User;

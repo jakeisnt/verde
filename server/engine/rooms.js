@@ -185,6 +185,28 @@ class Room {
 
     return this.getUsers();
   }
+
+  makeActive(user) {
+    user.spectate = false;
+    user.present = true;
+
+    return user;
+  }
+
+  nominateMod(modId, newModId) {
+    console.log(`${modId} has nominated ${newModId} to be the new mod`);
+    if (!this.isModerator(modId) || this.isBanned(newModId)) return undefined;
+
+    const index = this.users.findIndex(({ id }) => id === newModId);
+    if (index < 0) return undefined;
+    const user = this.users[index];
+    if (!user.present) return undefined;
+
+    this.users.splice(index, 1);
+    this.users.unshift(user);
+
+    return this.makeActive(user);
+  }
 }
 
 class Rooms {
@@ -244,6 +266,10 @@ class Rooms {
 
   static unspectateAllUsers(name, modId) {
     return this.getRoom(name)?.unspectateAll(modId);
+  }
+
+  static nominateMod(name, modId, newModId) {
+    return this.getRoom(name)?.nominateMod(modId, newModId);
   }
 }
 

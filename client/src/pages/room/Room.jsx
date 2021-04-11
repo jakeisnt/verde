@@ -6,6 +6,7 @@ import { useSocket } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
 import SpectatorList from "./SpectatorList";
+import PlayerList from "./PlayerList";
 
 function hasSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -87,9 +88,8 @@ function Room() {
         </div>
         {!error && lastMessage && (
           <>
-            <UserList
+            <PlayerList
               users={lastMessage.players}
-              title="Players"
               capacity={room && room.capacity}
               userIsMod={userIsMod}
               myId={me.id}

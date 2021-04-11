@@ -3,32 +3,16 @@ import { useSocket } from "../../context/socketContext";
 import User from "./User";
 import useStyles from "../styles";
 
-function SpectatorList({ users, capacity, myId, userIsMod }) {
+function PlayerList({ users, capacity, myId, userIsMod }) {
   const classes = useStyles();
   const { sendMessage } = useSocket();
 
   return users && users.length > 0 ? (
     <>
-      <div className={classes.flexRow}>
-        <div>
-          Spectators
-          {capacity &&
-            `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
-        </div>
-        {userIsMod && (
-          <button
-            type="button"
-            className={classes.box}
-            onClick={() =>
-              sendMessage &&
-              sendMessage({
-                type: "unspectateAll",
-              })
-            }
-          >
-            Admit All
-          </button>
-        )}
+      <div>
+        Players
+        {capacity &&
+          `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
       </div>
       <div className={classes.box}>
         {users &&
@@ -42,6 +26,7 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
                   myId={myId}
                   userIsMod={userIsMod}
                   userIsSpectator
+                  playerList
                 />
               )
           )}
@@ -50,7 +35,7 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
   ) : null;
 }
 
-SpectatorList.propTypes = {
+PlayerList.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -62,8 +47,8 @@ SpectatorList.propTypes = {
   userIsMod: PropTypes.bool.isRequired,
 };
 
-SpectatorList.defaultProps = {
+PlayerList.defaultProps = {
   capacity: null,
 };
 
-export default SpectatorList;
+export default PlayerList;

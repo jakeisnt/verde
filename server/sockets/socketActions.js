@@ -54,6 +54,11 @@ function unspectateAll(wss, message, { roomName, userId }) {
   updateUsers(wss, message, { roomName });
 }
 
+function nominateMod(wss, message, { roomName, userId }) {
+  Rooms.nominateMod(roomName, userId, message.payload.id);
+  updateUsers(wss, message, { roomName });
+}
+
 const socketActions = {
   connect,
   disconnect,
@@ -64,6 +69,7 @@ const socketActions = {
   changeName,
   modUnspectate,
   unspectateAll,
+  nominateMod,
 };
 
 module.exports = socketActions;
