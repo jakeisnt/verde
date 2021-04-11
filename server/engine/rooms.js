@@ -30,6 +30,10 @@ class Room {
     this.locked = true;
   }
 
+  getNumPlayers() {
+    return this.getUsers().players.length;
+  }
+
   getUsers() {
     const players = [];
     const inactives = [];
@@ -97,7 +101,25 @@ class Room {
     user.present = true;
     user.count += 1;
 
+    this.promoteSpectator();
+
     return user;
+  }
+
+  promoteSpectator() {
+    // if there are no more players, promote a spectator
+    if (this.getNumPlayers() === 0) {
+      const { players, inactives, spectators, banned } = this.getUsers();
+      console.log(players, inactives, spectators, banned, this.users);
+      if (spectators.length > 0) {
+        const upgradee = spectators[0].id;
+        console.log(`Upgrading spectator ${upgradee} to moderator!`);
+        this.getUser(upgradee).spectate = false;
+        // but if there are no more spectators, close the room
+      } else {
+        // close the room?
+      }
+    }
   }
 
   leave(userId) {
@@ -115,17 +137,7 @@ class Room {
       user.present = false;
     }
 
-    // if there are no more players, promote a spectator
-    if (this.numPlayers === 0) {
-      const { players, inactives, spectators, banned } = this.getUsers();
-      if (spectators.length >= 0) {
-        spectators[0].spectate = false;
-        // but if there are no more spectators, close the room
-      } else {
-        // close the room?
-      }
-    }
-
+    this.promoteSpectator();
     return user;
   }
 
@@ -152,6 +164,7 @@ class Room {
       if (!user.spectate) {
         user.spectate = true;
         this.numPlayers -= 1;
+        this.promoteSpectator();
       }
     } else if (this.canJoinAsPlayer()) {
       if (user.spectate) {
