@@ -7,7 +7,7 @@ function SpectatorList({ users, capacity, myId, userIsMod, userIsSpectator }) {
   const classes = useStyles();
   const { sendMessage } = useSocket();
 
-  return (
+  return users && users.length > 0 ? (
     <>
       <div className={classes.flexRow}>
         <div>
@@ -48,7 +48,7 @@ function SpectatorList({ users, capacity, myId, userIsMod, userIsSpectator }) {
           )}
       </div>
     </>
-  );
+  ) : null;
 }
 
 SpectatorList.propTypes = {

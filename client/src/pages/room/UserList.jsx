@@ -5,7 +5,7 @@ import useStyles from "../styles";
 function UserList({ users, title, capacity, myId, userIsMod }) {
   const classes = useStyles();
 
-  return (
+  return users && users.length > 0 ? (
     <>
       {title}
       {capacity &&
@@ -26,7 +26,7 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
           )}
       </div>
     </>
-  );
+  ) : null;
 }
 
 UserList.propTypes = {
