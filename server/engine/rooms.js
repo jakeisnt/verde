@@ -106,7 +106,7 @@ class Room {
   promoteSpectator() {
     // if there are no more players, promote a spectator
     if (this.getNumPlayers() === 0) {
-      const { players, inactives, spectators, banned } = this.getUsers();
+      const { spectators } = this.getUsers();
       if (spectators.length > 0) {
         const upgradee = spectators[0].id;
         console.log(`Upgrading spectator ${upgradee} to moderator!`);
@@ -182,6 +182,8 @@ class Room {
 
     const { spectators } = this.getUsers();
     spectators.forEach(({ id }) => this.setSpectate(id, false, true));
+
+    return this.getUsers();
   }
 }
 
