@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import useStyles from "../styles";
 import BackButton from "../../components/BackButton";
@@ -68,6 +68,15 @@ function Room() {
     [me, lastMessage]
   );
 
+  const sendSpectateMessage = useCallback(
+    () =>
+      sendMessage &&
+      sendMessage({
+        type: userIsNotSpectator ? "spectate" : "unspectate",
+      }),
+    [sendMessage, userIsNotSpectator]
+  );
+
   return (
     <>
       <div className={classes.room}>
@@ -99,12 +108,7 @@ function Room() {
             <button
               type="button"
               className={classes.box}
-              onClick={() =>
-                sendMessage &&
-                sendMessage({
-                  type: userIsNotSpectator ? "spectate" : "unspectate",
-                })
-              }
+              onClick={sendSpectateMessage}
             >
               {userIsNotSpectator ? "Spectate" : "Unspectate"}
             </button>

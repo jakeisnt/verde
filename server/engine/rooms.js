@@ -147,18 +147,16 @@ class Room {
   }
 
   setSpectate(userId, spectate) {
-    // The user can take no actions in this room if they are banned
     if (this.isBanned(userId)) return undefined;
-
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];
     if (!user.present) return undefined;
-
     if (spectate) {
       if (!user.spectate) {
         user.spectate = true;
-        this.promoteSpectator();
+        this.users.splice(index, 1);
+        this.users.push(user);
       }
     } else if (this.canJoinAsPlayer()) {
       if (user.spectate) {
@@ -168,9 +166,11 @@ class Room {
       }
     }
 
+    this.promoteSpectator();
     return user;
   }
 
+  // Allow moderator to set spectate status for another user
   modSetSpectate(modId, userId, spectate) {
     if (!this.isModerator(modId)) return undefined;
     return setSpectate(userId, spectate);
