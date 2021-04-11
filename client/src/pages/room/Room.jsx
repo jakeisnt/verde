@@ -105,13 +105,15 @@ function Room() {
               userIsMod={userIsMod}
               myId={me.id}
             />
-            <button
-              type="button"
-              className={classes.box}
-              onClick={sendSpectateMessage}
-            >
-              {userIsNotSpectator ? "Spectate" : "Unspectate"}
-            </button>
+            {(userIsMod || userIsNotSpectator) && (
+              <button
+                type="button"
+                className={classes.box}
+                onClick={sendSpectateMessage}
+              >
+                {userIsNotSpectator ? "Spectate" : "Unspectate"}
+              </button>
+            )}
           </>
         )}
       </div>
