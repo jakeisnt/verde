@@ -2,7 +2,14 @@ import PropTypes from "prop-types";
 import User from "./User";
 import useStyles from "../styles";
 
-function UserList({ users, title, capacity, myId, userIsMod }) {
+function UserList({
+  users,
+  title,
+  capacity,
+  myId,
+  userIsMod,
+  userIsSpectator,
+}) {
   const classes = useStyles();
 
   return (
@@ -21,6 +28,7 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
+                  userIsSpectator={userIsSpectator}
                 />
               )
           )}
@@ -40,6 +48,7 @@ UserList.propTypes = {
   capacity: PropTypes.number,
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
+  userIsSpectator: PropTypes.bool.isRequired,
 };
 
 UserList.defaultProps = {

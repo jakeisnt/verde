@@ -146,7 +146,8 @@ class Room {
     return bannedUser;
   }
 
-  setSpectate(userId, spectate) {
+  setSpectate(userId, spectate, byMod) {
+    console.log(`Setting ${userId}'s spectate status to ${spectate}`);
     if (this.isBanned(userId)) return undefined;
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
@@ -158,7 +159,7 @@ class Room {
         this.users.splice(index, 1);
         this.users.push(user);
       }
-    } else if (this.canJoinAsPlayer()) {
+    } else if (this.canJoinAsPlayer() || byMod) {
       if (user.spectate) {
         user.spectate = false;
         this.users.splice(index, 1);
@@ -173,7 +174,7 @@ class Room {
   // Allow moderator to set spectate status for another user
   modSetSpectate(modId, userId, spectate) {
     if (!this.isModerator(modId)) return undefined;
-    return setSpectate(userId, spectate);
+    return this.setSpectate(userId, spectate, true);
   }
 }
 
@@ -226,6 +227,10 @@ class Rooms {
 
   static banUser(name, userId, toBanId) {
     return this.getRoom(name)?.ban(userId, toBanId);
+  }
+
+  static modSetSpectate(name, modId, toSetId, spectate) {
+    return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
   }
 }
 

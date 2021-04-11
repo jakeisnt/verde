@@ -34,4 +34,9 @@ export default createUseStyles((theme) => ({
     paddingTop: "0.5em",
     paddingBottom: "0.5em",
   },
+  addButton: {
+    border: `2px solid ${theme.green}`,
+    padding: "auto",
+    backgroundColor: theme.white,
+  },
 }));

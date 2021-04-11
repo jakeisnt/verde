@@ -6,6 +6,11 @@ import { useSocket } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
 
+function userIsNotSpectator(userId, players) {
+  const meHopefully = players.filter(({ id }) => id === userId);
+  return meHopefully && meHopefully[0] && !meHopefully.spectate;
+}
+
 function Room() {
   const { error, lastMessage, roomName, sendMessage } = useSocket("users");
   const { user: me } = useUser();
@@ -53,18 +58,13 @@ function Room() {
     [me, lastMessage]
   );
 
-  const userIsNotSpectator = useMemo(
+  const userIsSpectator = !useMemo(
     () =>
       me &&
       me.id &&
       lastMessage &&
       lastMessage.players &&
-      (() => {
-        const meHopefully = lastMessage.players.filter(
-          ({ id }) => id === me.id
-        );
-        return meHopefully && meHopefully[0] && !meHopefully.spectate;
-      })(),
+      userIsNotSpectator(me.id, lastMessage.players),
     [me, lastMessage]
   );
 
@@ -72,9 +72,9 @@ function Room() {
     () =>
       sendMessage &&
       sendMessage({
-        type: userIsNotSpectator ? "spectate" : "unspectate",
+        type: userIsSpectator ? "unspectate" : "spectate",
       }),
-    [sendMessage, userIsNotSpectator]
+    [sendMessage, userIsSpectator]
   );
 
   return (
@@ -97,6 +97,7 @@ function Room() {
               users={lastMessage.spectators}
               title="Spectators"
               userIsMod={userIsMod}
+              userIsSpectator
               myId={me.id}
             />
             <UserList
@@ -111,7 +112,7 @@ function Room() {
                 className={classes.box}
                 onClick={sendSpectateMessage}
               >
-                {userIsNotSpectator ? "Spectate" : "Unspectate"}
+                {userIsSpectator ? "Unspectate" : "Spectate"}
               </button>
             )}
           </>
