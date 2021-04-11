@@ -45,11 +45,26 @@ function Room() {
   const userIsMod = useMemo(
     () =>
       me &&
-      lastMessage &&
       me.id &&
+      lastMessage &&
       lastMessage.players &&
       lastMessage.players[0] &&
       lastMessage.players[0].id === me.id,
+    [me, lastMessage]
+  );
+
+  const userIsNotSpectator = useMemo(
+    () =>
+      me &&
+      me.id &&
+      lastMessage &&
+      lastMessage.players &&
+      (() => {
+        const meHopefully = lastMessage.players.filter(
+          ({ id }) => id === me.id
+        );
+        return meHopefully && meHopefully[0] && !meHopefully.spectate;
+      })(),
     [me, lastMessage]
   );
 
@@ -84,16 +99,14 @@ function Room() {
             <button
               type="button"
               className={classes.box}
-              onClick={() => sendMessage && sendMessage({ type: "spectate" })}
+              onClick={() =>
+                sendMessage &&
+                sendMessage({
+                  type: userIsNotSpectator ? "spectate" : "unspectate",
+                })
+              }
             >
-              Spectate
-            </button>
-            <button
-              type="button"
-              className={classes.box}
-              onClick={() => sendMessage && sendMessage({ type: "unspectate" })}
-            >
-              Unspectate
+              {userIsNotSpectator ? "Spectate" : "Unspectate"}
             </button>
           </>
         )}
