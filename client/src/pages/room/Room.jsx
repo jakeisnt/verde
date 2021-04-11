@@ -5,6 +5,7 @@ import BackButton from "../../components/BackButton";
 import { useSocket } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
+import SpectatorList from "./SpectatorList";
 
 function userIsNotSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -93,11 +94,9 @@ function Room() {
               userIsMod={userIsMod}
               myId={me.id}
             />
-            <UserList
+            <SpectatorList
               users={lastMessage.spectators}
-              title="Spectators"
               userIsMod={userIsMod}
-              userIsSpectator
               myId={me.id}
             />
             <UserList

@@ -176,6 +176,13 @@ class Room {
     if (!this.isModerator(modId)) return undefined;
     return this.setSpectate(userId, spectate, true);
   }
+
+  unspectateAll(modId) {
+    if (!this.isModerator(modId)) return undefined;
+
+    const { spectators } = this.getUsers();
+    spectators.forEach(({ id }) => this.setSpectate(id, false, true));
+  }
 }
 
 class Rooms {
@@ -231,6 +238,10 @@ class Rooms {
 
   static modSetSpectate(name, modId, toSetId, spectate) {
     return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
+  }
+
+  static unspectateAllUsers(name, modId) {
+    return this.getRoom(name)?.unspectateAll(modId);
   }
 }
 

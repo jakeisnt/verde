@@ -104,7 +104,11 @@ User.propTypes = {
   userId: PropTypes.string.isRequired,
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
-  userIsSpectator: PropTypes.bool.isRequired,
+  userIsSpectator: PropTypes.bool,
+};
+
+User.defaultProps = {
+  userIsSpectator: false,
 };
 
 export default User;

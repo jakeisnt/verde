@@ -49,6 +49,11 @@ function modUnspectate(wss, message, { roomName, userId }) {
   updateUsers(wss, message, { roomName });
 }
 
+function unspectateAll(wss, message, { roomName, userId }) {
+  Rooms.unspectateAllUsers(roomName, userId);
+  updateUsers(wss, message, { roomName });
+}
+
 const socketActions = {
   connect,
   disconnect,
@@ -58,6 +63,7 @@ const socketActions = {
   banUser,
   changeName,
   modUnspectate,
+  unspectateAll,
 };
 
 module.exports = socketActions;
