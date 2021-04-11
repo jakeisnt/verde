@@ -27,7 +27,7 @@ class Room {
     this.capacity = capacity;
     this.users = [];
     this.numPlayers = 0;
-    this.locked = false;
+    this.locked = true;
   }
 
   getUsers() {
@@ -86,7 +86,7 @@ class Room {
       this.users.splice(index, 1);
     }
     if (index < 0 || !user.present) {
-      // Push (or repush) user if it is new or was inactive
+      // Push (or repush) user if they are new or were inactive
       if (this.canJoinAsPlayer()) {
         if (!user.spectate) this.numPlayers += 1;
       } else {
@@ -113,6 +113,17 @@ class Room {
     if (user.count === 0) {
       if (!user.spectate) this.numPlayers -= 1;
       user.present = false;
+    }
+
+    // if there are no more players, promote a spectator
+    if (this.numPlayers === 0) {
+      const { players, inactives, spectators, banned } = this.getUsers();
+      if (spectators.length >= 0) {
+        spectators[0].spectate = false;
+        // but if there are no more spectators, close the room
+      } else {
+        // close the room?
+      }
     }
 
     return user;
@@ -152,6 +163,11 @@ class Room {
     }
 
     return user;
+  }
+
+  modSetSpectate(modId, userId, spectate) {
+    if (!this.isModerator(modId)) return undefined;
+    return setSpectate(userId, spectate);
   }
 }
 
