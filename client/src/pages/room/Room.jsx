@@ -7,7 +7,7 @@ import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
 import SpectatorList from "./SpectatorList";
 
-function userIsNotSpectator(userId, players) {
+function hasSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully.spectate;
 }
@@ -59,13 +59,13 @@ function Room() {
     [me, lastMessage]
   );
 
-  const userIsSpectator = !useMemo(
+  const userIsSpectator = useMemo(
     () =>
       me &&
       me.id &&
       lastMessage &&
       lastMessage.players &&
-      userIsNotSpectator(me.id, lastMessage.players),
+      hasSpectator(me.id, lastMessage.players),
     [me, lastMessage]
   );
 
@@ -105,7 +105,7 @@ function Room() {
               userIsMod={userIsMod}
               myId={me.id}
             />
-            {(userIsMod || userIsNotSpectator) && (
+            {userIsSpectator && (
               <button
                 type="button"
                 className={classes.box}
