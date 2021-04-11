@@ -81,7 +81,6 @@ function Room() {
               userIsMod={userIsMod}
               myId={me.id}
             />
-
             <button
               type="button"
               className={classes.box}
