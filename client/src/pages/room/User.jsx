@@ -5,7 +5,15 @@ import { useSocket } from "../../context/socketContext";
 import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
 
-function User({ name, userId, myId, userIsMod, userIsSpectator, playerList }) {
+function User({
+  name,
+  userId,
+  myId,
+  userIsMod,
+  userIsSpectator,
+  playerList,
+  inactiveUser,
+}) {
   const { sendMessage } = useSocket();
   const classes = useStyles();
   const [changingName, setChangingName] = useState(false);
@@ -90,19 +98,21 @@ function User({ name, userId, myId, userIsMod, userIsSpectator, playerList }) {
                 Add
               </button>
             )}
-            <button
-              type="submit"
-              className={classes.addButton}
-              onClick={() =>
-                sendMessage &&
-                sendMessage({
-                  type: "nominateMod",
-                  payload: { id: userId },
-                })
-              }
-            >
-              Make Mod
-            </button>
+            {!inactiveUser && (
+              <button
+                type="submit"
+                className={classes.addButton}
+                onClick={() =>
+                  sendMessage &&
+                  sendMessage({
+                    type: "nominateMod",
+                    payload: { id: userId },
+                  })
+                }
+              >
+                Make Mod
+              </button>
+            )}
           </>
         )
       ) : (
@@ -119,11 +129,13 @@ User.propTypes = {
   userIsMod: PropTypes.bool.isRequired,
   userIsSpectator: PropTypes.bool,
   playerList: PropTypes.bool,
+  inactiveUser: PropTypes.bool,
 };
 
 User.defaultProps = {
   userIsSpectator: false,
   playerList: false,
+  inactiveUser: false,
 };
 
 export default User;

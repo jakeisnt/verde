@@ -186,13 +186,6 @@ class Room {
     return this.getUsers();
   }
 
-  makeActive(user) {
-    user.spectate = false;
-    user.present = true;
-
-    return user;
-  }
-
   nominateMod(modId, newModId) {
     console.log(`${modId} has nominated ${newModId} to be the new mod`);
     if (!this.isModerator(modId) || this.isBanned(newModId)) return undefined;
@@ -203,9 +196,10 @@ class Room {
     if (!user.present) return undefined;
 
     this.users.splice(index, 1);
+    user.spectate = false;
     this.users.unshift(user);
 
-    return this.makeActive(user);
+    return user;
   }
 }
 

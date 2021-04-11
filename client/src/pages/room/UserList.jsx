@@ -21,6 +21,7 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
+                  inactiveUser
                 />
               )
           )}
