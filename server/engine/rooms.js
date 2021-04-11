@@ -26,7 +26,6 @@ class Room {
     this.name = name;
     this.capacity = capacity;
     this.users = [];
-    this.numPlayers = 0;
     this.locked = true;
   }
 
@@ -53,7 +52,7 @@ class Room {
 
   canJoinAsPlayer() {
     if (this.locked) return false;
-    return this.capacity < 0 || this.numPlayers < this.capacity;
+    return this.capacity < 0 || this.getNumPlayers() < this.capacity;
   }
 
   getCurrentPlayers() {
@@ -62,7 +61,9 @@ class Room {
 
   isModerator(userId) {
     // The moderator is the first added active player.
-    return this.numPlayers > 0 && userId === this.getCurrentPlayers()[0].id;
+    return (
+      this.getNumPlayers() > 0 && userId === this.getCurrentPlayers()[0].id
+    );
   }
 
   isBanned(userId) {
@@ -91,11 +92,7 @@ class Room {
     }
     if (index < 0 || !user.present) {
       // Push (or repush) user if they are new or were inactive
-      if (this.canJoinAsPlayer()) {
-        if (!user.spectate) this.numPlayers += 1;
-      } else {
-        user.spectate = true;
-      }
+      if (!this.canJoinAsPlayer()) user.spectate = true;
       this.users.push(user);
     }
     user.present = true;
@@ -110,7 +107,6 @@ class Room {
     // if there are no more players, promote a spectator
     if (this.getNumPlayers() === 0) {
       const { players, inactives, spectators, banned } = this.getUsers();
-      console.log(players, inactives, spectators, banned, this.users);
       if (spectators.length > 0) {
         const upgradee = spectators[0].id;
         console.log(`Upgrading spectator ${upgradee} to moderator!`);
@@ -133,7 +129,6 @@ class Room {
 
     user.count -= 1;
     if (user.count === 0) {
-      if (!user.spectate) this.numPlayers -= 1;
       user.present = false;
     }
 
@@ -163,7 +158,6 @@ class Room {
     if (spectate) {
       if (!user.spectate) {
         user.spectate = true;
-        this.numPlayers -= 1;
         this.promoteSpectator();
       }
     } else if (this.canJoinAsPlayer()) {
@@ -171,7 +165,6 @@ class Room {
         user.spectate = false;
         this.users.splice(index, 1);
         this.users.push(user);
-        this.numPlayers += 1;
       }
     }
 
