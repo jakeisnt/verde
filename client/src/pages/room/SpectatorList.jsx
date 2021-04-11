@@ -30,7 +30,6 @@ function SpectatorList({ users, capacity, myId, userIsMod, userIsSpectator }) {
           </button>
         )}
       </div>
-
       <div className={classes.box}>
         {users &&
           users.map(

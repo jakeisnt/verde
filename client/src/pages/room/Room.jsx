@@ -73,9 +73,9 @@ function Room() {
     () =>
       sendMessage &&
       sendMessage({
-        type: userIsSpectator ? "unspectate" : "spectate",
+        type: "spectate",
       }),
-    [sendMessage, userIsSpectator]
+    [sendMessage]
   );
 
   return (
@@ -111,7 +111,7 @@ function Room() {
                 className={classes.box}
                 onClick={sendSpectateMessage}
               >
-                {userIsSpectator ? "Unspectate" : "Spectate"}
+                Spectate
               </button>
             )}
           </>
