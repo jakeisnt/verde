@@ -1,10 +1,28 @@
 const Users = require("./users");
+const game = require("../game");
 
-// apply a transformation to the state of the player
-function applyTransform(state, transform) {
-  return {
-    ...state,
-  };
+function getInitialPlayerState(player) {
+  return game.initialState.player();
+}
+
+function getInitialGameState() {
+  return game.initialState.game();
+}
+
+// Apply the game action to the game state.
+function takeAction(action, gameState) {
+  if (!action in gameSettings.actions) return gameState;
+  return gameSettings.actions[action](gameState);
+}
+
+// Determine when the game is over
+function isGameOver(gameState, playerState) {
+  return game.endWhen(gameState, playerState);
+}
+
+// Determine the winner of the game
+function getWinners(gameState, playerState) {
+  return game.getWinners(gameState, playerState);
 }
 
 /** TODO:
@@ -18,16 +36,10 @@ function applyTransform(state, transform) {
  * */
 
 class GamePlayer {
-  constructor({ id }) {
-    this.id = id;
+  constructor(player) {
+    this.id = player.id;
     this.inGame = true;
-    this.state = {
-      points: 100,
-    };
-  }
-
-  changeState(transform) {
-    this.state = applyTransform(this.state, transform);
+    this.state = getInitialPlayerState(player);
   }
 }
 
@@ -35,11 +47,11 @@ class Game {
   constructor(players) {
     this.players = players.map((player) => new GamePlayer(player));
     this.curPlayer = 0;
-    this.gameState = {};
+    this.gameState = getInitialGameState(players);
   }
 
   isOver() {
-    return true;
+    return isGameOver(this.gameState, this.players);
   }
 
   addPlayer(player) {
@@ -54,9 +66,7 @@ class Game {
     };
   }
 
-  start() {
-    return this.getGameState();
-  }
+  start() {}
 
   stop() {}
 
@@ -72,8 +82,7 @@ class Game {
   }
 
   takeAction(action) {
-    // transform the game state based on the action
-    return this.gameState.transform(action);
+    this.gameState = takeAction(action, this.gameState);
   }
 }
 
