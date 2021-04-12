@@ -7,6 +7,16 @@ function applyTransform(state, transform) {
   };
 }
 
+/** TODO:
+ * - End game
+ * - Persist some state between games
+ * - Make state changes to player state and to global state
+ * - Expose nice api for configuring:
+ * - - specific actions a user can take during their turn. maps to transformations
+ * - - events that trigger by the room at specific points. i.e. dealing extra cards
+ * - - public vs private state, for users and for players
+ * */
+
 class GamePlayer {
   constructor({ id }) {
     this.id = id;
