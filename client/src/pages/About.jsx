@@ -5,7 +5,7 @@ function About() {
   const classes = useStyles();
 
   return (
-    <div className={classes.about}>
+    <div className={classes.page}>
       <BackButton />
       <h1>About</h1>
       <p>

@@ -8,6 +8,7 @@ import UserList from "./UserList";
 import SpectatorList from "./SpectatorList";
 import PlayerList from "./PlayerList";
 import Game from "./Game";
+import Button from "../../components/Button";
 
 function hasSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -104,13 +105,7 @@ function Room() {
             myId={me.id}
           />
           {userIsSpectator && (
-            <button
-              type="button"
-              className={classes.box}
-              onClick={sendSpectateMessage}
-            >
-              Spectate
-            </button>
+            <Button title="Spectate" onClick={sendSpectateMessage} />
           )}
         </>
       )}

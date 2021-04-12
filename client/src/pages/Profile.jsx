@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useUser } from "../context/userContext";
 import useStyles from "./styles";
-import BackButton from "../components/BackButton";
+import { BackButton, Button } from "../components";
 
 function Profile() {
   const [name, setName] = useState("");
@@ -9,7 +9,7 @@ function Profile() {
   const classes = useStyles();
 
   return (
-    <div className={classes.home}>
+    <div className={classes.page}>
       <BackButton />
       <h1>Profile</h1>
       <p>Current User ID: {user && user.id}</p>
@@ -28,16 +28,13 @@ function Profile() {
         }}
         onInput={(e) => setName(e.target.value)}
       />
-      <button
-        type="button"
-        className={classes.box}
+      <Button
+        title="Set Name"
         onClick={() => {
           setUserName(name);
           setName("");
         }}
-      >
-        Set Name
-      </button>
+      />
     </div>
   );
 }

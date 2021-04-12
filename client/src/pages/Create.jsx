@@ -4,6 +4,7 @@ import { useUser } from "../context/userContext";
 import useStyles from "./styles";
 
 import BackButton from "../components/BackButton";
+import Button from "../components/Button";
 
 function Create() {
   const { userId } = useUser();
@@ -26,7 +27,7 @@ function Create() {
   }, [userId, history, capacity]);
 
   return (
-    <div className={classes.home}>
+    <div className={classes.page}>
       <BackButton />
       <input
         type="text"
@@ -36,13 +37,7 @@ function Create() {
         onKeyUp={(e) => e.key === "Enter" && createRoom()}
         onInput={(e) => setCapacity(e.target.value.toUpperCase())}
       />
-      <button
-        type="button"
-        className={classes.box}
-        onClick={() => createRoom()}
-      >
-        Create Lobby
-      </button>
+      <Button title="Create Lobby" onClick={createRoom} />
     </div>
   );
 }

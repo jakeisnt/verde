@@ -7,6 +7,7 @@ import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
 import SpectatorList from "./SpectatorList";
 import PlayerList from "./PlayerList";
+import Button from "../../components/Button";
 
 function hasPlayer(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -39,17 +40,27 @@ function Game({ userIsMod }) {
     lastMessage.curPlayer &&
     lastMessage.curPlayer === me.id;
 
+  function takeGameAction(type) {
+    return (
+      sendMessage && sendMessage({ type: "takeAction", payload: { type } })
+    );
+  }
+
+  function passTurn() {
+    return sendMessage && sendMessage({ type: "passTurn" });
+  }
+
+  function stopGame() {
+    return sendMessage && sendMessage({ type: "stopGame" });
+  }
+
+  function startGame() {
+    return sendMessage && sendMessage({ type: "startGame" });
+  }
+
   if (!gameStarted) {
     if (userIsMod) {
-      return (
-        <button
-          type="button"
-          className={classes.box}
-          onClick={() => sendMessage && sendMessage({ type: "startGame" })}
-        >
-          Start Game
-        </button>
-      );
+      return <Button title="Start Game" onClick={startGame} />;
     }
     return <div>Waiting for game to start...</div>;
   }
@@ -61,42 +72,12 @@ function Game({ userIsMod }) {
       <div>Game State: {lastMessage.game}</div>
       {userIsPlayer && isUserTurn && (
         <>
-          <button
-            type="button"
-            className={classes.box}
-            onClick={() =>
-              sendMessage({ type: "takeAction", payload: { type: "-1" } })
-            }
-          >
-            -1
-          </button>
-          <button
-            type="button"
-            className={classes.box}
-            onClick={() =>
-              sendMessage({ type: "takeAction", payload: { type: "+1" } })
-            }
-          >
-            +1
-          </button>
-          <button
-            type="button"
-            className={classes.box}
-            onClick={() => sendMessage({ type: "passTurn" })}
-          >
-            Pass Turn
-          </button>
+          <Button title="-1" onClick={() => takeGameAction("-1")} />
+          <Button title="+1" onClick={() => takeGameAction("+1")} />
+          <Button title="Pass Turn" onClick={passTurn} />
         </>
       )}
-      {userIsMod && (
-        <button
-          type="button"
-          className={classes.box}
-          onClick={() => sendMessage({ type: "stopGame" })}
-        >
-          End Game
-        </button>
-      )}
+      {userIsMod && <Button title="End Game" onClick={stopGame} />}
     </div>
   );
 }

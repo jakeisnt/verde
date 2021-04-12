@@ -56,6 +56,7 @@ module.exports = {
     "jsx-a11y/click-events-have-key-events": "warn",
     "jsx-a11y/interactive-supports-focus": "warn",
     "jsx-a11y/label-has-associated-control": "warn",
+    "jsx-a11y/control-has-associated-label": "warn",
 
     // personal preference
     "react/jsx-props-no-spreading": "off",

@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
 
 import BackButton from "../components/BackButton";
+import Button from "../components/Button";
 
 function Join() {
   const [name, setName] = useState("");
@@ -10,7 +11,7 @@ function Join() {
   const classes = useStyles();
 
   return (
-    <div className={classes.home}>
+    <div className={classes.page}>
       <BackButton />
       <input
         type="text"
@@ -20,13 +21,10 @@ function Join() {
         onKeyUp={(e) => e.key === "Enter" && history.push(`/room/${name}`)}
         onInput={(e) => setName(e.target.value.toUpperCase())}
       />
-      <button
-        type="button"
-        className={classes.box}
+      <Button
+        title="Join Lobby"
         onClick={() => history.push(`/room/${name}`)}
-      >
-        Join Lobby
-      </button>
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { createUseStyles } from "react-jss";
 
 export default createUseStyles((theme) => ({
-  home: {
+  page: {
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
@@ -10,22 +10,6 @@ export default createUseStyles((theme) => ({
     marginTop: "2em",
   },
   room: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    maxWidth: "50%",
-    margin: "auto",
-    marginTop: "2em",
-  },
-  profile: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    maxWidth: "50%",
-    margin: "auto",
-    marginTop: "2em",
-  },
-  about: {
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
@@ -60,7 +44,6 @@ export default createUseStyles((theme) => ({
     margin: "auto",
     marginBottom: "2em",
   },
-
   flexRow: {
     display: "flex",
     flexDirection: "row",
