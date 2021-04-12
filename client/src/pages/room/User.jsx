@@ -1,14 +1,64 @@
+import { useState, useEffect, useCallback, useRef } from "react";
+
 import PropTypes from "prop-types";
 import { useSocket } from "../../context/socketContext";
+import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
 
 function User({ name, userId, myId, userIsMod }) {
   const { sendMessage } = useSocket();
   const classes = useStyles();
+  const [changingName, setChangingName] = useState(false);
+  const [nextName, setNextName] = useState(name);
+  const editNameBoxRef = useRef();
+
+  const canChangeName = myId === userId;
+
+  const changeName = useCallback(() => {
+    sendMessage({ type: "changeName", payload: { name: nextName } });
+    setChangingName(false);
+    editNameBoxRef.current.blur();
+  }, [sendMessage, nextName, setChangingName, editNameBoxRef]);
+
+  const startChangingName = useCallback(() => {
+    setChangingName(true);
+    if (editNameBoxRef.current) editNameBoxRef.current.focus();
+  }, [setChangingName]);
+
+  useEffect(() => {
+    if (changingName) editNameBoxRef.current.focus();
+  }, [changingName]);
 
   return (
     <div key={`userBox-${userId}`} className={classes.userBox}>
-      <p key={userId}>{name}</p>
+      <div className={classes.changeUserBox}>
+        <input
+          type="text"
+          className={classes.smallBox}
+          value={nextName}
+          onKeyUp={(e) =>
+            e.key === "Enter" &&
+            (changingName ? changeName() : startChangingName())
+          }
+          onInput={(e) => setNextName(e.target.value)}
+          disabled={!canChangeName || !changingName}
+          ref={editNameBoxRef}
+        />
+        {canChangeName && (
+          <button
+            type="button"
+            tabIndex={0}
+            className={classes.userSaveButton}
+            onClick={(e) => (changingName ? changeName() : startChangingName())}
+            onKeyUp={(e) =>
+              e.key === "Enter" &&
+              (changingName ? changeName() : startChangingName())
+            }
+          >
+            {changingName ? "Save" : "Edit Name"}
+          </button>
+        )}
+      </div>
       {myId !== userId ? (
         userIsMod && (
           <button
@@ -26,10 +76,7 @@ function User({ name, userId, myId, userIsMod }) {
           </button>
         )
       ) : (
-        <>
-          <p>Me</p>
-          {userIsMod && <p>Mod</p>}
-        </>
+        <p>Me{userIsMod && ", Mod"}</p>
       )}
     </div>
   );

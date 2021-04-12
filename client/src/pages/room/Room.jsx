@@ -30,6 +30,7 @@ function Room() {
       lastMessage.banned.map(({ id }) => id).includes(me.id) // better than object comparison
     )
       history.push(
+        // eslint-disable-next-line prefer-template
         "/home/" +
           encodeURIComponent(`You have been banned from room ${roomName}.`)
       );

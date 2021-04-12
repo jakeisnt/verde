@@ -17,6 +17,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // api requests won't work without this
+// TODO: remove this for security reasons later
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
