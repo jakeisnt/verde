@@ -26,8 +26,11 @@ class Room {
     this.name = name;
     this.capacity = capacity;
     this.users = [];
-    this.numPlayers = 0;
-    this.locked = false;
+    this.locked = true;
+  }
+
+  getNumPlayers() {
+    return this.getUsers().players.length;
   }
 
   getUsers() {
@@ -49,7 +52,7 @@ class Room {
 
   canJoinAsPlayer() {
     if (this.locked) return false;
-    return this.capacity < 0 || this.numPlayers < this.capacity;
+    return this.capacity < 0 || this.getNumPlayers() < this.capacity;
   }
 
   getCurrentPlayers() {
@@ -58,7 +61,9 @@ class Room {
 
   isModerator(userId) {
     // The moderator is the first added active player.
-    return this.numPlayers > 0 && userId === this.getCurrentPlayers()[0].id;
+    return (
+      this.getNumPlayers() > 0 && userId === this.getCurrentPlayers()[0].id
+    );
   }
 
   isBanned(userId) {
@@ -86,18 +91,31 @@ class Room {
       this.users.splice(index, 1);
     }
     if (index < 0 || !user.present) {
-      // Push (or repush) user if it is new or was inactive
-      if (this.canJoinAsPlayer()) {
-        if (!user.spectate) this.numPlayers += 1;
-      } else {
-        user.spectate = true;
-      }
+      // Push (or repush) user if they are new or were inactive
+      if (!this.canJoinAsPlayer()) user.spectate = true;
       this.users.push(user);
     }
     user.present = true;
     user.count += 1;
 
+    this.promoteSpectator();
+
     return user;
+  }
+
+  promoteSpectator() {
+    // if there are no more players, promote a spectator
+    if (this.getNumPlayers() === 0) {
+      const { spectators } = this.getUsers();
+      if (spectators.length > 0) {
+        const upgradee = spectators[0].id;
+        console.log(`Upgrading spectator ${upgradee} to moderator!`);
+        this.getUser(upgradee).spectate = false;
+        // but if there are no more spectators, close the room
+      } else {
+        // close the room?
+      }
+    }
   }
 
   leave(userId) {
@@ -111,10 +129,10 @@ class Room {
 
     user.count -= 1;
     if (user.count === 0) {
-      if (!user.spectate) this.numPlayers -= 1;
       user.present = false;
     }
 
+    this.promoteSpectator();
     return user;
   }
 
@@ -128,28 +146,58 @@ class Room {
     return bannedUser;
   }
 
-  setSpectate(userId, spectate) {
-    // The user can take no actions in this room if they are banned
+  setSpectate(userId, spectate, byMod) {
+    console.log(`Setting ${userId}'s spectate status to ${spectate}`);
     if (this.isBanned(userId)) return undefined;
-
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
     const user = this.users[index];
     if (!user.present) return undefined;
-
     if (spectate) {
       if (!user.spectate) {
         user.spectate = true;
-        this.numPlayers -= 1;
+        this.users.splice(index, 1);
+        this.users.push(user);
       }
-    } else if (this.canJoinAsPlayer()) {
+    } else if (this.canJoinAsPlayer() || byMod) {
       if (user.spectate) {
         user.spectate = false;
         this.users.splice(index, 1);
         this.users.push(user);
-        this.numPlayers += 1;
       }
     }
+
+    this.promoteSpectator();
+    return user;
+  }
+
+  // Allow moderator to set spectate status for another user
+  modSetSpectate(modId, userId, spectate) {
+    if (!this.isModerator(modId)) return undefined;
+    return this.setSpectate(userId, spectate, true);
+  }
+
+  unspectateAll(modId) {
+    if (!this.isModerator(modId)) return undefined;
+
+    const { spectators } = this.getUsers();
+    spectators.forEach(({ id }) => this.setSpectate(id, false, true));
+
+    return this.getUsers();
+  }
+
+  nominateMod(modId, newModId) {
+    console.log(`${modId} has nominated ${newModId} to be the new mod`);
+    if (!this.isModerator(modId) || this.isBanned(newModId)) return undefined;
+
+    const index = this.users.findIndex(({ id }) => id === newModId);
+    if (index < 0) return undefined;
+    const user = this.users[index];
+    if (!user.present) return undefined;
+
+    this.users.splice(index, 1);
+    user.spectate = false;
+    this.users.unshift(user);
 
     return user;
   }
@@ -204,6 +252,18 @@ class Rooms {
 
   static banUser(name, userId, toBanId) {
     return this.getRoom(name)?.ban(userId, toBanId);
+  }
+
+  static modSetSpectate(name, modId, toSetId, spectate) {
+    return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
+  }
+
+  static unspectateAllUsers(name, modId) {
+    return this.getRoom(name)?.unspectateAll(modId);
+  }
+
+  static nominateMod(name, modId, newModId) {
+    return this.getRoom(name)?.nominateMod(modId, newModId);
   }
 }
 

@@ -5,7 +5,15 @@ import { useSocket } from "../../context/socketContext";
 import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
 
-function User({ name, userId, myId, userIsMod }) {
+function User({
+  name,
+  userId,
+  myId,
+  userIsMod,
+  userIsSpectator,
+  playerList,
+  inactiveUser,
+}) {
   const { sendMessage } = useSocket();
   const classes = useStyles();
   const [changingName, setChangingName] = useState(false);
@@ -61,19 +69,51 @@ function User({ name, userId, myId, userIsMod }) {
       </div>
       {myId !== userId ? (
         userIsMod && (
-          <button
-            type="submit"
-            className={classes.banButton}
-            onClick={() =>
-              sendMessage &&
-              sendMessage({
-                type: "banUser",
-                payload: { toBanId: userId },
-              })
-            }
-          >
-            Ban
-          </button>
+          <>
+            <button
+              type="submit"
+              className={classes.banButton}
+              onClick={() =>
+                sendMessage &&
+                sendMessage({
+                  type: "banUser",
+                  payload: { toBanId: userId },
+                })
+              }
+            >
+              Ban
+            </button>
+            {userIsSpectator && (
+              <button
+                type="submit"
+                className={classes.addButton}
+                onClick={() =>
+                  sendMessage &&
+                  sendMessage({
+                    type: "modUnspectate",
+                    payload: { id: userId },
+                  })
+                }
+              >
+                Add
+              </button>
+            )}
+            {!inactiveUser && (
+              <button
+                type="submit"
+                className={classes.addButton}
+                onClick={() =>
+                  sendMessage &&
+                  sendMessage({
+                    type: "nominateMod",
+                    payload: { id: userId },
+                  })
+                }
+              >
+                Make Mod
+              </button>
+            )}
+          </>
         )
       ) : (
         <p>Me{userIsMod && ", Mod"}</p>
@@ -87,6 +127,15 @@ User.propTypes = {
   userId: PropTypes.string.isRequired,
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
+  userIsSpectator: PropTypes.bool,
+  playerList: PropTypes.bool,
+  inactiveUser: PropTypes.bool,
+};
+
+User.defaultProps = {
+  userIsSpectator: false,
+  playerList: false,
+  inactiveUser: false,
 };
 
 export default User;

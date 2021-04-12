@@ -1,15 +1,35 @@
 import PropTypes from "prop-types";
+import { useSocket } from "../../context/socketContext";
 import User from "./User";
 import useStyles from "../styles";
 
-function UserList({ users, title, capacity, myId, userIsMod }) {
+function SpectatorList({ users, capacity, myId, userIsMod }) {
   const classes = useStyles();
+  const { sendMessage } = useSocket();
 
   return users && users.length > 0 ? (
     <>
-      {title}
-      {capacity &&
-        `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
+      <div className={classes.flexRow}>
+        <div>
+          Spectators
+          {capacity &&
+            `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
+        </div>
+        {userIsMod && (
+          <button
+            type="button"
+            className={classes.box}
+            onClick={() =>
+              sendMessage &&
+              sendMessage({
+                type: "unspectateAll",
+              })
+            }
+          >
+            Admit All
+          </button>
+        )}
+      </div>
       <div className={classes.box}>
         {users &&
           users.map(
@@ -21,7 +41,7 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
-                  inactiveUser
+                  userIsSpectator
                 />
               )
           )}
@@ -30,21 +50,20 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
   ) : null;
 }
 
-UserList.propTypes = {
+SpectatorList.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
-  title: PropTypes.string.isRequired,
   capacity: PropTypes.number,
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
 };
 
-UserList.defaultProps = {
+SpectatorList.defaultProps = {
   capacity: null,
 };
 
-export default UserList;
+export default SpectatorList;

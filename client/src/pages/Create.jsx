@@ -14,7 +14,12 @@ function Create() {
   const createRoom = useCallback(() => {
     if (userId) {
       const cap = capacity || "-1";
-      fetch(`/room/new?${new URLSearchParams({ userId, capacity: cap })}`)
+      fetch(
+        `/room/new?${new URLSearchParams({
+          userId,
+          capacity: cap,
+        })}`
+      )
         .then((res) => res.json())
         .then((room) => history.push(`/room/${room.name}`));
     }

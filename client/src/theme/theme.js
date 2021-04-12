@@ -6,6 +6,7 @@ const theme = {
   ok: "green",
   warn: "orange",
   error: "red",
+  green: "green",
 };
 
 export default theme;

@@ -60,4 +60,11 @@ export default createUseStyles((theme) => ({
     margin: "auto",
     marginBottom: "2em",
   },
+
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 }));
