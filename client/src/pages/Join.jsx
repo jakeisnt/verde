@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
 
-import BackButton from "../components/BackButton";
-import Button from "../components/Button";
+import { Button, Page, TextInput } from "../components";
 
 function Join() {
   const [name, setName] = useState("");
@@ -11,11 +10,8 @@ function Join() {
   const classes = useStyles();
 
   return (
-    <div className={classes.page}>
-      <BackButton />
-      <input
-        type="text"
-        className={classes.box}
+    <Page>
+      <TextInput
         value={name}
         placeholder="Enter a room ID"
         onKeyUp={(e) => e.key === "Enter" && history.push(`/room/${name}`)}
@@ -25,7 +21,7 @@ function Join() {
         title="Join Lobby"
         onClick={() => history.push(`/room/${name}`)}
       />
-    </div>
+    </Page>
   );
 }
 

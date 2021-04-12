@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 import PropTypes from "prop-types";
 import { useSocket } from "../../context/socketContext";
+import { useGameActions } from "../../context/socketContext";
 import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
 
@@ -14,7 +15,7 @@ function User({
   playerList,
   inactiveUser,
 }) {
-  const { sendMessage } = useSocket();
+  const { unspectateUser, banUser, nominateMod, changeName } = useGameActions();
   const classes = useStyles();
   const [changingName, setChangingName] = useState(false);
   const [nextName, setNextName] = useState(name);
@@ -23,10 +24,10 @@ function User({
   const canChangeName = myId === userId;
 
   const changeName = useCallback(() => {
-    sendMessage({ type: "changeName", payload: { name: nextName } });
+    changeName(nextName);
     setChangingName(false);
     editNameBoxRef.current.blur();
-  }, [sendMessage, nextName, setChangingName, editNameBoxRef]);
+  }, [changeName, nextName, setChangingName, editNameBoxRef]);
 
   const startChangingName = useCallback(() => {
     setChangingName(true);
@@ -53,65 +54,38 @@ function User({
           ref={editNameBoxRef}
         />
         {canChangeName && (
-          <button
-            type="button"
-            tabIndex={0}
+          <Button
+            title={changingName ? "Save" : "Edit Name"}
             className={classes.userSaveButton}
             onClick={(e) => (changingName ? changeName() : startChangingName())}
             onKeyUp={(e) =>
               e.key === "Enter" &&
               (changingName ? changeName() : startChangingName())
             }
-          >
-            {changingName ? "Save" : "Edit Name"}
-          </button>
+          />
         )}
       </div>
       {myId !== userId ? (
         userIsMod && (
           <>
-            <button
-              type="submit"
+            <Button
+              title="Ban"
               className={classes.banButton}
-              onClick={() =>
-                sendMessage &&
-                sendMessage({
-                  type: "banUser",
-                  payload: { toBanId: userId },
-                })
-              }
-            >
-              Ban
-            </button>
+              onClick={() => banUser(userId)}
+            />
             {userIsSpectator && (
-              <button
-                type="submit"
+              <Button
+                title="Add"
                 className={classes.addButton}
-                onClick={() =>
-                  sendMessage &&
-                  sendMessage({
-                    type: "modUnspectate",
-                    payload: { id: userId },
-                  })
-                }
-              >
-                Add
-              </button>
+                onClick={() => unpsectateUser(userId)}
+              />
             )}
             {!inactiveUser && (
-              <button
-                type="submit"
+              <Button
+                title="Make Mod"
                 className={classes.addButton}
-                onClick={() =>
-                  sendMessage &&
-                  sendMessage({
-                    type: "nominateMod",
-                    payload: { id: userId },
-                  })
-                }
-              >
-                Make Mod
-              </button>
+                onClick={() => nominateMod(userId)}
+              />
             )}
           </>
         )

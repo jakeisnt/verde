@@ -1,7 +1,7 @@
 import { useHistory, useParams } from "react-router-dom";
 import useStyles from "./styles";
 
-import Button from "../components/Button";
+import { Button } from "./components";
 
 function Home() {
   const history = useHistory();
@@ -9,7 +9,7 @@ function Home() {
   const classes = useStyles();
 
   return (
-    <div className={classes.page}>
+    <div className={classes.home}>
       {error && (
         <div className={classes.errorBox}>{decodeURIComponent(error)}</div>
       )}

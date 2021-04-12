@@ -17,7 +17,12 @@ function Button({ onClick, title }) {
   const classes = useStyles();
 
   return (
-    <button type="button" className={classes.button} onClick={onClick}>
+    <button
+      tabIndex={0}
+      type="button"
+      className={classes.button}
+      onClick={onClick}
+    >
       {title}
     </button>
   );

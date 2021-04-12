@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
-import { useSocket } from "../../context/socketContext";
 import User from "./User";
-import useStyles from "../styles";
+import useStyles from "../../styles";
 
 function PlayerList({ users, capacity, myId, userIsMod }) {
   const classes = useStyles();
-  const { sendMessage } = useSocket();
 
   return users && users.length > 0 ? (
     <>

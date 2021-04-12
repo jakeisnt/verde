@@ -1,7 +1,7 @@
 import { createUseStyles } from "react-jss";
 
 export default createUseStyles((theme) => ({
-  page: {
+  home: {
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",

@@ -4,7 +4,6 @@
   "private": true,
   "proxy": "http://localhost:4000",
   "dependencies": {
-    "@xstate/react": "1.3.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-jss": "10.6.0",
@@ -13,7 +12,6 @@
     "universal-cookie": "4.0.4",
     "react-scripts": "4.0.3",
     "web-vitals": "1.0.1",
-    "xstate": "4.17.0",
     "prop-types": "15.7.2"
   },
   "scripts": {

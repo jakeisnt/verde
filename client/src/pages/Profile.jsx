@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useUser } from "../context/userContext";
 import useStyles from "./styles";
-import { BackButton, Button } from "../components";
+import { Button, Input, Page } from "../components";
 
 function Profile() {
   const [name, setName] = useState("");
@@ -9,15 +9,12 @@ function Profile() {
   const classes = useStyles();
 
   return (
-    <div className={classes.page}>
-      <BackButton />
-      <h1>Profile</h1>
-      <p>Current User ID: {user && user.id}</p>
-      <p>Current User Name: {user && user.name}</p>
+    <Page>
+      <Title>Profile</Title>
+      <Subtitle>Current User ID: {user && user.id}</Subtitle>
+      <Subtitle>Current User Name: {user && user.name}</Subtitle>
       <br />
-      <input
-        type="text"
-        className={classes.box}
+      <Input
         value={name}
         placeholder="Enter a new name"
         onKeyUp={(e) => {
@@ -35,7 +32,7 @@ function Profile() {
           setName("");
         }}
       />
-    </div>
+    </Page>
   );
 }
 

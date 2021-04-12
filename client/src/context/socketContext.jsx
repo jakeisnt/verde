@@ -97,4 +97,44 @@ function useSocket(messageTypes) {
   return context;
 }
 
-export { useSocket, SocketProvider };
+const spec = {
+  unspectateUser: ["id"],
+  banUser: ["toBanId"],
+  nominateMod: ["id"],
+  changeName: ["name"],
+  unspectateAll: [],
+  spectate: [],
+};
+
+function generateFunctions(spec, sendMessage) {
+  return Object.keys(spec).reduce((funcs, funcName) => {
+    return {
+      ...funcs,
+      [funcName]: (args) =>
+        sendMessage &&
+        sendMessage({
+          type: funcName,
+          payload: Object.keys(spec[funcName]).reduce((pload, argname, i) => {
+            return { ...pload, [argname]: args[i] };
+          }, {}),
+        }),
+    };
+  }, {});
+}
+
+/** Provides a standard library of game action functions to use. */
+function useGameActions(messageTypes) {
+  const { sendMessage } = useSocket(messageTypes);
+
+  const stdlib = useMemo(() => generateFunctions(spec, sendMessage), [
+    sendMessage,
+  ]);
+
+  console.log(stdlib);
+
+  return stdlib;
+}
+
+/** TODO: combination of useUser and useSocket hook that provides some of the good user data */
+
+export { useSocket, SocketProvider, useGameActions };

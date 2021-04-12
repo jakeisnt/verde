@@ -2,9 +2,7 @@ import { useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import useStyles from "./styles";
-
-import BackButton from "../components/BackButton";
-import Button from "../components/Button";
+import { BackButton, Button, TextInput, Page } from "../components";
 
 function Create() {
   const { userId } = useUser();
@@ -27,18 +25,15 @@ function Create() {
   }, [userId, history, capacity]);
 
   return (
-    <div className={classes.page}>
-      <BackButton />
-      <input
-        type="text"
-        className={classes.box}
+    <Page>
+      <TextInput
         value={capacity}
         placeholder="Enter a room capacity (empty for infinite)"
         onKeyUp={(e) => e.key === "Enter" && createRoom()}
         onInput={(e) => setCapacity(e.target.value.toUpperCase())}
       />
       <Button title="Create Lobby" onClick={createRoom} />
-    </div>
+    </Page>
   );
 }
 
