@@ -79,45 +79,55 @@ function Room() {
     [sendMessage]
   );
 
+  const startGame = useCallback(
+    () =>
+      sendMessage &&
+      sendMessage({
+        type: "startGame",
+      }),
+    [sendMessage]
+  );
+
   return (
-    <>
-      <div className={classes.room}>
-        <BackButton text="Exit" />
-        <div className={classes.box}>
-          {error || `This is room ${roomName}.`}
-        </div>
-        {!error && lastMessage && (
-          <>
-            <PlayerList
-              users={lastMessage.players}
-              capacity={room && room.capacity}
-              userIsMod={userIsMod}
-              myId={me.id}
-            />
-            <SpectatorList
-              users={lastMessage.spectators}
-              userIsMod={userIsMod}
-              myId={me.id}
-            />
-            <UserList
-              users={lastMessage.inactives}
-              title="Inactive Users"
-              userIsMod={userIsMod}
-              myId={me.id}
-            />
-            {userIsSpectator && (
-              <button
-                type="button"
-                className={classes.box}
-                onClick={sendSpectateMessage}
-              >
-                Spectate
-              </button>
-            )}
-          </>
-        )}
-      </div>
-    </>
+    <div className={classes.room}>
+      <BackButton text="Exit" />
+      <div className={classes.box}>{error || `This is room ${roomName}.`}</div>
+      {!error && lastMessage && (
+        <>
+          <PlayerList
+            users={lastMessage.players}
+            capacity={room && room.capacity}
+            userIsMod={userIsMod}
+            myId={me.id}
+          />
+          <SpectatorList
+            users={lastMessage.spectators}
+            userIsMod={userIsMod}
+            myId={me.id}
+          />
+          <UserList
+            users={lastMessage.inactives}
+            title="Inactive Users"
+            userIsMod={userIsMod}
+            myId={me.id}
+          />
+          {userIsSpectator && (
+            <button
+              type="button"
+              className={classes.box}
+              onClick={sendSpectateMessage}
+            >
+              Spectate
+            </button>
+          )}
+          {userIsMod && (
+            <button type="button" className={classes.box} onClick={startGame}>
+              Start Game
+            </button>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 

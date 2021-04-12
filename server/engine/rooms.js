@@ -1,4 +1,5 @@
 const Users = require("./users");
+const Game = require("./game");
 
 /** Bijective hash on 32-bit ints */
 function hashInt32(x) {
@@ -21,12 +22,22 @@ class RoomUser {
   }
 }
 
+class RoomGamer {
+  constructor({ id }) {
+    this.id = id;
+    this.state = {
+      points: 100,
+    };
+  }
+}
+
 class Room {
   constructor(name, capacity = -1) {
     this.name = name;
     this.capacity = capacity;
     this.users = [];
     this.locked = true;
+    this.game = null;
   }
 
   getNumPlayers() {
@@ -201,6 +212,18 @@ class Room {
 
     return user;
   }
+
+  startGame() {
+    if (!this.game) {
+      const { players } = this.getUsers();
+      this.game = new Game(players);
+    }
+    return this.game?.start();
+  }
+
+  getGame() {
+    return this.game ?? this.game;
+  }
 }
 
 class Rooms {
@@ -264,6 +287,26 @@ class Rooms {
 
   static nominateMod(name, modId, newModId) {
     return this.getRoom(name)?.nominateMod(modId, newModId);
+  }
+
+  static startGame(name, modId) {
+    return this.getRoom(name)?.startGame();
+  }
+
+  static stopGame(name, modId) {
+    return this.getRoom(name)?.getGame()?.stop();
+  }
+
+  static takeAction(name, playerId, action) {
+    return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
+  }
+
+  static passTurn(name, playerId) {
+    const game = this.getRoom(name)?.getGame()?.passTurn(playerId);
+  }
+
+  static getGameState(roomName) {
+    return this.getRoom(name)?.getGameState();
   }
 }
 

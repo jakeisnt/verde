@@ -14,6 +14,10 @@ function updateUsers(wss, message, { roomName }) {
   broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
 }
 
+function updateGameState(wss, message, { roomName }) {
+  broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
+}
+
 function connect(wss, message, { roomName, userId }) {
   Rooms.joinRoom(roomName, userId);
   updateUsers(wss, message, { roomName });
@@ -57,6 +61,16 @@ function unspectateAll(wss, message, { roomName, userId }) {
 function nominateMod(wss, message, { roomName, userId }) {
   Rooms.nominateMod(roomName, userId, message.payload.id);
   updateUsers(wss, message, { roomName });
+}
+
+function startGame(wss, message, { roomName, userId }) {
+  Rooms.startGame(roomName, userId);
+  updateGameState(wss, message, { roomName });
+}
+
+function stopGame(wss, message, { roomName, userId }) {
+  Rooms.stopGame(roomName, userId);
+  updateGameState(wss, message, { roomName });
 }
 
 const socketActions = {
