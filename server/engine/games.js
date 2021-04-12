@@ -70,8 +70,12 @@ class Game {
 
   stop() {}
 
+  isCurrentPlayer(playerId) {
+    return playerId !== this.players[this.curPlayer].id;
+  }
+
   passTurn(playerId) {
-    if (playerId !== this.players[this.curPlayer].id) return undefined;
+    if (!this.isCurrentPlayer(playerId)) return undefined;
     this.curPlayer = (this.curPlayer + 1) % this.players.length;
     let cp = this.players[this.curPlayer];
     while (!cp.inGame) {
@@ -81,7 +85,8 @@ class Game {
     return cp;
   }
 
-  takeAction(action) {
+  takeAction(playerId, action) {
+    if (!this.isCurrentPlayer(playerId)) return undefined;
     this.gameState = takeAction(action, this.gameState);
   }
 }

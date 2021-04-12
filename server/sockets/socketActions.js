@@ -78,6 +78,11 @@ function passTurn(wss, message, { roomName, userId }) {
   updateGameState(wss, message, { roomName });
 }
 
+function takeAction(wss, message, { roomName, userId }) {
+  Rooms.takeAction(roomName, userId, message.payload.type);
+  updateGameState(wss, message, { roomName });
+}
+
 const socketActions = {
   connect,
   disconnect,
@@ -92,6 +97,7 @@ const socketActions = {
   startGame,
   stopGame,
   passTurn,
+  takeAction,
 };
 
 module.exports = socketActions;
