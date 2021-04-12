@@ -97,7 +97,13 @@ function useSocket(messageTypes) {
   return context;
 }
 
+/* Specification for socket functions. */
 const spec = {
+  // name of function/endpoint: names of arguments expected in socket message
+  passTurn: [],
+  stopGame: [],
+  startGame: [],
+  takeAction: ["type"],
   unspectateUser: ["id"],
   banUser: ["toBanId"],
   nominateMod: ["id"],
@@ -106,7 +112,7 @@ const spec = {
   spectate: [],
 };
 
-function generateFunctions(spec, sendMessage) {
+function generateEndpoints(spec, sendMessage) {
   return Object.keys(spec).reduce((funcs, funcName) => {
     return {
       ...funcs,
@@ -126,7 +132,7 @@ function generateFunctions(spec, sendMessage) {
 function useGameActions(messageTypes) {
   const { sendMessage } = useSocket(messageTypes);
 
-  const stdlib = useMemo(() => generateFunctions(spec, sendMessage), [
+  const stdlib = useMemo(() => generateEndpoints(spec, sendMessage), [
     sendMessage,
   ]);
 

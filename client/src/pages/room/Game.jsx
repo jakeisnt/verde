@@ -1,13 +1,8 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useMemo } from "react";
 import useStyles from "../styles";
-import BackButton from "../../components/BackButton";
-import { useSocket } from "../../context/socketContext";
+import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
-import UserList from "./UserList";
-import SpectatorList from "./SpectatorList";
-import PlayerList from "./PlayerList";
-import Button from "../../components/Button";
+import { Button } from "../../components";
 
 function hasPlayer(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -15,11 +10,10 @@ function hasPlayer(userId, players) {
 }
 
 function Game({ userIsMod }) {
-  const { lastMessage, sendMessage } = useSocket("game");
+  const { lastMessage } = useSocket("game");
+  const { passTurn, stopGame, startGame, takeGameAction } = useGameActions();
   const { user: me } = useUser();
   const classes = useStyles();
-  const [room, setGame] = useState(null);
-  const history = useHistory();
 
   const gameStarted = lastMessage;
 
@@ -39,24 +33,6 @@ function Game({ userIsMod }) {
     lastMessage &&
     lastMessage.curPlayer &&
     lastMessage.curPlayer === me.id;
-
-  function takeGameAction(type) {
-    return (
-      sendMessage && sendMessage({ type: "takeAction", payload: { type } })
-    );
-  }
-
-  function passTurn() {
-    return sendMessage && sendMessage({ type: "passTurn" });
-  }
-
-  function stopGame() {
-    return sendMessage && sendMessage({ type: "stopGame" });
-  }
-
-  function startGame() {
-    return sendMessage && sendMessage({ type: "startGame" });
-  }
 
   if (!gameStarted) {
     if (userIsMod) {
