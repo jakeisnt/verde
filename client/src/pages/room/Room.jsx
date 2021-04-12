@@ -7,6 +7,7 @@ import { useUser } from "../../context/userContext";
 import UserList from "./UserList";
 import SpectatorList from "./SpectatorList";
 import PlayerList from "./PlayerList";
+import Game from "./Game";
 
 function hasSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -79,15 +80,6 @@ function Room() {
     [sendMessage]
   );
 
-  const startGame = useCallback(
-    () =>
-      sendMessage &&
-      sendMessage({
-        type: "startGame",
-      }),
-    [sendMessage]
-  );
-
   return (
     <div className={classes.room}>
       <BackButton text="Exit" />
@@ -120,13 +112,9 @@ function Room() {
               Spectate
             </button>
           )}
-          {userIsMod && (
-            <button type="button" className={classes.box} onClick={startGame}>
-              Start Game
-            </button>
-          )}
         </>
       )}
+      <Game userIsMod={userIsMod} />
     </div>
   );
 }

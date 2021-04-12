@@ -20,20 +20,7 @@ function Game({ userIsMod }) {
   const [room, setGame] = useState(null);
   const history = useHistory();
 
-  if (!gameStarted) {
-    if (userIsMod) {
-      return (
-        <button
-          type="button"
-          className={classes.box}
-          onClick={() => sendMessage({ type: "startGame" })}
-        >
-          Start Game
-        </button>
-      );
-    }
-    return <div>Waiting for game to start...</div>;
-  }
+  const gameStarted = lastMessage;
 
   const userIsPlayer = useMemo(
     () =>
@@ -52,10 +39,25 @@ function Game({ userIsMod }) {
     lastMessage.curPlayer &&
     lastMessage.curPlayer === me.id;
 
+  if (!gameStarted) {
+    if (userIsMod) {
+      return (
+        <button
+          type="button"
+          className={classes.box}
+          onClick={() => sendMessage && sendMessage({ type: "startGame" })}
+        >
+          Start Game
+        </button>
+      );
+    }
+    return <div>Waiting for game to start...</div>;
+  }
+
+  console.log(lastMessage);
+
   return (
     <div className={classes.box}>
-      Game State: {lastMessage.global}
-      Player state: {lastMessage.local}
       {userIsPlayer && isUserTurn && (
         <button
           type="button"
@@ -69,7 +71,7 @@ function Game({ userIsMod }) {
         <button
           type="button"
           className={classes.box}
-          onClick={() => sendMessage({ type: "endGame" })}
+          onClick={() => sendMessage({ type: "stopGame" })}
         >
           End Game
         </button>

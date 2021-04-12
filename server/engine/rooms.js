@@ -1,5 +1,5 @@
 const Users = require("./users");
-const Game = require("./game");
+const Game = require("./games");
 
 /** Bijective hash on 32-bit ints */
 function hashInt32(x) {
@@ -22,15 +22,6 @@ class RoomUser {
   }
 }
 
-class RoomGamer {
-  constructor({ id }) {
-    this.id = id;
-    this.state = {
-      points: 100,
-    };
-  }
-}
-
 class Room {
   constructor(name, capacity = -1) {
     this.name = name;
@@ -42,6 +33,10 @@ class Room {
 
   getNumPlayers() {
     return this.getUsers().players.length;
+  }
+
+  getGame() {
+    return this.game;
   }
 
   getUsers() {
@@ -221,8 +216,8 @@ class Room {
     return this.game?.start();
   }
 
-  getGame() {
-    return this.game ?? this.game;
+  getGameState() {
+    return this.game ? this.game.getGameState() : undefined;
   }
 }
 
@@ -302,10 +297,10 @@ class Rooms {
   }
 
   static passTurn(name, playerId) {
-    const game = this.getRoom(name)?.getGame()?.passTurn(playerId);
+    return this.getRoom(name)?.getGame()?.passTurn(playerId);
   }
 
-  static getGameState(roomName) {
+  static getGameState(name) {
     return this.getRoom(name)?.getGameState();
   }
 }

@@ -24,7 +24,7 @@ class GamePlayer {
 class Game {
   constructor(players) {
     this.players = players.map((player) => new GamePlayer(player));
-    this.currPlayer = 0;
+    this.curPlayer = 0;
     this.gameState = {};
   }
 
@@ -39,8 +39,8 @@ class Game {
   getGameState() {
     return {
       players: this.players,
-      currPlayer: this.players[this.currPlayer],
-      gameState: this.gameState,
+      curPlayer: this.players[this.curPlayer].id,
+      game: this.gameState,
     };
   }
 
@@ -51,12 +51,12 @@ class Game {
   stop() {}
 
   passTurn(playerId) {
-    if (playerId !== this.players[currPlayer].id) return undefined;
-    let cp = this.players[this.currPlayer];
-    this.currPlayer = (this.currPlayer + 1) % this.players.length;
+    if (playerId !== this.players[this.curPlayer].id) return undefined;
+    this.curPlayer = (this.curPlayer + 1) % this.players.length;
+    let cp = this.players[this.curPlayer];
     while (!cp.inGame) {
-      this.currPlayer = (this.currPlayer + 1) % this.players.length;
-      cp = this.players[this.currPlayer];
+      this.curPlayer = (this.curPlayer + 1) % this.players.length;
+      cp = this.players[this.curPlayer];
     }
     return cp;
   }
@@ -66,3 +66,5 @@ class Game {
     return this.gameState.transform(action);
   }
 }
+
+module.exports = Game;
