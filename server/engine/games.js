@@ -11,8 +11,8 @@ function getInitialGameState() {
 
 // Apply the game action to the game state.
 function takeAction(action, gameState) {
-  if (!action in gameSettings.actions) return gameState;
-  return gameSettings.actions[action](gameState);
+  if (!action in game.actions) return gameState;
+  return game.actions[action](gameState);
 }
 
 // Determine when the game is over
@@ -71,7 +71,7 @@ class Game {
   stop() {}
 
   isCurrentPlayer(playerId) {
-    return playerId !== this.players[this.curPlayer].id;
+    return playerId === this.players[this.curPlayer].id;
   }
 
   passTurn(playerId) {
@@ -82,6 +82,7 @@ class Game {
       this.curPlayer = (this.curPlayer + 1) % this.players.length;
       cp = this.players[this.curPlayer];
     }
+    console.log("next player", cp);
     return cp;
   }
 

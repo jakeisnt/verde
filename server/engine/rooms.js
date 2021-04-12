@@ -293,6 +293,7 @@ class Rooms {
   }
 
   static takeAction(name, playerId, action) {
+    console.log(`${name}: ${playerId}: takeAction ${action}`);
     return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
   }
 

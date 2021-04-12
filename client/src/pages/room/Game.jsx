@@ -58,14 +58,35 @@ function Game({ userIsMod }) {
 
   return (
     <div className={classes.box}>
+      <div>Game State: {lastMessage.game}</div>
       {userIsPlayer && isUserTurn && (
-        <button
-          type="button"
-          className={classes.box}
-          onClick={() => sendMessage({ type: "passTurn" })}
-        >
-          Pass Turn
-        </button>
+        <>
+          <button
+            type="button"
+            className={classes.box}
+            onClick={() =>
+              sendMessage({ type: "takeAction", payload: { type: "-1" } })
+            }
+          >
+            -1
+          </button>
+          <button
+            type="button"
+            className={classes.box}
+            onClick={() =>
+              sendMessage({ type: "takeAction", payload: { type: "+1" } })
+            }
+          >
+            +1
+          </button>
+          <button
+            type="button"
+            className={classes.box}
+            onClick={() => sendMessage({ type: "passTurn" })}
+          >
+            Pass Turn
+          </button>
+        </>
       )}
       {userIsMod && (
         <button
