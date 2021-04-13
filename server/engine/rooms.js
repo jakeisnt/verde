@@ -251,59 +251,6 @@ class Rooms {
   static getRoom(name) {
     return this.rooms[name];
   }
-
-  static joinRoom(name, userId) {
-    return this.getRoom(name)?.join(userId);
-  }
-
-  static leaveRoom(name, userId) {
-    return this.getRoom(name)?.leave(userId);
-  }
-
-  static setSpectate(name, userId, spectate) {
-    return this.getRoom(name)?.setSpectate(userId, spectate);
-  }
-
-  static getUsers(name) {
-    return this.getRoom(name)?.getUsers();
-  }
-
-  static banUser(name, userId, toBanId) {
-    return this.getRoom(name)?.ban(userId, toBanId);
-  }
-
-  static modSetSpectate(name, modId, toSetId, spectate) {
-    return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
-  }
-
-  static unspectateAllUsers(name, modId) {
-    return this.getRoom(name)?.unspectateAll(modId);
-  }
-
-  static nominateMod(name, modId, newModId) {
-    return this.getRoom(name)?.nominateMod(modId, newModId);
-  }
-
-  static startGame(name, modId) {
-    return this.getRoom(name)?.startGame(modId);
-  }
-
-  static stopGame(name, modId) {
-    return this.getRoom(name)?.getGame(modId)?.stop(modId);
-  }
-
-  static takeAction(name, playerId, action) {
-    console.log(`${name}: ${playerId}: takeAction ${action}`);
-    return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
-  }
-
-  static passTurn(name, playerId) {
-    return this.getRoom(name)?.getGame()?.passTurn(playerId);
-  }
-
-  static getGameState(name) {
-    return this.getRoom(name)?.getGameState();
-  }
 }
 
 module.exports = Rooms;

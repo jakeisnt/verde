@@ -2,6 +2,7 @@ const WebSocket = require("ws");
 const Rooms = require("../engine/rooms");
 const Users = require("../engine/users");
 
+/**  Effectively standard library. */
 function broadcast(wss, message) {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
