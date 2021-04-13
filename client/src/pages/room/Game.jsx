@@ -12,7 +12,7 @@ function hasPlayer(userId, players) {
 
 function Game({ userIsMod }) {
   const { lastMessage } = useSocket("game");
-  const { passTurn, stopGame, startGame, takeGameAction } = useGameActions();
+  const { passTurn, stopGame, startGame, takeAction } = useGameActions();
   const { user: me } = useUser();
   const classes = useStyles();
 
@@ -42,15 +42,13 @@ function Game({ userIsMod }) {
     return <div>Waiting for game to start...</div>;
   }
 
-  console.log(lastMessage);
-
   return (
     <div className={classes.box}>
       <div>Game State: {lastMessage.game}</div>
       {userIsPlayer && isUserTurn && (
         <>
-          <Button title="-1" onClick={() => takeGameAction("-1")} />
-          <Button title="+1" onClick={() => takeGameAction("+1")} />
+          <Button title="-1" onClick={() => takeAction("-1")} />
+          <Button title="+1" onClick={() => takeAction("+1")} />
           <Button title="Pass Turn" onClick={passTurn} />
         </>
       )}
