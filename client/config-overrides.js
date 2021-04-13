@@ -1,9 +1,9 @@
-const { override, addBabelPlugins } = require("customize-cra");
+const { override, useBabelRc, addBabelPlugins } = require("customize-cra");
 
 module.exports = override(
+  useBabelRc(),
   addBabelPlugins(
-    // "@babel/plugin-proposal-nullish-coalescing-operator",
-    // "@babel/plugin-syntax-optional-chaining",
-    "@babel/plugin-syntax-class-properties"
+    "@babel/plugin-syntax-class-properties",
+    "@babel/plugin-proposal-class-properties"
   )
 );
