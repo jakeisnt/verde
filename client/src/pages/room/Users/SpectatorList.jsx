@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useGameActions } from "../../../context";
 import User from "./User";
 import useStyles from "./styles";
-import { Button } from "../../../components";
+import { Button, Box } from "../../../components";
 
 function SpectatorList({ users, capacity, myId, userIsMod }) {
   const classes = useStyles();
@@ -18,7 +18,7 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
         </div>
         {userIsMod && <Button title="Admit All" onClick={unspectateAll} />}
       </div>
-      <div className={classes.box}>
+      <Box>
         {users &&
           users.map(
             (user) =>
@@ -33,7 +33,7 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
                 />
               )
           )}
-      </div>
+      </Box>
     </>
   ) : null;
 }

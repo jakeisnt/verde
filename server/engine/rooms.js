@@ -296,7 +296,7 @@ class Rooms {
     const game = this.getRoom(name)?.getGame()?.passTurn(playerId);
   }
 
-  static getGameState(roomName) {
+  static getGameState(name) {
     return this.getRoom(name)?.getGameState();
   }
 }

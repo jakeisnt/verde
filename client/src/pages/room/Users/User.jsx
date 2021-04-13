@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import useStyles from "./styles";
 import { useGameActions } from "../../../context";
-import { Button } from "../../../components";
+import { Button, TextInput } from "../../../components";
 
 function User({
   name,
@@ -54,7 +54,6 @@ function User({
         {canChangeName && (
           <Button
             title={changingName ? "Save" : "Edit Name"}
-            className={classes.userSaveButton}
             onClick={() => (changingName ? setNewName() : startChangingName())}
             onKeyUp={(e) =>
               e.key === "Enter" &&
@@ -66,24 +65,12 @@ function User({
       {myId !== userId ? (
         userIsMod && (
           <>
-            <Button
-              title="Ban"
-              className={classes.banButton}
-              onClick={() => banUser(userId)}
-            />
+            <Button title="Ban" onClick={() => banUser(userId)} />
             {userIsSpectator && (
-              <Button
-                title="Add"
-                className={classes.addButton}
-                onClick={() => unspectateUser(userId)}
-              />
+              <Button title="Add" onClick={() => unspectateUser(userId)} />
             )}
             {!inactiveUser && (
-              <Button
-                title="Make Mod"
-                className={classes.addButton}
-                onClick={() => nominateMod(userId)}
-              />
+              <Button title="Make Mod" onClick={() => nominateMod(userId)} />
             )}
           </>
         )

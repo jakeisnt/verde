@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import User from "./User";
 import useStyles from "../../styles";
+import { Box } from "../../../components";
 
 function PlayerList({ users, capacity, myId, userIsMod }) {
   const classes = useStyles();
@@ -12,7 +13,7 @@ function PlayerList({ users, capacity, myId, userIsMod }) {
         {capacity &&
           `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
       </div>
-      <div className={classes.box}>
+      <Box>
         {users &&
           users.map(
             (user) =>
@@ -28,7 +29,7 @@ function PlayerList({ users, capacity, myId, userIsMod }) {
                 />
               )
           )}
-      </div>
+      </Box>
     </>
   ) : null;
 }

@@ -2,14 +2,6 @@ const Rooms = require("../engine/rooms");
 const Users = require("../engine/users");
 
 class Users2 {
-  // static joinRoom(name, userId) {
-  //   return Rooms.getRoom(name)?.join(userId);
-  // }
-
-  // static leaveRoom(name, userId) {
-  //   return Rooms.getRoom(name)?.leave(userId);
-  // }
-
   static connect(name, userId) {
     return Rooms.joinRoom(name, userId);
   }
@@ -19,6 +11,7 @@ class Users2 {
   }
 
   static changeName(roomName, userId, { name }) {
+    console.log(`setting name to ${name}`);
     return Users.setName(userId, name);
   }
 
@@ -28,10 +21,6 @@ class Users2 {
 
   static unspectate(name, userId) {
     return Rooms.getRoom(name)?.setSpectate(userId, false);
-  }
-
-  static modUnspectate(roomName, userId, { id }) {
-    Rooms.modSetSpectate(roomName, userId, id, false);
   }
 
   static getUsers(name) {

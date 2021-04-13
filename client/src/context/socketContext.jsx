@@ -104,14 +104,16 @@ function generateEndpoints(config, sendMessage) {
   return Object.keys(config).reduce((funcs, funcName) => {
     return {
       ...funcs,
-      [funcName]: (args) =>
-        sendMessage &&
-        sendMessage({
+      [funcName]: (...args) => {
+        const message = {
           type: funcName,
-          payload: Object.keys(config[funcName]).reduce((pload, argname, i) => {
+          payload: config[funcName].reduce((pload, argname, i) => {
             return { ...pload, [argname]: args[i] };
           }, {}),
-        }),
+        };
+        console.log("sending message", JSON.stringify(message, null, 2));
+        return sendMessage && sendMessage(message);
+      },
     };
   }, {});
 }
@@ -123,8 +125,6 @@ function useGameActions(messageTypes) {
   const stdlib = useMemo(() => generateEndpoints(spec, sendMessage), [
     sendMessage,
   ]);
-
-  console.log(stdlib);
 
   return stdlib;
 }

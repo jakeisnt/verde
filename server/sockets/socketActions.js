@@ -35,6 +35,7 @@ function generateEndpoints(config) {
       return {
         ...funcs,
         [funcName]: (wss, message, { roomName, userId }) => {
+          console.log(`${roomName}: ${userId}: ${funcName}`);
           // if the payload doesn't have all of the arguments required by the config, abort!
           // if (
           //   message &&
