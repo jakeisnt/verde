@@ -263,6 +263,42 @@ class Rooms {
   static getUsers(name) {
     return this.getRoom(name)?.getUsers();
   }
+
+  static banUser(name, userId, toBanId) {
+    return this.getRoom(name)?.ban(userId, toBanId);
+  }
+
+  static modSetSpectate(name, modId, toSetId, spectate) {
+    return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
+  }
+
+  static unspectateAllUsers(name, modId) {
+    return this.getRoom(name)?.unspectateAll(modId);
+  }
+
+  static nominateMod(name, modId, newModId) {
+    return this.getRoom(name)?.nominateMod(modId, newModId);
+  }
+
+  static startGame(name, modId) {
+    return this.getRoom(name)?.startGame();
+  }
+
+  static stopGame(name, modId) {
+    return this.getRoom(name)?.getGame()?.stop();
+  }
+
+  static takeAction(name, playerId, action) {
+    return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
+  }
+
+  static passTurn(name, playerId) {
+    const game = this.getRoom(name)?.getGame()?.passTurn(playerId);
+  }
+
+  static getGameState(roomName) {
+    return this.getRoom(name)?.getGameState();
+  }
 }
 
 module.exports = Rooms;

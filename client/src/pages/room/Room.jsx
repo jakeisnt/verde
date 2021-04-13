@@ -13,7 +13,8 @@ function hasSpectator(userId, players) {
 }
 
 /* When this page loads, add a message to warn when unloading. */
-window.onbeforeunload = () => "Are you sure that you want to leave the game?";
+
+/* Remove the listener when this component unmounts. */
 
 function Room() {
   const { error, lastMessage, roomName } = useSocket("users");

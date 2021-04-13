@@ -100,21 +100,6 @@ function useSocket(messageTypes) {
   return context;
 }
 
-/* Specification for socket functions. */
-// const spec = {
-//   // name of function/endpoint: names of arguments expected in socket message
-//   passTurn: [],
-//   stopGame: [],
-//   startGame: [],
-//   takeAction: ["type"],
-//   unspectateUser: ["id"],
-//   banUser: ["toBanId"],
-//   nominateMod: ["id"],
-//   changeName: ["name"],
-//   unspectateAll: [],
-//   spectate: [],
-// };
-
 function generateEndpoints(config, sendMessage) {
   return Object.keys(config).reduce((funcs, funcName) => {
     return {

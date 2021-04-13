@@ -13,13 +13,16 @@ function broadcast(wss, message) {
 }
 
 function users(wss, message, { roomName }) {
+  console.log("broadcasting users message");
   broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
 }
 
 function game(wss, message, { roomName }) {
+  console.log("broadcasting game message");
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
 
+// The two functions must belong to an object to index into them with a string.
 const Actions = {
   users,
   game,
@@ -33,14 +36,14 @@ function generateEndpoints(config) {
         ...funcs,
         [funcName]: (wss, message, { roomName, userId }) => {
           // if the payload doesn't have all of the arguments required by the config, abort!
-          if (
-            message &&
-            message.payload &&
-            !config[type][funcName].every(
-              (elem) => elem in Object.keys(message.payload)
-            )
-          )
-            return undefined;
+          // if (
+          //   message &&
+          //   message.payload &&
+          //   !config[type][funcName].every(
+          //     (elem) => elem in Object.keys(message.payload)
+          //   )
+          // )
+          //   return undefined;
           // call the appropriate function off of the appropriate class
           classes[type][funcName](
             roomName,
@@ -55,8 +58,11 @@ function generateEndpoints(config) {
     return { ...allfuncs, ...newFuncs };
   }, {});
 }
-console.log(spec);
-const socketActions = { ...generateEndpoints(spec) };
+const socketActions = generateEndpoints(spec);
+
+Object.keys(socketActions).forEach((action) =>
+  console.log(socketActions[action].toString())
+);
 console.log(socketActions);
 
 module.exports = socketActions;
