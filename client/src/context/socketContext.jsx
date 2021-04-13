@@ -9,7 +9,7 @@ import {
 import PropTypes from "prop-types";
 import useWebSocket from "react-use-websocket";
 import { useUser } from "./userContext";
-const spec = require("server");
+import spec from "../api_schema.json";
 // import spec from "server";
 
 const SocketContext = createContext(null);

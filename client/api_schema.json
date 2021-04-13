@@ -1,0 +1,30 @@
+{
+  "connect": [],
+  "disconnect": [],
+  "changeName": [
+    "name"
+  ],
+  "spectate": [],
+  "unspectate": [],
+  "modUnspectate": [
+    "id"
+  ],
+  "getUsers": [],
+  "banUser": [
+    "toBanId"
+  ],
+  "unspectateUser": [
+    "id"
+  ],
+  "unspectateAll": [],
+  "nominateMod": [
+    "id"
+  ],
+  "startGame": [],
+  "stopGame": [],
+  "takeAction": [
+    "type"
+  ],
+  "passTurn": [],
+  "getGameState": []
+}

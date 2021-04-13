@@ -24,3 +24,7 @@ yarn-error.log*
 
 .direnv/*
 !.direnv/.git-keep
+
+server/api_schema.json
+server/api/api_schema.json
+client/src/api_schema.json

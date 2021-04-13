@@ -12,6 +12,9 @@ function hasSpectator(userId, players) {
   return meHopefully && meHopefully[0] && !meHopefully.spectate;
 }
 
+/* When this page loads, add a message to warn when unloading. */
+window.onbeforeunload = () => "Are you sure that you want to leave the game?";
+
 function Room() {
   const { error, lastMessage, roomName } = useSocket("users");
   const { spectate } = useGameActions();

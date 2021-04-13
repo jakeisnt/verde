@@ -251,6 +251,18 @@ class Rooms {
   static getRoom(name) {
     return this.rooms[name];
   }
+
+  static joinRoom(name, userId) {
+    return this.getRoom(name)?.join(userId);
+  }
+
+  static leaveRoom(name, userId) {
+    return this.getRoom(name)?.leave(userId);
+  }
+
+  static getUsers(name) {
+    return this.getRoom(name)?.getUsers();
+  }
 }
 
 module.exports = Rooms;

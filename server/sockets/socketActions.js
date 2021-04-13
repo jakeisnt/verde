@@ -20,6 +20,11 @@ function game(wss, message, { roomName }) {
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
 
+const Actions = {
+  users,
+  game,
+};
+
 // name of function/endpoint: names of arguments expected in socket payload
 function generateEndpoints(config) {
   return Object.keys(config).reduce((allfuncs, type) => {
@@ -29,22 +34,29 @@ function generateEndpoints(config) {
         [funcName]: (wss, message, { roomName, userId }) => {
           // if the payload doesn't have all of the arguments required by the config, abort!
           if (
+            message &&
+            message.payload &&
             !config[type][funcName].every(
               (elem) => elem in Object.keys(message.payload)
             )
           )
             return undefined;
           // call the appropriate function off of the appropriate class
-          classes[type][funcName](roomName, userId, message.payload);
+          classes[type][funcName](
+            roomName,
+            userId,
+            (message && message.payload) || undefined
+          );
           // call the corresponding broadcasting function
-          return [type](wss, message, { roomName });
+          return Actions[type](wss, message, { roomName });
         },
       };
-    });
-    return { ...allfuncs, newFuncs };
+    }, {});
+    return { ...allfuncs, ...newFuncs };
   }, {});
 }
-
-const socketActions = generateEndpoints(spec);
+console.log(spec);
+const socketActions = { ...generateEndpoints(spec) };
+console.log(socketActions);
 
 module.exports = socketActions;
