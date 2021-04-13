@@ -1,4 +1,4 @@
-const Rooms = require("./engine/rooms");
+const Rooms = require("../engine/rooms");
 
 class Game {
   static startGame(name, modId) {

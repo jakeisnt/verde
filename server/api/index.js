@@ -6,4 +6,4 @@ const config = {
   game: Game,
 };
 
-export default config;
+module.exports = config;

@@ -1,4 +1,4 @@
-const Rooms = require("./engines/Rooms");
+const Rooms = require("../engine/rooms");
 
 class Users {
   static joinRoom(name, userId) {
