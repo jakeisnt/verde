@@ -58,28 +58,28 @@ function andmap(arr, cond) {
   return arr.reduce((b, elem) => b && cond(elem), true);
 }
 
-function generateEndpoints(spec, sendMessage) {
-  return Object.keys(spec).reduce((allfuncs, type) => {
-    const newFuncs = reduce((funcs, funcName) => {
+function generateEndpoints(config) {
+  return Object.keys(config).reduce((allfuncs, type) => {
+    const newFuncs = Object.keys(config[type]).reduce((funcs, funcName) => {
       return {
         ...funcs,
         [funcName]: (wss, message, { roomName, userId }) => {
-          // if the payload doesn't have all of the arguments required by the spec, abort!
+          // if the payload doesn't have all of the arguments required by the config, abort!
           if (
             !andmap(
-              spec[type][funcName],
+              config[type][funcName],
               (elem) => elem in Object.keys(message.payload)
             )
           )
             return undefined;
           // otherwise, call the appropriate function of Rooms, then of Broadcast
           Rooms[funcName](roomName, userId, message.payload);
-          Broadcast[type](wss, message, { roomName });
+          return Broadcast[type](wss, message, { roomName });
         },
       };
-      return { ...allfuncs, newFuncs };
-    }, {});
-  });
+    });
+    return { ...allfuncs, newFuncs };
+  }, {});
 }
 
 function connect(wss, message, { roomName, userId }) {

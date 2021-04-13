@@ -1,4 +1,5 @@
 /** This is where the user describes the game! */
+/* eslint-disable */
 
 const game = {
   /* Specifies the initial state for the game and each player. */

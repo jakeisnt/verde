@@ -285,11 +285,11 @@ class Rooms {
   }
 
   static startGame(name, modId) {
-    return this.getRoom(name)?.startGame();
+    return this.getRoom(name)?.startGame(modId);
   }
 
   static stopGame(name, modId) {
-    return this.getRoom(name)?.getGame()?.stop();
+    return this.getRoom(name)?.getGame(modId)?.stop(modId);
   }
 
   static takeAction(name, playerId, action) {

@@ -1,17 +1,16 @@
-const Users = require("./users");
 const game = require("../game");
 
 function getInitialPlayerState(player) {
-  return game.initialState.player();
+  return game.initialState.player(player);
 }
 
-function getInitialGameState() {
-  return game.initialState.game();
+function getInitialGameState(players) {
+  return game.initialState.game(players);
 }
 
 // Apply the game action to the game state.
 function takeAction(action, gameState) {
-  if (!action in game.actions) return gameState;
+  if (!(action in game.actions)) return gameState;
   return game.actions[action](gameState);
 }
 
@@ -89,6 +88,7 @@ class Game {
   takeAction(playerId, action) {
     if (!this.isCurrentPlayer(playerId)) return undefined;
     this.gameState = takeAction(action, this.gameState);
+    return this.gameState;
   }
 }
 
