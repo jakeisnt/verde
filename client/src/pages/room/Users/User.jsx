@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 import PropTypes from "prop-types";
-import { useSocket } from "../../context/socketContext";
-import { useGameActions } from "../../context/socketContext";
-import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
+import { useGameActions } from "../../../context";
+import { Button } from "../../../components";
 
 function User({
   name,
@@ -12,7 +11,6 @@ function User({
   myId,
   userIsMod,
   userIsSpectator,
-  playerList,
   inactiveUser,
 }) {
   const { unspectateUser, banUser, nominateMod, changeName } = useGameActions();
@@ -23,7 +21,7 @@ function User({
 
   const canChangeName = myId === userId;
 
-  const changeName = useCallback(() => {
+  const setNewName = useCallback(() => {
     changeName(nextName);
     setChangingName(false);
     editNameBoxRef.current.blur();
@@ -47,7 +45,7 @@ function User({
           value={nextName}
           onKeyUp={(e) =>
             e.key === "Enter" &&
-            (changingName ? changeName() : startChangingName())
+            (changingName ? setNewName() : startChangingName())
           }
           onInput={(e) => setNextName(e.target.value)}
           disabled={!canChangeName || !changingName}
@@ -57,10 +55,10 @@ function User({
           <Button
             title={changingName ? "Save" : "Edit Name"}
             className={classes.userSaveButton}
-            onClick={(e) => (changingName ? changeName() : startChangingName())}
+            onClick={() => (changingName ? setNewName() : startChangingName())}
             onKeyUp={(e) =>
               e.key === "Enter" &&
-              (changingName ? changeName() : startChangingName())
+              (changingName ? setNewName() : startChangingName())
             }
           />
         )}
@@ -77,7 +75,7 @@ function User({
               <Button
                 title="Add"
                 className={classes.addButton}
-                onClick={() => unpsectateUser(userId)}
+                onClick={() => unspectateUser(userId)}
               />
             )}
             {!inactiveUser && (
@@ -102,13 +100,11 @@ User.propTypes = {
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
   userIsSpectator: PropTypes.bool,
-  playerList: PropTypes.bool,
   inactiveUser: PropTypes.bool,
 };
 
 User.defaultProps = {
   userIsSpectator: false,
-  playerList: false,
   inactiveUser: false,
 };
 

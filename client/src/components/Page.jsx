@@ -1,17 +1,10 @@
-import { createUseStyles } from "react-jss";
+import PropTypes from "./prop-types";
 import BackButton from "./BackButton";
-
-const useStyles = createUseStyles((theme) => ({
-  page: {
-    border: "none",
-    backgroundColor: theme.white,
-    color: theme.black,
-    textAlign: "left",
-  },
-}));
+import useStyles from "./styles";
 
 function Page({ backButtonName, children }) {
   const classes = useStyles();
+
   return (
     <div className={classes.page}>
       <BackButton text={backButtonName} />
@@ -19,5 +12,14 @@ function Page({ backButtonName, children }) {
     </div>
   );
 }
+
+Page.propTypes = {
+  backButtonName: PropTypes.string,
+  children: PropTypes.children.isRequired,
+};
+
+Page.defaultProps = {
+  backButtonName: undefined,
+};
 
 export default Page;

@@ -1,7 +1,7 @@
 import { useHistory, useParams } from "react-router-dom";
 import useStyles from "./styles";
 
-import { Button } from "./components";
+import { Button } from "../components";
 
 function Home() {
   const history = useHistory();

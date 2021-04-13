@@ -1,9 +1,6 @@
-import useStyles from "./styles";
-import { BackButton, Title, Subtitle, Text, Page } from "../components";
+import { Title, Text, Page } from "../components";
 
 function About() {
-  const classes = useStyles();
-
   return (
     <Page>
       <Title>About</Title>

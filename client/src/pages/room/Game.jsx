@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useMemo } from "react";
 import useStyles from "../styles";
 import { useSocket, useGameActions } from "../../context/socketContext";
@@ -57,5 +58,9 @@ function Game({ userIsMod }) {
     </div>
   );
 }
+
+Game.propTypes = {
+  userIsMod: PropTypes.bool.isRequired,
+};
 
 export default Game;

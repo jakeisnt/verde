@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useUser } from "../context/userContext";
-import useStyles from "./styles";
-import { Button, Input, Page } from "../components";
+import { Button, TextInput, Page, Title, Subtitle } from "../components";
 
 function Profile() {
   const [name, setName] = useState("");
   const { user, setUserName } = useUser();
-  const classes = useStyles();
 
   return (
     <Page>
@@ -14,7 +12,7 @@ function Profile() {
       <Subtitle>Current User ID: {user && user.id}</Subtitle>
       <Subtitle>Current User Name: {user && user.name}</Subtitle>
       <br />
-      <Input
+      <TextInput
         value={name}
         placeholder="Enter a new name"
         onKeyUp={(e) => {

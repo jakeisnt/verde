@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useGameActions } from "../../context/socketContext";
+import { useGameActions } from "../../../context";
 import User from "./User";
 import useStyles from "./styles";
 import { Button } from "../../../components";

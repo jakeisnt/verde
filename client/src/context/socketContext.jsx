@@ -4,6 +4,7 @@ import {
   useState,
   useCallback,
   useContext,
+  useMemo,
 } from "react";
 import PropTypes from "prop-types";
 import useWebSocket from "react-use-websocket";
@@ -112,15 +113,15 @@ const spec = {
   spectate: [],
 };
 
-function generateEndpoints(spec, sendMessage) {
-  return Object.keys(spec).reduce((funcs, funcName) => {
+function generateEndpoints(config, sendMessage) {
+  return Object.keys(config).reduce((funcs, funcName) => {
     return {
       ...funcs,
       [funcName]: (args) =>
         sendMessage &&
         sendMessage({
           type: funcName,
-          payload: Object.keys(spec[funcName]).reduce((pload, argname, i) => {
+          payload: Object.keys(config[funcName]).reduce((pload, argname, i) => {
             return { ...pload, [argname]: args[i] };
           }, {}),
         }),

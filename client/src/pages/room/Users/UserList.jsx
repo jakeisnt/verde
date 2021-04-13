@@ -1,16 +1,14 @@
 import PropTypes from "prop-types";
 import User from "./User";
-import useStyles from "../styles";
+import { Box } from "../../../components";
 
 function UserList({ users, title, capacity, myId, userIsMod }) {
-  const classes = useStyles();
-
   return users && users.length > 0 ? (
     <>
       {title}
       {capacity &&
         `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
-      <div className={classes.box}>
+      <Box>
         {users &&
           users.map(
             (user) =>
@@ -25,7 +23,7 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
                 />
               )
           )}
-      </div>
+      </Box>
     </>
   ) : null;
 }

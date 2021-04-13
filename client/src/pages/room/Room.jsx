@@ -1,12 +1,11 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import useStyles from "../styles";
-import { useSocket } from "../../context/socketContext";
-import { useUser } from "../../context/userContext";
+import { useSocket, useUser, useGameActions } from "../../context";
 import { UserList, SpectatorList, PlayerList } from "./Users";
 import Game from "./Game";
 
-import { BackButton, Button } from "../../components";
+import { Button, Page } from "../../components";
 
 function hasSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);

@@ -1,13 +1,5 @@
-import { createUseStyles } from "react-jss";
-
-const useStyles = createUseStyles((theme) => ({
-  backButton: {
-    border: "none",
-    backgroundColor: theme.white,
-    color: theme.black,
-    textAlign: "left",
-  },
-}));
+import PropTypes from "./prop-types";
+import useStyles from "./styles";
 
 function TextInput({ value, placeholder, onKeyUp, onInput }) {
   const classes = useStyles();
@@ -22,5 +14,17 @@ function TextInput({ value, placeholder, onKeyUp, onInput }) {
     />
   );
 }
+
+TextInput.propTypes = {
+  value: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  onKeyUp: PropTypes.func,
+  onInput: PropTypes.func,
+};
+
+TextInput.defaultProps = {
+  onKeyUp: null,
+  onInput: null,
+};
 
 export default TextInput;

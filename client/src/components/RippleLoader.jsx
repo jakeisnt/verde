@@ -1,6 +1,6 @@
 import { createUseStyles } from "react-jss";
 
-const rippleStyles = createUseStyles((theme) => ({
+const useStyles = createUseStyles((theme) => ({
   ripple: {
     display: "inline-block",
     position: "relative",
@@ -36,7 +36,7 @@ const rippleStyles = createUseStyles((theme) => ({
 }));
 
 function RippleLoader() {
-  const classes = rippleStyles();
+  const classes = useStyles();
 
   return (
     <div className={classes.ripple}>

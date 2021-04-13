@@ -1,15 +1,6 @@
 import { useHistory } from "react-router-dom";
-import { createUseStyles } from "react-jss";
-import PropTypes from "prop-types";
-
-const useStyles = createUseStyles((theme) => ({
-  backButton: {
-    border: "none",
-    backgroundColor: theme.white,
-    color: theme.black,
-    textAlign: "left",
-  },
-}));
+import PropTypes from "./prop-types";
+import useStyles from "./styles";
 
 function BackButton({ text }) {
   const history = useHistory();

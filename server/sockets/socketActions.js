@@ -18,6 +18,9 @@ function game(wss, message, { roomName }) {
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
 
+const updateUsers = users;
+const updateGameState = game;
+
 /* TODO
  * spec:
  * */
@@ -26,6 +29,11 @@ const Broadcast = {
   users,
   game,
 };
+
+/*
+ * Really, we should be able to retrieve the spec information using reflection
+ * straight off of the functions defined in Rooms!
+ */
 
 const spec = {
   // name of function/endpoint: names of arguments expected in socket message
