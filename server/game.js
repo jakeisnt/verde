@@ -3,7 +3,7 @@
 
 /* stdlib: helper functions for working with the game! */
 // Make a copy of an object or array so you don't mutate it!
-const deepcopy = (obj) => JSON.stringify(JSON.parse(obj));
+const deepcopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 // the definition of the game.
 const game = {
