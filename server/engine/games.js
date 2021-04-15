@@ -62,7 +62,9 @@ class Game {
     };
   }
 
-  start() {}
+  start() {
+    this.stopped = false;
+  }
 
   stop() {
     this.stopped = true;

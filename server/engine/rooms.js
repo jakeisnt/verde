@@ -208,16 +208,16 @@ class Room {
     return user;
   }
 
-  startGame() {
-    // if (!this.game) {
+  startGame(modId) {
+    if (!this.isModerator(modId)) return undefined;
     const { players } = this.getUsers();
     this.game = new Game(players);
-    // }
     return this.game?.start();
   }
 
-  stopGame() {
-    this.game?.stop();
+  stopGame(modId) {
+    if (!this.isModerator(modId)) return undefined;
+    return this.game?.stop();
   }
 
   getGameState() {
@@ -285,11 +285,11 @@ class Rooms {
   }
 
   static startGame(name, modId) {
-    return this.getRoom(name)?.startGame();
+    return this.getRoom(name)?.startGame(modId);
   }
 
   static stopGame(name, modId) {
-    return this.getRoom(name)?.stopGame();
+    return this.getRoom(name)?.stopGame(modId);
   }
 
   static takeAction(name, playerId, action) {
@@ -297,7 +297,7 @@ class Rooms {
   }
 
   static passTurn(name, playerId) {
-    const game = this.getRoom(name)?.getGame()?.passTurn(playerId);
+    return this.getRoom(name)?.getGame()?.passTurn(playerId);
   }
 
   static getGameState(name) {

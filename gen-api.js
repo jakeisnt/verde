@@ -1,11 +1,10 @@
 const fs = require("fs");
-const { clientConfig, serverConfig } = require("./server/index.js");
+const { clientConfig } = require("./server/index.js");
 
+/* Script to provide the server's websocket API to the client.
+ * If this does not update, try deleting the client's api schema.
+ */
 function writeJSON(path, obj) {
-  // fs.stat(path, (err) =>
-  //   err === null ? fs.unlinkSync(path) : console.log(err)
-  // );
-
   fs.writeFile(path, JSON.stringify(obj, null, 2), (err) => {
     if (err) {
       throw err;
@@ -13,5 +12,4 @@ function writeJSON(path, obj) {
   });
 }
 
-// writeJSON("./server/api_schema.json", serverConfig);
 writeJSON("./client/src/api_schema.json", clientConfig);

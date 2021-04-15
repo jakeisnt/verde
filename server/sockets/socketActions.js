@@ -1,6 +1,5 @@
 const WebSocket = require("ws");
 const Rooms = require("../engine/rooms");
-const Users = require("../engine/users");
 const { spec, classes } = require("../api");
 
 /**  Effectively the standard library. */
@@ -51,6 +50,7 @@ function generateEndpoints(config) {
             userId,
             (message && message.payload) || undefined
           );
+
           // call the corresponding broadcasting function
           return Actions[type](wss, message, { roomName });
         },
@@ -60,10 +60,5 @@ function generateEndpoints(config) {
   }, {});
 }
 const socketActions = generateEndpoints(spec);
-
-Object.keys(socketActions).forEach((action) =>
-  console.log(socketActions[action].toString())
-);
-console.log(socketActions);
 
 module.exports = socketActions;

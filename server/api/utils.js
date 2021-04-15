@@ -1,8 +1,10 @@
-var STRIP_COMMENTS = /(\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s*=[^,\)]*(('(?:\\'|[^'\r\n])*')|("(?:\\"|[^"\r\n])*"))|(\s*=[^,\)]*))/gm;
-var ARGUMENT_NAMES = /([^\s,]+)/g;
+const STRIP_COMMENTS = /(\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s*=[^,\)]*(('(?:\\'|[^'\r\n])*')|("(?:\\"|[^"\r\n])*"))|(\s*=[^,\)]*))/gm;
+const ARGUMENT_NAMES = /([^\s,]+)/g;
+
+// get the names of parameters provided to a function.
 function getParamNames(func) {
-  var fnStr = func.toString().replace(STRIP_COMMENTS, "");
-  var result = fnStr
+  const fnStr = func.toString().replace(STRIP_COMMENTS, "");
+  let result = fnStr
     .slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")"))
     .match(ARGUMENT_NAMES);
   if (result === null) result = [];
@@ -19,11 +21,9 @@ function getParamNames(func) {
   return result;
 }
 
-// const DEFAULT_CLASS_PROPS = ["length", "prototype", "name"];
-// (propName) => !(propName in DEFAULT_CLASS_PROPS)
 function getFuncsOfClass(clss) {
   return Object.getOwnPropertyNames(clss).filter(
-    (e) => typeof clss[e] == "function"
+    (e) => typeof clss[e] === "function"
   );
 }
 

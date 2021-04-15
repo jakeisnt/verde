@@ -72,6 +72,9 @@ module.exports = {
     // nested template strings are not supported by js
     "prefer-template": "warn",
 
+    // interferes with regex
+    "no-useless-escape": "off",
+
     "max-classes-per-file": ["error", 3],
   },
 };
