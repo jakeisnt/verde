@@ -1,6 +1,11 @@
 /** This is where the user describes the game! */
 /* eslint-disable */
 
+/* stdlib: helper functions for working with the game! */
+// Make a copy of an object or array so you don't mutate it!
+const deepcopy = (obj) => JSON.stringify(JSON.parse(obj));
+
+// the definition of the game.
 const game = {
   /* Specifies the initial state for the game and each player. */
   initialState: {
@@ -38,6 +43,7 @@ const game = {
         state: { clickedLast: id === playerId },
       })),
       passTurn: true,
+      // Please don't mutate things, either... that wouldn't be very nice.
     }),
   },
 
