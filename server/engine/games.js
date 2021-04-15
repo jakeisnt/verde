@@ -10,9 +10,9 @@ function getInitialGameState(players) {
 }
 
 // Apply the game action to the game state.
-function takeAction(action, gameState) {
+function takeAction(action, gameState, players, playerId) {
   if (!(action in game.actions)) return gameState;
-  return game.actions[action](gameState);
+  return game.actions[action](gameState, players, playerId);
 }
 
 // Determine when the game is over
@@ -24,7 +24,7 @@ function isGameOver(gameState, playerState) {
 function getWinners(gameState, playerState) {
   return game.getWinners(gameState, playerState).map(({ id, ...rest }) => {
     const user = Users.getUser(id);
-    return { ...rest, ...user };
+    return { ...rest, ...user, id };
   });
 }
 
@@ -85,7 +85,15 @@ class Game {
 
   takeAction(playerId, action) {
     if (!this.isCurrentPlayer(playerId)) return undefined;
-    this.gameState = takeAction(action, this.gameState);
+    const { gameState, playerState, passTurn } = takeAction(
+      action,
+      this.gameState,
+      this.players,
+      playerId
+    );
+    if (gameState) this.gameState = gameState;
+    if (playerState) this.players = playerState;
+    if (passTurn) this.passTurn(playerId);
     return this.gameState;
   }
 }

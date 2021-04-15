@@ -33,6 +33,8 @@ function Game({ userIsMod }) {
     lastMessage.curPlayer &&
     lastMessage.curPlayer === me.id;
 
+  console.log(lastMessage);
+
   if (!gameStarted) {
     if (userIsMod) {
       return <Button title="Start Game" onClick={startGame} />;
