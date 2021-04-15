@@ -97,9 +97,9 @@ function Room() {
             myId={me.id}
           />
           {userIsSpectator && <Button title="Spectate" onClick={spectate} />}
+          <Game userIsMod={userIsMod} />
         </>
       )}
-      <Game userIsMod={userIsMod} />
     </Page>
   );
 }

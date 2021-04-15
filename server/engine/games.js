@@ -1,4 +1,5 @@
 const game = require("../game");
+const Users = require("./users");
 
 function getInitialPlayerState(player) {
   return game.initialState.player(player);
@@ -21,18 +22,11 @@ function isGameOver(gameState, playerState) {
 
 // Determine the winner of the game
 function getWinners(gameState, playerState) {
-  return game.getWinners(gameState, playerState);
+  return game.getWinners(gameState, playerState).map(({ id, ...rest }) => {
+    const user = Users.getUser(id);
+    return { ...rest, ...user };
+  });
 }
-
-/** TODO:
- * - End game
- * - Persist some state between games
- * - Make state changes to player state and to global state
- * - Expose nice api for configuring:
- * - - specific actions a user can take during their turn. maps to transformations
- * - - events that trigger by the room at specific points. i.e. dealing extra cards
- * - - public vs private state, for users and for players
- * */
 
 class GamePlayer {
   constructor(player) {
@@ -64,6 +58,7 @@ class Game {
       curPlayer: this.players[this.curPlayer].id,
       game: this.gameState,
       isOver: this.isOver(),
+      winners: this.isOver() && getWinners(this.gameState, this.players),
     };
   }
 

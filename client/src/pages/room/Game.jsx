@@ -1,9 +1,8 @@
 import PropTypes from "prop-types";
 import { useMemo } from "react";
-import useStyles from "../styles";
 import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
-import { Button } from "../../components";
+import { Button, Box, Title, Subtitle, Text } from "../../components";
 
 function hasPlayer(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -14,7 +13,6 @@ function Game({ userIsMod }) {
   const { lastMessage } = useSocket("game");
   const { passTurn, stopGame, startGame, takeAction } = useGameActions();
   const { user: me } = useUser();
-  const classes = useStyles();
 
   const gameStarted = lastMessage;
 
@@ -39,11 +37,11 @@ function Game({ userIsMod }) {
     if (userIsMod) {
       return <Button title="Start Game" onClick={startGame} />;
     }
-    return <div>Waiting for game to start...</div>;
+    return <Subtitle>Waiting for game to start...</Subtitle>;
   }
 
   return (
-    <div className={classes.box}>
+    <Box>
       <div>Game State: {lastMessage.game}</div>
       {!lastMessage.isOver && userIsPlayer && isUserTurn && (
         <>
@@ -55,10 +53,18 @@ function Game({ userIsMod }) {
       {!lastMessage.isOver && userIsMod && (
         <Button title="End Game" onClick={stopGame} />
       )}
+      {lastMessage.isOver && lastMessage.winners && (
+        <Box>
+          <Subtitle>Winners</Subtitle>
+          {lastMessage.winners.map(({ name, id }) => (
+            <Text key={`winner-${id}`}>{name}</Text>
+          ))}
+        </Box>
+      )}
       {lastMessage.isOver && userIsMod && (
         <Button title="Start Game" onClick={startGame} />
       )}
-    </div>
+    </Box>
   );
 }
 
