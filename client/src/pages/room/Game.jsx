@@ -45,14 +45,19 @@ function Game({ userIsMod }) {
   return (
     <div className={classes.box}>
       <div>Game State: {lastMessage.game}</div>
-      {userIsPlayer && isUserTurn && (
+      {!lastMessage.isOver && userIsPlayer && isUserTurn && (
         <>
           <Button title="-1" onClick={() => takeAction("-1")} />
           <Button title="+1" onClick={() => takeAction("+1")} />
           <Button title="Pass Turn" onClick={passTurn} />
         </>
       )}
-      {userIsMod && <Button title="End Game" onClick={stopGame} />}
+      {!lastMessage.isOver && userIsMod && (
+        <Button title="End Game" onClick={stopGame} />
+      )}
+      {lastMessage.isOver && userIsMod && (
+        <Button title="Start Game" onClick={startGame} />
+      )}
     </div>
   );
 }

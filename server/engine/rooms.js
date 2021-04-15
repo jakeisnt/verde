@@ -209,11 +209,15 @@ class Room {
   }
 
   startGame() {
-    if (!this.game) {
-      const { players } = this.getUsers();
-      this.game = new Game(players);
-    }
+    // if (!this.game) {
+    const { players } = this.getUsers();
+    this.game = new Game(players);
+    // }
     return this.game?.start();
+  }
+
+  stopGame() {
+    this.game?.stop();
   }
 
   getGameState() {
@@ -285,7 +289,7 @@ class Rooms {
   }
 
   static stopGame(name, modId) {
-    return this.getRoom(name)?.getGame()?.stop();
+    return this.getRoom(name)?.stopGame();
   }
 
   static takeAction(name, playerId, action) {

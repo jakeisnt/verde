@@ -47,10 +47,11 @@ class Game {
     this.players = players.map((player) => new GamePlayer(player));
     this.curPlayer = 0;
     this.gameState = getInitialGameState(players);
+    this.stopped = false;
   }
 
   isOver() {
-    return isGameOver(this.gameState, this.players);
+    return this.stopped || isGameOver(this.gameState, this.players);
   }
 
   addPlayer(player) {
@@ -62,12 +63,15 @@ class Game {
       players: this.players,
       curPlayer: this.players[this.curPlayer].id,
       game: this.gameState,
+      isOver: this.isOver(),
     };
   }
 
   start() {}
 
-  stop() {}
+  stop() {
+    this.stopped = true;
+  }
 
   isCurrentPlayer(playerId) {
     return playerId === this.players[this.curPlayer].id;
@@ -81,7 +85,6 @@ class Game {
       this.curPlayer = (this.curPlayer + 1) % this.players.length;
       cp = this.players[this.curPlayer];
     }
-    console.log("next player", cp);
     return cp;
   }
 
