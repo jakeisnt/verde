@@ -10,9 +10,9 @@ function getInitialGameState(players) {
 }
 
 // Apply the game action to the game state.
-function takeAction(action, gameState, players, playerId) {
+function takeAction(action, gameState, players, playerId, payload) {
   if (!(action in game.actions)) return gameState;
-  return game.actions[action](gameState, players, playerId);
+  return game.actions[action](gameState, players, playerId, payload);
 }
 
 // Determine when the game is over
@@ -85,13 +85,14 @@ class Game {
     return cp;
   }
 
-  takeAction(playerId, action) {
+  takeAction(playerId, action, payload) {
     if (!this.isCurrentPlayer(playerId)) return undefined;
     const { gameState, playerState, passTurn } = takeAction(
       action,
       this.gameState,
       this.players,
-      playerId
+      playerId,
+      payload
     );
     if (gameState) this.gameState = gameState;
     if (playerState) this.players = playerState;

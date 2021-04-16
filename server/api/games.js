@@ -9,9 +9,15 @@ class Game {
     return Rooms.getRoom(name)?.getGame(modId)?.stop(modId);
   }
 
-  static takeAction(name, playerId, { type }) {
-    console.log(`${name}: ${playerId}: takeAction ${type}`);
-    return Rooms.getRoom(name)?.getGame()?.takeAction(playerId, type);
+  static takeAction(name, playerId, { type, ...payload }) {
+    console.log(
+      `${name}: ${playerId}: takeAction ${type} ${JSON.stringify(
+        payload,
+        null,
+        2
+      )}`
+    );
+    return Rooms.getRoom(name)?.getGame()?.takeAction(playerId, type, payload);
   }
 
   static passTurn(name, playerId) {
