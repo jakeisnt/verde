@@ -33,12 +33,8 @@ function Game({ userIsMod }) {
     lastMessage.curPlayer &&
     lastMessage.curPlayer === me.id;
 
-  if (!gameStarted) {
-    if (userIsMod) {
-      return <Button title="Start Game" onClick={startGame} />;
-    }
-    return <Subtitle>Waiting for game to start...</Subtitle>;
-  }
+  if (!gameStarted && userIsMod) 
+    return <Button title="Start Game" onClick={startGame} />;
 
   return (
     <Box>
