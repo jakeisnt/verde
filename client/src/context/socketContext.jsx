@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import useWebSocket from "react-use-websocket";
 import { useUser } from "./userContext";
 import spec from "../api_schema.json";
-// import spec from "server";
 
 const SocketContext = createContext(null);
 
@@ -109,10 +108,11 @@ function generateEndpoints(config, sendMessage) {
           type: funcName,
           payload: config[funcName].reduce((pload, argname, i) => {
             return { ...pload, [argname]: args[i]};
-          }, { data: args }),
+          }, { }),
         };
-        console.log(`Sending message ${JSON.stringify(message, null, 2)}`);
-        return sendMessage && sendMessage(message);
+	const finalMessage = {...message, data: args[1] };
+        console.log(`Sending message ${JSON.stringify(finalMessage, null, 2)}`);
+        return sendMessage && sendMessage(finalMessage);
       },
     };
   }, {});

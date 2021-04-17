@@ -35,6 +35,9 @@ function Game({ userIsMod }) {
 
   if (!gameStarted && userIsMod) 
     return <Button title="Start Game" onClick={startGame} />;
+  
+  if (!gameStarted)
+    return <Subtitle>Waiting for the game to start...</Subtitle>;
 
   return (
     <Box>
