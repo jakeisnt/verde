@@ -1,23 +1,18 @@
 import { useState } from "react";
 import { useUser } from "../context/userContext";
-import useStyles from "./styles";
-import BackButton from "../components/BackButton";
+import { Button, TextInput, Page, Title, Subtitle } from "../components";
 
 function Profile() {
   const [name, setName] = useState("");
   const { user, setUserName } = useUser();
-  const classes = useStyles();
 
   return (
-    <div className={classes.home}>
-      <BackButton />
-      <h1>Profile</h1>
-      <p>Current User ID: {user && user.id}</p>
-      <p>Current User Name: {user && user.name}</p>
+    <Page>
+      <Title>Profile</Title>
+      <Subtitle>Current User ID: {user && user.id}</Subtitle>
+      <Subtitle>Current User Name: {user && user.name}</Subtitle>
       <br />
-      <input
-        type="text"
-        className={classes.box}
+      <TextInput
         value={name}
         placeholder="Enter a new name"
         onKeyUp={(e) => {
@@ -28,17 +23,14 @@ function Profile() {
         }}
         onInput={(e) => setName(e.target.value)}
       />
-      <button
-        type="button"
-        className={classes.box}
+      <Button
+        title="Set Name"
         onClick={() => {
           setUserName(name);
           setName("");
         }}
-      >
-        Set Name
-      </button>
-    </div>
+      />
+    </Page>
   );
 }
 

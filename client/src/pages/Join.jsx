@@ -1,33 +1,25 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import useStyles from "./styles";
 
-import BackButton from "../components/BackButton";
+import { Button, Page, TextInput } from "../components";
 
 function Join() {
   const [name, setName] = useState("");
   const history = useHistory();
-  const classes = useStyles();
 
   return (
-    <div className={classes.home}>
-      <BackButton />
-      <input
-        type="text"
-        className={classes.box}
+    <Page>
+      <TextInput
         value={name}
         placeholder="Enter a room ID"
         onKeyUp={(e) => e.key === "Enter" && history.push(`/room/${name}`)}
         onInput={(e) => setName(e.target.value.toUpperCase())}
       />
-      <button
-        type="button"
-        className={classes.box}
+      <Button
+        title="Join Lobby"
         onClick={() => history.push(`/room/${name}`)}
-      >
-        Join Lobby
-      </button>
-    </div>
+      />
+    </Page>
   );
 }
 

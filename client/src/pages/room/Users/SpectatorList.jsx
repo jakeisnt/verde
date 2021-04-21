@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
-import { useSocket } from "../../context/socketContext";
+import { useGameActions } from "../../../context";
 import User from "./User";
-import useStyles from "../styles";
+import useStyles from "./styles";
+import { Button, Box } from "../../../components";
 
 function SpectatorList({ users, capacity, myId, userIsMod }) {
   const classes = useStyles();
-  const { sendMessage } = useSocket();
+  const { unspectateAll } = useGameActions();
 
   return users && users.length > 0 ? (
     <>
@@ -15,22 +16,9 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
           {capacity &&
             `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
         </div>
-        {userIsMod && (
-          <button
-            type="button"
-            className={classes.box}
-            onClick={() =>
-              sendMessage &&
-              sendMessage({
-                type: "unspectateAll",
-              })
-            }
-          >
-            Admit All
-          </button>
-        )}
+        {userIsMod && <Button title="Admit All" onClick={unspectateAll} />}
       </div>
-      <div className={classes.box}>
+      <Box>
         {users &&
           users.map(
             (user) =>
@@ -45,7 +33,7 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
                 />
               )
           )}
-      </div>
+      </Box>
     </>
   ) : null;
 }

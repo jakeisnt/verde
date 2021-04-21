@@ -1,6 +1,12 @@
 import { createUseStyles } from "react-jss";
 
 export default createUseStyles((theme) => ({
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   userBox: {
     display: "flex",
     flexDirection: "row",

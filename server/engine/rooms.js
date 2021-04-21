@@ -1,4 +1,5 @@
 const Users = require("./users");
+const Game = require("./games");
 
 /** Bijective hash on 32-bit ints */
 function hashInt32(x) {
@@ -27,10 +28,15 @@ class Room {
     this.capacity = capacity;
     this.users = [];
     this.locked = true;
+    this.game = null;
   }
 
   getNumPlayers() {
     return this.getUsers().players.length;
+  }
+
+  getGame() {
+    return this.game;
   }
 
   getUsers() {
@@ -201,6 +207,22 @@ class Room {
 
     return user;
   }
+
+  startGame(modId) {
+    if (!this.isModerator(modId)) return undefined;
+    const { players } = this.getUsers();
+    this.game = new Game(players);
+    return this.game?.start();
+  }
+
+  stopGame(modId) {
+    if (!this.isModerator(modId)) return undefined;
+    return this.game?.stop();
+  }
+
+  getGameState() {
+    return this.game ? this.game.getGameState() : undefined;
+  }
 }
 
 class Rooms {
@@ -242,10 +264,6 @@ class Rooms {
     return this.getRoom(name)?.leave(userId);
   }
 
-  static setSpectate(name, userId, spectate) {
-    return this.getRoom(name)?.setSpectate(userId, spectate);
-  }
-
   static getUsers(name) {
     return this.getRoom(name)?.getUsers();
   }
@@ -264,6 +282,26 @@ class Rooms {
 
   static nominateMod(name, modId, newModId) {
     return this.getRoom(name)?.nominateMod(modId, newModId);
+  }
+
+  static startGame(name, modId) {
+    return this.getRoom(name)?.startGame(modId);
+  }
+
+  static stopGame(name, modId) {
+    return this.getRoom(name)?.stopGame(modId);
+  }
+
+  static takeAction(name, playerId, action) {
+    return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
+  }
+
+  static passTurn(name, playerId) {
+    return this.getRoom(name)?.getGame()?.passTurn(playerId);
+  }
+
+  static getGameState(name) {
+    return this.getRoom(name)?.getGameState();
   }
 }
 

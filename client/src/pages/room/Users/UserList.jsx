@@ -1,20 +1,14 @@
 import PropTypes from "prop-types";
-import { useSocket } from "../../context/socketContext";
 import User from "./User";
-import useStyles from "../styles";
+import { Box } from "../../../components";
 
-function PlayerList({ users, capacity, myId, userIsMod }) {
-  const classes = useStyles();
-  const { sendMessage } = useSocket();
-
+function UserList({ users, title, capacity, myId, userIsMod }) {
   return users && users.length > 0 ? (
     <>
-      <div>
-        Players
-        {capacity &&
-          `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
-      </div>
-      <div className={classes.box}>
+      {title}
+      {capacity &&
+        `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
+      <Box>
         {users &&
           users.map(
             (user) =>
@@ -25,30 +19,30 @@ function PlayerList({ users, capacity, myId, userIsMod }) {
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
-                  userIsSpectator
-                  playerList
+                  inactiveUser
                 />
               )
           )}
-      </div>
+      </Box>
     </>
   ) : null;
 }
 
-PlayerList.propTypes = {
+UserList.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
+  title: PropTypes.string.isRequired,
   capacity: PropTypes.number,
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
 };
 
-PlayerList.defaultProps = {
+UserList.defaultProps = {
   capacity: null,
 };
 
-export default PlayerList;
+export default UserList;

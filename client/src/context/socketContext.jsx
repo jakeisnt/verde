@@ -4,10 +4,12 @@ import {
   useState,
   useCallback,
   useContext,
+  useMemo,
 } from "react";
 import PropTypes from "prop-types";
 import useWebSocket from "react-use-websocket";
 import { useUser } from "./userContext";
+import spec from "../api_schema.json";
 
 const SocketContext = createContext(null);
 
@@ -97,4 +99,36 @@ function useSocket(messageTypes) {
   return context;
 }
 
-export { useSocket, SocketProvider };
+function generateEndpoints(config, sendMessage) {
+  return Object.keys(config).reduce((funcs, funcName) => {
+    return {
+      ...funcs,
+      [funcName]: (...args) => {
+        const message = {
+          type: funcName,
+          payload: config[funcName].reduce((pload, argname, i) => {
+            return { ...pload, [argname]: args[i]};
+          }, { }),
+        };
+	const finalMessage = {...message, data: args[1] };
+        console.log(`Sending message ${JSON.stringify(finalMessage, null, 2)}`);
+        return sendMessage && sendMessage(finalMessage);
+      },
+    };
+  }, {});
+}
+
+/** Provides a standard library of game action functions to use. */
+function useGameActions(messageTypes) {
+  const { sendMessage } = useSocket(messageTypes);
+
+  const stdlib = useMemo(() => generateEndpoints(spec, sendMessage), [
+    sendMessage,
+  ]);
+
+  return stdlib;
+}
+
+/** TODO: combination of useUser and useSocket hook that provides some of the good user data */
+
+export { useSocket, SocketProvider, useGameActions };

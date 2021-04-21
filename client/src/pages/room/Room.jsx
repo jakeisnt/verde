@@ -1,20 +1,24 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import useStyles from "../styles";
-import BackButton from "../../components/BackButton";
-import { useSocket } from "../../context/socketContext";
-import { useUser } from "../../context/userContext";
-import UserList from "./UserList";
-import SpectatorList from "./SpectatorList";
-import PlayerList from "./PlayerList";
+import { useSocket, useUser, useGameActions } from "../../context";
+import { UserList, SpectatorList, PlayerList } from "./Users";
+import Game from "./Game";
+
+import { Button, Page } from "../../components";
 
 function hasSpectator(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully.spectate;
 }
 
+/* When this page loads, add a message to warn when unloading. */
+
+/* Remove the listener when this component unmounts. */
+
 function Room() {
-  const { error, lastMessage, roomName, sendMessage } = useSocket("users");
+  const { error, lastMessage, roomName } = useSocket("users");
+  const { spectate } = useGameActions();
   const { user: me } = useUser();
   const classes = useStyles();
   const [room, setRoom] = useState(null);
@@ -70,54 +74,33 @@ function Room() {
     [me, lastMessage]
   );
 
-  const sendSpectateMessage = useCallback(
-    () =>
-      sendMessage &&
-      sendMessage({
-        type: "spectate",
-      }),
-    [sendMessage]
-  );
-
   return (
-    <>
-      <div className={classes.room}>
-        <BackButton text="Exit" />
-        <div className={classes.box}>
-          {error || `This is room ${roomName}.`}
-        </div>
-        {!error && lastMessage && (
-          <>
-            <PlayerList
-              users={lastMessage.players}
-              capacity={room && room.capacity}
-              userIsMod={userIsMod}
-              myId={me.id}
-            />
-            <SpectatorList
-              users={lastMessage.spectators}
-              userIsMod={userIsMod}
-              myId={me.id}
-            />
-            <UserList
-              users={lastMessage.inactives}
-              title="Inactive Users"
-              userIsMod={userIsMod}
-              myId={me.id}
-            />
-            {userIsSpectator && (
-              <button
-                type="button"
-                className={classes.box}
-                onClick={sendSpectateMessage}
-              >
-                Spectate
-              </button>
-            )}
-          </>
-        )}
-      </div>
-    </>
+    <Page backButtonText="exit">
+      <div className={classes.box}>{error || `This is room ${roomName}.`}</div>
+      {!error && lastMessage && (
+        <>
+          <PlayerList
+            users={lastMessage.players}
+            capacity={room && room.capacity}
+            userIsMod={userIsMod}
+            myId={me.id}
+          />
+          <SpectatorList
+            users={lastMessage.spectators}
+            userIsMod={userIsMod}
+            myId={me.id}
+          />
+          <UserList
+            users={lastMessage.inactives}
+            title="Inactive Users"
+            userIsMod={userIsMod}
+            myId={me.id}
+          />
+          {userIsSpectator && <Button title="Spectate" onClick={spectate} />}
+          <Game userIsMod={userIsMod} />
+        </>
+      )}
+    </Page>
   );
 }
 

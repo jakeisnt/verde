@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import WSConnectionStatus from "../../components/WSConnectionStatus";
 import Room from "./Room";
@@ -5,6 +6,15 @@ import { SocketProvider } from "../../context/socketContext";
 
 function RoomContainer() {
   const { name: roomName } = useParams();
+
+  /* When the page loads, add a message warning when unloading.
+   * When it unloads, remove the warning. */
+  useEffect(() => {
+    window.onbeforeunload = () =>
+      "Are you sure that you want to leave the room?";
+    return () => (window.beforeunload = undefined);
+  }, []);
+
   return (
     <SocketProvider roomName={roomName}>
       <Room />

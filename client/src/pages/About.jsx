@@ -1,18 +1,14 @@
-import useStyles from "./styles";
-import BackButton from "../components/BackButton";
+import { Title, Text, Page } from "../components";
 
 function About() {
-  const classes = useStyles();
-
   return (
-    <div className={classes.about}>
-      <BackButton />
-      <h1>About</h1>
-      <p>
+    <Page>
+      <Title>About</Title>
+      <Text>
         This is a sample about page. It has some information about the creators
         of this game.
-      </p>
-      <p>
+      </Text>
+      <Text>
         You can find the source code to this repository{" "}
         <a
           href="https://github.com/jakeisnt/react-turn-based-game"
@@ -22,8 +18,8 @@ function About() {
           here
         </a>
         . Feel free to open a pull request!
-      </p>
-    </div>
+      </Text>
+    </Page>
   );
 }
 

@@ -17,22 +17,6 @@ export default createUseStyles((theme) => ({
     margin: "auto",
     marginTop: "2em",
   },
-  profile: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    maxWidth: "50%",
-    margin: "auto",
-    marginTop: "2em",
-  },
-  about: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    maxWidth: "50%",
-    margin: "auto",
-    marginTop: "2em",
-  },
   box: {
     padding: "1em",
     margin: "1em",
@@ -60,7 +44,6 @@ export default createUseStyles((theme) => ({
     margin: "auto",
     marginBottom: "2em",
   },
-
   flexRow: {
     display: "flex",
     flexDirection: "row",

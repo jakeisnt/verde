@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 import PropTypes from "prop-types";
-import { useSocket } from "../../context/socketContext";
-import useToggle from "../../context/useToggle";
 import useStyles from "./styles";
+import { useGameActions } from "../../../context";
+import { Button, TextInput } from "../../../components";
 
 function User({
   name,
@@ -11,10 +11,9 @@ function User({
   myId,
   userIsMod,
   userIsSpectator,
-  playerList,
   inactiveUser,
 }) {
-  const { sendMessage } = useSocket();
+  const { unspectateUser, banUser, nominateMod, changeName } = useGameActions();
   const classes = useStyles();
   const [changingName, setChangingName] = useState(false);
   const [nextName, setNextName] = useState(name);
@@ -22,11 +21,11 @@ function User({
 
   const canChangeName = myId === userId;
 
-  const changeName = useCallback(() => {
-    sendMessage({ type: "changeName", payload: { name: nextName } });
+  const setNewName = useCallback(() => {
+    changeName(nextName);
     setChangingName(false);
     editNameBoxRef.current.blur();
-  }, [sendMessage, nextName, setChangingName, editNameBoxRef]);
+  }, [changeName, nextName, setChangingName, editNameBoxRef]);
 
   const startChangingName = useCallback(() => {
     setChangingName(true);
@@ -46,72 +45,32 @@ function User({
           value={nextName}
           onKeyUp={(e) =>
             e.key === "Enter" &&
-            (changingName ? changeName() : startChangingName())
+            (changingName ? setNewName() : startChangingName())
           }
           onInput={(e) => setNextName(e.target.value)}
           disabled={!canChangeName || !changingName}
           ref={editNameBoxRef}
         />
         {canChangeName && (
-          <button
-            type="button"
-            tabIndex={0}
-            className={classes.userSaveButton}
-            onClick={(e) => (changingName ? changeName() : startChangingName())}
+          <Button
+            title={changingName ? "Save" : "Edit Name"}
+            onClick={() => (changingName ? setNewName() : startChangingName())}
             onKeyUp={(e) =>
               e.key === "Enter" &&
-              (changingName ? changeName() : startChangingName())
+              (changingName ? setNewName() : startChangingName())
             }
-          >
-            {changingName ? "Save" : "Edit Name"}
-          </button>
+          />
         )}
       </div>
       {myId !== userId ? (
         userIsMod && (
           <>
-            <button
-              type="submit"
-              className={classes.banButton}
-              onClick={() =>
-                sendMessage &&
-                sendMessage({
-                  type: "banUser",
-                  payload: { toBanId: userId },
-                })
-              }
-            >
-              Ban
-            </button>
+            <Button title="Ban" onClick={() => banUser(userId)} />
             {userIsSpectator && (
-              <button
-                type="submit"
-                className={classes.addButton}
-                onClick={() =>
-                  sendMessage &&
-                  sendMessage({
-                    type: "modUnspectate",
-                    payload: { id: userId },
-                  })
-                }
-              >
-                Add
-              </button>
+              <Button title="Add" onClick={() => unspectateUser(userId)} />
             )}
             {!inactiveUser && (
-              <button
-                type="submit"
-                className={classes.addButton}
-                onClick={() =>
-                  sendMessage &&
-                  sendMessage({
-                    type: "nominateMod",
-                    payload: { id: userId },
-                  })
-                }
-              >
-                Make Mod
-              </button>
+              <Button title="Make Mod" onClick={() => nominateMod(userId)} />
             )}
           </>
         )
@@ -128,13 +87,11 @@ User.propTypes = {
   myId: PropTypes.string.isRequired,
   userIsMod: PropTypes.bool.isRequired,
   userIsSpectator: PropTypes.bool,
-  playerList: PropTypes.bool,
   inactiveUser: PropTypes.bool,
 };
 
 User.defaultProps = {
   userIsSpectator: false,
-  playerList: false,
   inactiveUser: false,
 };
 

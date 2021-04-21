@@ -1,6 +1,8 @@
 import { useHistory, useParams } from "react-router-dom";
 import useStyles from "./styles";
 
+import { Button } from "../components";
+
 function Home() {
   const history = useHistory();
   const { error } = useParams();
@@ -13,34 +15,10 @@ function Home() {
       )}
       <h1 className={classes.title}>Fun Game</h1>
       <img alt="add logo here" className={classes.fakePic} />
-      <button
-        type="button"
-        className={classes.box}
-        onClick={() => history.push("/create")}
-      >
-        Create Room
-      </button>
-      <button
-        type="button"
-        className={classes.box}
-        onClick={() => history.push("/join")}
-      >
-        Join Room
-      </button>
-      <button
-        type="button"
-        className={classes.box}
-        onClick={() => history.push("/profile")}
-      >
-        Profile
-      </button>
-      <button
-        type="button"
-        className={classes.box}
-        onClick={() => history.push("/about")}
-      >
-        About
-      </button>
+      <Button title="Create Room" onClick={() => history.push("/create")} />
+      <Button title="Join Room" onClick={() => history.push("/join")} />
+      <Button title="Profile" onClick={() => history.push("/profile")} />
+      <Button title="About" onClick={() => history.push("/about")} />
     </div>
   );
 }

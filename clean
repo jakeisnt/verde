@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-
-# clean the user directory of filth and reset
-
-rm -rf node_modules 
-rm -rf client/node_modules
-
-yarn install
