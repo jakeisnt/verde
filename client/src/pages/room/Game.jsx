@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useMemo } from "react";
 import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
-import { Button, Box, Title, Subtitle, Text } from "../../components";
+import { Button, Box, Subtitle, Text } from "../../components";
 
 function hasPlayer(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
@@ -33,9 +33,9 @@ function Game({ userIsMod }) {
     lastMessage.curPlayer &&
     lastMessage.curPlayer === me.id;
 
-  if (!gameStarted && userIsMod) 
+  if (!gameStarted && userIsMod)
     return <Button title="Start Game" onClick={startGame} />;
-  
+
   if (!gameStarted)
     return <Subtitle>Waiting for the game to start...</Subtitle>;
 

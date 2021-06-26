@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import useStyles from "./styles";
 import { useGameActions } from "../../../context";
-import { Button, TextInput } from "../../../components";
+import { Button } from "../../../components";
 
 function User({
   name,

@@ -1,11 +1,8 @@
 import PropTypes from "prop-types";
 import User from "./User";
-import useStyles from "../../styles";
 import { Box } from "../../../components";
 
 function PlayerList({ users, capacity, myId, userIsMod }) {
-  const classes = useStyles();
-
   return users && users.length > 0 ? (
     <>
       <div>
