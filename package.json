@@ -2,7 +2,10 @@
   "private": true,
   "name": "react-turn-based-game",
   "version": "0.0.0",
-  "workspaces": ["client", "server"],
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
@@ -11,7 +14,8 @@
     "clean": "rm -rf node_modules && rm -rf client/node_modules && yarn install"
   },
   "dependencies": {
-    "concurrently": "6.0.0"
+    "concurrently": "6.0.0",
+    "lerna": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.13.14",
