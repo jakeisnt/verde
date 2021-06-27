@@ -5,6 +5,7 @@ const url = require("url");
 const querystring = require("querystring");
 const socketActions = require("./socketActions");
 const Rooms = require("../engine/rooms");
+const { logger } = require("../logger");
 
 const socketServers = {};
 
@@ -23,7 +24,7 @@ const MAX_INACTIVE_PINGS = 2;
 
 // Given a room name, make a socket for the room and add listeners.
 function makeRoomSocket(name) {
-  console.log(`Opening WebSocket server for room ${name}.`);
+  logger.info(`Opening WebSocket server for room ${name}.`);
 
   const wss = new WebSocket.Server({ noServer: true });
   wss.on("connection", (ws, request) => {
@@ -35,12 +36,12 @@ function makeRoomSocket(name) {
     ws.userId = userId;
     ws.isAlive = true;
     ws.on("pong", () => {
-      console.log(`User with id ${userId} ponged room ${name}.`);
+      logger.debug(`User with id ${userId} ponged room ${name}.`);
       ws.isAlive = true;
     });
 
     ws.on("close", () => {
-      console.log(`User with id ${userId} left room ${name}.`);
+      logger.info(`User with id ${userId} left room ${name}.`);
       socketActions.disconnect(wss, null, { roomName: name, userId });
     });
 
@@ -49,15 +50,15 @@ function makeRoomSocket(name) {
         const message = JSON.parse(msg);
         const args = { roomName: name, userId };
         if (message.type && message.type in socketActions) {
-          console.log(
+          logger.debug(
             `Sending socket message associated with type "${message.type}"`
           );
           socketActions[message.type](wss, message, args);
         } else {
-          console.log(`"${message.type}" is not a valid socket message type.`);
+          logger.error(`"${message.type}" is not a valid socket message type.`);
         }
       } else {
-        console.log(`${msg} is not valid JSON.`);
+        logger.error(`${msg} is not valid JSON.`);
       }
     });
   });
@@ -65,11 +66,11 @@ function makeRoomSocket(name) {
   let inactivePings = 0;
 
   wss.interval = setInterval(() => {
-    console.log(`Pinging clients of room ${name}...`);
+    logger.debug(`Pinging clients of room ${name}...`);
     let hasActive = false;
     wss.clients.forEach((ws) => {
       if (ws.isAlive === false) {
-        console.log(`User with id ${ws.userId} dropped from room ${name}.`);
+        logger.info(`User with id ${ws.userId} dropped from room ${name}.`);
         return ws.terminate();
       }
       hasActive = true;
@@ -79,17 +80,17 @@ function makeRoomSocket(name) {
     if (hasActive) {
       inactivePings = 0;
     } else {
-      console.log(`Room ${name} has no active users.`);
+      logger.info(`Room ${name} has no active users.`);
       inactivePings += 1;
     }
     if (inactivePings >= MAX_INACTIVE_PINGS) {
-      console.log(`Room ${name} has had no active users for too long.`);
+      logger.info(`Room ${name} has had no active users for too long.`);
       wss.close();
     }
   }, PING_INTERVAL);
 
   wss.on("close", () => {
-    console.log(`Closing WebSocket server and deleting room ${name}.`);
+    logger.info(`Closing WebSocket server and deleting room ${name}.`);
     wss.clients.forEach((ws) => ws.terminate());
     Rooms.deleteRoom(name);
     delete socketServers[name];
@@ -104,16 +105,16 @@ function onUpgrade(request, socket, head) {
   const { room } = querystring.parse(url.parse(request.url).query);
 
   if (!Rooms.getRoom(room)) {
-    socket.on("error", (err) => console.log(JSON.stringify(err)));
+    socket.on("error", (err) => logger.error(JSON.stringify(err)));
     socket.destroy({ error: `Room ${room} not found` });
     return;
   }
 
   if (!socketServers[room]) {
     socketServers[room] = makeRoomSocket(room);
-    console.log(`Created socket for room ${room}`);
+    logger.info(`Created socket for room ${room}`);
   } else {
-    console.log(`Using socket for room ${room}`);
+    logger.info(`Using socket for room ${room}`);
   }
 
   const currentSocket = socketServers[room];

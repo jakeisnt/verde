@@ -1,6 +1,7 @@
 const WebSocket = require("ws");
 const Rooms = require("../engine/rooms");
 const { spec, classes } = require("../api");
+const { logger } = require("../logger");
 
 /**  Effectively the standard library. */
 function broadcast(wss, message) {
@@ -12,12 +13,12 @@ function broadcast(wss, message) {
 }
 
 function users(wss, message, { roomName }) {
-  console.log("broadcasting users message");
+  logger.debug("Groadcasting user's message");
   broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
 }
 
 function game(wss, message, { roomName }) {
-  console.log("broadcasting game message");
+  logger.debug("Broadcasting game message");
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
 
@@ -34,17 +35,7 @@ function generateEndpoints(config) {
       return {
         ...funcs,
         [funcName]: (wss, message, { roomName, userId }) => {
-          console.log(`${roomName}: ${userId}: ${funcName}`);
-          // if the payload doesn't have all of the arguments required by the config, abort!
-          // if (
-          //   message &&
-          //   message.payload &&
-          //   !config[type][funcName].every(
-          //     (elem) => elem in Object.keys(message.payload)
-          //   )
-          // )
-          //   return undefined;
-          // call the appropriate function off of the appropriate class
+          logger.info(`${roomName}: ${userId}: ${funcName}`);
           classes[type][funcName](
             roomName,
             userId,
