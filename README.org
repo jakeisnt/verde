@@ -2,13 +2,7 @@
 
 This sets out to be a complete starter kit for building React and Node.js turn-based games.
 
-* (Desired) Features?
-- Create and join rooms
-- See all players within your current room
-- Pass the turn to the next player in the room
-- Reset room after game is finished
 * Development
-
 This is a standard full stack JavaScript monorepo build with `yarn` and organized with lerna.
 Frontend and backend are found in `client/` and `server/`, respectively.
 
