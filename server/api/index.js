@@ -1,3 +1,5 @@
+/** Converts the classes to APIs for use here and externally. */
+
 import Users from "./users";
 import Game from "./games";
 import { getParamNames, getFuncsOfClass } from "./utils";
