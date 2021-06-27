@@ -3,12 +3,13 @@
  * Module dependencies.
  */
 
-import app from "../app";
 import debugM from "debug";
-const debug = debugM("server:server");
 
 import http from "http";
+import app from "../app";
 import onUpgrade from "../sockets/socket";
+
+const debug = debugM("server:server");
 
 /**
  * Get port from environment and store in Express.

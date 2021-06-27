@@ -120,7 +120,9 @@ class Room {
         this.getUser(upgradee).spectate = false;
         // but if there are no more spectators, close the room
       } else {
-        logger.info(`There are no more spectators to upgrade to moderators. The room is effectively closed.`);
+        logger.info(
+          `There are no more spectators to upgrade to moderators. The room is effectively closed.`
+        );
         // close the room?
       }
     }
