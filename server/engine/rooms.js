@@ -1,5 +1,6 @@
 const Users = require("./users");
 const Game = require("./games");
+const { logger } = require("../logger");
 
 /** Bijective hash on 32-bit ints */
 function hashInt32(x) {
@@ -115,10 +116,11 @@ class Room {
       const { spectators } = this.getUsers();
       if (spectators.length > 0) {
         const upgradee = spectators[0].id;
-        console.log(`Upgrading spectator ${upgradee} to moderator!`);
+        logger.info(`Upgrading spectator ${upgradee} to moderator!`);
         this.getUser(upgradee).spectate = false;
         // but if there are no more spectators, close the room
       } else {
+        logger.info(`There are no more spectators to upgrade to moderators. The room is effectively closed.`);
         // close the room?
       }
     }
@@ -153,7 +155,7 @@ class Room {
   }
 
   setSpectate(userId, spectate, byMod) {
-    console.log(`Setting ${userId}'s spectate status to ${spectate}`);
+    logger.info(`Setting ${userId}'s spectate status to ${spectate}`);
     if (this.isBanned(userId)) return undefined;
     const index = this.users.findIndex(({ id }) => id === userId);
     if (index < 0) return undefined;
@@ -193,7 +195,7 @@ class Room {
   }
 
   nominateMod(modId, newModId) {
-    console.log(`${modId} has nominated ${newModId} to be the new mod`);
+    logger.info(`${modId} has nominated ${newModId} to be the new mod`);
     if (!this.isModerator(modId) || this.isBanned(newModId)) return undefined;
 
     const index = this.users.findIndex(({ id }) => id === newModId);

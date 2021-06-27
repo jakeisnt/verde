@@ -1,5 +1,6 @@
 const Rooms = require("../engine/rooms");
 const Users = require("../engine/users");
+const { logger } = require("../logger");
 
 class Users2 {
   static connect(name, userId) {
@@ -11,7 +12,7 @@ class Users2 {
   }
 
   static changeName(roomName, userId, { name }) {
-    console.log(`setting name to ${name}`);
+    logger.info(`Setting the name of ${userId} to ${name}`);
     return Users.setName(userId, name);
   }
 

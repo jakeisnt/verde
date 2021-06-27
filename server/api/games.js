@@ -1,4 +1,5 @@
 const Rooms = require("../engine/rooms");
+const { logger } = require("../logger");
 
 class Game {
   static startGame(name, modId) {
@@ -10,7 +11,7 @@ class Game {
   }
 
   static takeAction(name, playerId, { type, ...payload }) {
-    console.log(
+    logger.info(
       `${name}: ${playerId}: takeAction ${type} ${JSON.stringify(
         payload,
         null,
