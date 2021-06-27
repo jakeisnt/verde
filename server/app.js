@@ -15,8 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-const dirname = path.resolve(path.dirname(""));
-app.use(express.static(path.join(dirname, "public")));
+const __dirname = path.resolve(path.dirname(''));
+app.use(express.static(path.join(__dirname, "public")));
 
 // api requests won't work without this
 // TODO: remove this for security reasons later
