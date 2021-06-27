@@ -3,6 +3,8 @@ import Users from "../engine/users";
 
 const router = express.Router();
 
+/** Provide HTTP functionality for creating, fetching and renaming users. */
+
 /* GET new user. */
 router.get("/new", (req, res) => {
   res.json(Users.createUser());
