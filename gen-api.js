@@ -1,5 +1,5 @@
 import fs from "fs";
-import { clientConfig } from "./server/index.js";
+import { clientConfig } from "./server";
 
 /* Script to provide the server's websocket API to the client.
  * If this does not update, try deleting the client's api schema.
