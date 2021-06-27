@@ -1,6 +1,6 @@
-const Users = require("./users");
-const Game = require("./games");
-const { logger } = require("../logger");
+import Users from "./users";
+import Game from "./games";
+import { logger } from "../logger";
 
 /** Bijective hash on 32-bit ints */
 function hashInt32(x) {
@@ -307,4 +307,4 @@ class Rooms {
   }
 }
 
-module.exports = Rooms;
+export default Rooms;

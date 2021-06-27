@@ -1,5 +1,5 @@
-const winston = require('winston');
-const expressWinston = require('express-winston');
+import winston from 'winston';
+import expressWinston from 'express-winston';
 
 const loggerSettings= {
   level: 'info',
@@ -21,13 +21,8 @@ const loggerSettings= {
 };
 
 const logger = winston.createLogger(loggerSettings)
-const expressLogger = expressWinston.logger({...loggerSettings, 
-  msg: "HTTP {{req.method}} {{req.url}}", 
+const expressLogger = expressWinston.logger({...loggerSettings,
+  msg: "HTTP {{req.method}} {{req.url}}",
   expressFormat: true });
 
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-// if (process.env.NODE_ENV !== 'production') {
-// }
-
-module.exports = { logger, expressLogger };
+export { logger, expressLogger };

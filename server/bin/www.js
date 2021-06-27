@@ -1,13 +1,14 @@
-#!/usr/bin/env node
-
+#!/usr/bin/env node --experimental-specifier-resolution=node
 /**
  * Module dependencies.
  */
 
-const app = require("../app");
-const debug = require("debug")("server:server");
-const http = require("http");
-const onUpgrade = require("../sockets/socket.js");
+import app from "../app";
+import debugM from "debug";
+const debug = debugM("server:server");
+
+import http from "http";
+import onUpgrade from "../sockets/socket";
 
 /**
  * Get port from environment and store in Express.

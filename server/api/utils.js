@@ -27,4 +27,4 @@ function getFuncsOfClass(clss) {
   );
 }
 
-module.exports = { getParamNames, getFuncsOfClass };
+export { getParamNames, getFuncsOfClass };
