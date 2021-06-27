@@ -108,10 +108,10 @@ function generateEndpoints(config, sendMessage) {
         const message = {
           type: funcName,
           payload: config[funcName].reduce((pload, argname, i) => {
-            return { ...pload, [argname]: args[i]};
-          }, { }),
+            return { ...pload, [argname]: args[i] };
+          }, {}),
         };
-	const finalMessage = {...message, data: args[1] };
+        const finalMessage = { ...message, data: args[1] };
         console.log(`Sending message ${JSON.stringify(finalMessage, null, 2)}`);
         return sendMessage && sendMessage(finalMessage);
       },
