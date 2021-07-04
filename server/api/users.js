@@ -1,6 +1,6 @@
-const Rooms = require("../engine/rooms");
-const Users = require("../engine/users");
-const { logger } = require("../logger");
+import Rooms from "../engine/rooms";
+import Users from "../engine/users";
+import { logger } from "../logger";
 
 class Users2 {
   static connect(name, userId) {
@@ -45,4 +45,4 @@ class Users2 {
   }
 }
 
-module.exports = Users2;
+export default Users2;

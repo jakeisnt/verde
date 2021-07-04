@@ -1,7 +1,7 @@
-const WebSocket = require("ws");
-const Rooms = require("../engine/rooms");
-const { spec, classes } = require("../api");
-const { logger } = require("../logger");
+import WebSocket from "ws";
+import Rooms from "../engine/rooms";
+import { spec, classes } from "../api";
+import { logger } from "../logger";
 
 /**  Effectively the standard library. */
 function broadcast(wss, message) {
@@ -52,4 +52,4 @@ function generateEndpoints(config) {
 }
 const socketActions = generateEndpoints(spec);
 
-module.exports = socketActions;
+export default socketActions;

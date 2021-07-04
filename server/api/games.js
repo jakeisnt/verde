@@ -1,5 +1,5 @@
-const Rooms = require("../engine/rooms");
-const { logger } = require("../logger");
+import Rooms from "../engine/rooms";
+import { logger } from "../logger";
 
 class Game {
   static startGame(name, modId) {
@@ -30,4 +30,4 @@ class Game {
   }
 }
 
-module.exports = Game;
+export default Game;

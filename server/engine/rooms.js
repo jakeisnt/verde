@@ -1,6 +1,6 @@
-const Users = require("./users");
-const Game = require("./games");
-const { logger } = require("../logger");
+import Users from "./users";
+import Game from "./games";
+import { logger } from "../logger";
 
 /** Bijective hash on 32-bit ints */
 function hashInt32(x) {
@@ -120,7 +120,9 @@ class Room {
         this.getUser(upgradee).spectate = false;
         // but if there are no more spectators, close the room
       } else {
-        logger.info(`There are no more spectators to upgrade to moderators. The room is effectively closed.`);
+        logger.info(
+          `There are no more spectators to upgrade to moderators. The room is effectively closed.`
+        );
         // close the room?
       }
     }
@@ -307,4 +309,4 @@ class Rooms {
   }
 }
 
-module.exports = Rooms;
+export default Rooms;

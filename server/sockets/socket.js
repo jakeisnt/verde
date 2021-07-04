@@ -1,11 +1,11 @@
 /* All of the machinery required to work our websockets. */
 
-const WebSocket = require("ws");
-const url = require("url");
-const querystring = require("querystring");
-const socketActions = require("./socketActions");
-const Rooms = require("../engine/rooms");
-const { logger } = require("../logger");
+import WebSocket from "ws";
+import url from "url";
+import querystring from "querystring";
+import socketActions from "./socketActions";
+import Rooms from "../engine/rooms";
+import { logger } from "../logger";
 
 const socketServers = {};
 
@@ -124,4 +124,4 @@ function onUpgrade(request, socket, head) {
   });
 }
 
-module.exports = onUpgrade;
+export default onUpgrade;

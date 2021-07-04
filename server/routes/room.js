@@ -1,5 +1,5 @@
-const express = require("express");
-const Rooms = require("../engine/rooms");
+import express from "express";
+import Rooms from "../engine/rooms";
 
 const router = express.Router();
 
@@ -16,4 +16,4 @@ router.get("/get", (req, res) => {
   return res.status(404).send(`Room ${req.query.name} not found`);
 });
 
-module.exports = router;
+export default router;

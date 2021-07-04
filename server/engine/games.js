@@ -1,5 +1,5 @@
-const game = require("../game");
-const Users = require("./users");
+import game from "../game";
+import Users from "./users";
 
 function getInitialPlayerState(player) {
   return game.initialState.player(player);
@@ -101,4 +101,4 @@ class Game {
   }
 }
 
-module.exports = Game;
+export default Game;
