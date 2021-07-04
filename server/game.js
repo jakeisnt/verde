@@ -40,7 +40,7 @@ const game = {
         // retrieve userId here: payload.data[1].userId (0 is going to be the "+1")
         // you could also call takeAction("+1", userId) and you would have the id at payload.data[1],
         // but that may be a bit more difficult to keep track of.
-      gameState: gameState + 1,
+      gameState: gameState - 1,
       // Currently, anything you get from the state object should be
       // provided when returning.
       // If you mess with the playerId, things will get scary.
