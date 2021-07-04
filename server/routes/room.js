@@ -3,6 +3,8 @@ import Rooms from "../engine/rooms";
 
 const router = express.Router();
 
+/** Provide functions to create and access information about rooms. */
+
 /* GET new room. */
 router.get("/new", (req, res) => {
   const capacity = parseInt(req.query.capacity || "-1", 10);

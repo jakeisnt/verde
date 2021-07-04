@@ -14,10 +14,15 @@ const spec = clientConfig;
 
 const SocketContext = createContext(null);
 
+/** Generate the server-side websocket URL from a room and userId. */
 function makeUrl(room, userId) {
   return `ws://localhost:4000/?${new URLSearchParams({ userId, room })}`;
 }
 
+/**
+ * Provides a WebSocket connection to the server when mounted.
+ * Required to use the `useSocket` hook.
+ */
 function SocketProvider({ children, roomName }) {
   const [error, setError] = useState(null);
   const [lastMessages, setLastMessages] = useState({});
@@ -70,6 +75,9 @@ SocketProvider.propTypes = {
   roomName: PropTypes.string.isRequired,
 };
 
+/**
+* Provides messages, status and a dispatching function for the websocket.
+*/
 function useSocket(messageTypes) {
   const context = useContext(SocketContext);
 
@@ -100,6 +108,9 @@ function useSocket(messageTypes) {
   return context;
 }
 
+/**
+* Generates endpoint functions for common game actions from a configuration.
+*/
 function generateEndpoints(config, sendMessage) {
   return Object.keys(config).reduce((funcs, funcName) => {
     return {
@@ -108,10 +119,10 @@ function generateEndpoints(config, sendMessage) {
         const message = {
           type: funcName,
           payload: config[funcName].reduce((pload, argname, i) => {
-            return { ...pload, [argname]: args[i]};
-          }, { }),
+            return { ...pload, [argname]: args[i] };
+          }, {}),
         };
-	const finalMessage = {...message, data: args[1] };
+        const finalMessage = { ...message, data: args[1] };
         console.log(`Sending message ${JSON.stringify(finalMessage, null, 2)}`);
         return sendMessage && sendMessage(finalMessage);
       },
@@ -119,7 +130,7 @@ function generateEndpoints(config, sendMessage) {
   }, {});
 }
 
-/** Provides a standard library of game action functions to use. */
+/** Provides a standard library of game action functions to use, as imported from the server. */
 function useGameActions(messageTypes) {
   const { sendMessage } = useSocket(messageTypes);
 
@@ -129,7 +140,5 @@ function useGameActions(messageTypes) {
 
   return stdlib;
 }
-
-/** TODO: combination of useUser and useSocket hook that provides some of the good user data */
 
 export { useSocket, SocketProvider, useGameActions };

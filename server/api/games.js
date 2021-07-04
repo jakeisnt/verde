@@ -1,6 +1,9 @@
 import Rooms from "../engine/rooms";
 import { logger } from "../logger";
 
+/** presents all of the actions that can be taken during a game.
+* include a static method here that accepts a name, playerid and an optional payload (js object)
+* to make it available for the client to call and send a message with. */
 class Game {
   static startGame(name, modId) {
     return Rooms.getRoom(name)?.startGame(modId);
