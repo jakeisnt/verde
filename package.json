@@ -10,7 +10,7 @@
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
-    "start": "node --experimental-specifier-resolution=node ./gen-api.js && concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "lint": "eslint . --fix",
     "clean": "rm -rf node_modules && rm -rf client/node_modules && yarn install"
   },
