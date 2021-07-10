@@ -1,6 +1,6 @@
 import game from "../game";
 import Users from "./users";
-
+import { logger } from "../logger";
 
 /** Get the initial state of the players. */
 function getInitialPlayerState(player) {
@@ -14,7 +14,11 @@ function getInitialGameState(players) {
 
 // Apply the game action to the game state.
 function takeAction(action, gameState, players, playerId, payload) {
-  if (!(action in game.actions)) return gameState;
+  if (!(action in game.actions)) {
+    logger.error(action + " could not be taken! It's not a valid action.")
+    return gameState;
+  }
+
   return game.actions[action](gameState, players, playerId, payload);
 }
 
@@ -107,8 +111,11 @@ class Game {
       playerId,
       payload
     );
-    if (gameState) this.gameState = gameState;
-    if (playerState) this.players = playerState;
+
+    // in js, 0 is falsy (as is false), and those are both valid gameStates
+    if (gameState != null) this.gameState = gameState;
+    if (playerState != null) this.players = playerState;
+    // passTurn is true or false, so we're not checking for null or undefined
     if (passTurn) this.passTurn(playerId);
     return this.gameState;
   }
