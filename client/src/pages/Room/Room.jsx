@@ -12,7 +12,7 @@ import Game from "./Game";
 import { Button, Page } from "../../components";
 
 /** Determines whether the list of players contains a spectator with the provided userId. */
-function hasSpectator(userId, players) {
+function hasPlayer(userId, players) {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully.spectate;
 }
@@ -65,13 +65,13 @@ function Room() {
     [me, lastMessage]
   );
 
-  const userIsSpectator = useMemo(
+  const userIsPlayer = useMemo(
     () =>
       me &&
       me.id &&
       lastMessage &&
       lastMessage.players &&
-      hasSpectator(me.id, lastMessage.players),
+      hasPlayer(me.id, lastMessage.players),
     [me, lastMessage]
   );
 
@@ -97,7 +97,7 @@ function Room() {
             userIsMod={userIsMod}
             myId={me.id}
           />
-          {userIsSpectator && <Button title="Spectate" onClick={spectate} />}
+          {userIsPlayer && lastMessage.players.length > 1 && <Button title="Spectate" onClick={spectate} />}
           <Game userIsMod={userIsMod} />
         </>
       )}
