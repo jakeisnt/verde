@@ -2,6 +2,7 @@
 
 import Users from "./users";
 import Game from "./games";
+import Connect from "./connect";
 import { getParamNames, getFuncsOfClass } from "./utils";
 
 function classToAPI(clss) {
@@ -13,14 +14,13 @@ function classToAPI(clss) {
   }, {});
 }
 
-const spec = {
-  users: classToAPI(Users),
-  game: classToAPI(Game),
-};
-
 const classes = {
   users: Users,
   game: Game,
+  connect_disconnect: Connect,
 };
+
+const spec = Object.keys(classes).reduce(
+  (curSpec, nextKey) => ({ ...curSpec, [nextKey]: classToAPI(classes[nextKey]) }), {});
 
 export { spec, classes };

@@ -80,7 +80,7 @@ function makeRoomSocket(name) {
       }
       hasActive = true;
       ws.isAlive = false;
-      return ws.ping(() => {});
+      return ws.ping(() => { });
     });
     if (hasActive) {
       inactivePings = 0;

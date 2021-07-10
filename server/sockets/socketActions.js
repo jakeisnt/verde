@@ -24,10 +24,18 @@ function game(wss, message, { roomName }) {
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
 
+/** Broadcast a 'game' message - typically a game action - to the socket. */
+function connect_disconnect(wss, message, { roomName }) {
+  logger.debug("Broadcasting 'users' and 'game' messages: user has connected or disconnected");
+  broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
+  broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
+}
+
 // The two functions must belong to an object to index into them with a string.
 const Actions = {
   users,
   game,
+  connect_disconnect
 };
 
 /** Generate various websocket endpoints from API utilities. */

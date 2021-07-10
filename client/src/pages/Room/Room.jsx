@@ -44,7 +44,7 @@ function Room() {
       history.push(
         // eslint-disable-next-line prefer-template
         "/home/" +
-          encodeURIComponent(`You have been banned from room ${roomName}.`)
+        encodeURIComponent(`You have been banned from room ${roomName}.`)
       );
   }, [lastMessage, roomName, history, me]);
 
