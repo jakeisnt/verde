@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node --experimental-specifier-resolution=node ./bin/www.js"
+    "start": "nodemon --experimental-specifier-resolution=node ./bin/www.js"
   },
   "dependencies": {
     "cookie-parser": "1.4.4",
