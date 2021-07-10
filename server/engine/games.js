@@ -15,7 +15,7 @@ function getInitialGameState(players) {
 // Apply the game action to the game state.
 function takeAction(action, gameState, players, playerId, payload) {
   if (!(action in game.actions)) {
-    logger.error(action + " could not be taken! It's not a valid action.")
+    logger.error(`${action} could not be taken! It's not a valid action.`);
     return gameState;
   }
 

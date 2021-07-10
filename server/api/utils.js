@@ -1,5 +1,5 @@
 /** This file contains logic used to parse the games/ and users/ api files
-  * to provide the client with callable functions for the websockets. */
+ * to provide the client with callable functions for the websockets. */
 
 const STRIP_COMMENTS = /(\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s*=[^,\)]*(('(?:\\'|[^'\r\n])*')|("(?:\\"|[^"\r\n])*"))|(\s*=[^,\)]*))/gm;
 const ARGUMENT_NAMES = /([^\s,]+)/g;
