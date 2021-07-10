@@ -19,8 +19,7 @@ function takeAction(action, gameState, players, playerId, payload) {
     return gameState;
   }
 
-  const result = game.actions[action](gameState, players, playerId, payload);
-  return result;
+  return game.actions[action](gameState, players, playerId, payload);
 }
 
 // Determine when the game is over
