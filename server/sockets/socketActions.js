@@ -25,8 +25,10 @@ function game(wss, message, { roomName }) {
 }
 
 /** Broadcast a 'game' message - typically a game action - to the socket. */
-function connect_disconnect(wss, message, { roomName }) {
-  logger.debug("Broadcasting 'users' and 'game' messages: user has connected or disconnected");
+function connectDisconnect(wss, message, { roomName }) {
+  logger.debug(
+    "Broadcasting 'users' and 'game' messages: user has connected or disconnected"
+  );
   broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
@@ -35,7 +37,7 @@ function connect_disconnect(wss, message, { roomName }) {
 const Actions = {
   users,
   game,
-  connect_disconnect
+  connect_disconnect: connectDisconnect,
 };
 
 /** Generate various websocket endpoints from API utilities. */
