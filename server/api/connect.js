@@ -1,6 +1,4 @@
 import Rooms from "../engine/rooms";
-import Users from "../engine/users";
-import { logger } from "../logger";
 
 /** Represents all of the actions users can take in a room.
  * Include a static method on this class that accepts the room name,

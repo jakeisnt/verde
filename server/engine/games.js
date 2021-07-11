@@ -68,7 +68,7 @@ class Game {
     return {
       players: this.players,
       curPlayer: this.players[this.curPlayer].id,
-      game: this.gameState,
+      game: this.gameState.pub,
       isOver: this.isOver(),
       winners: this.isOver() && getWinners(this.gameState, this.players),
     };

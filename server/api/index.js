@@ -21,6 +21,11 @@ const classes = {
 };
 
 const spec = Object.keys(classes).reduce(
-  (curSpec, nextKey) => ({ ...curSpec, [nextKey]: classToAPI(classes[nextKey]) }), {});
+  (curSpec, nextKey) => ({
+    ...curSpec,
+    [nextKey]: classToAPI(classes[nextKey]),
+  }),
+  {}
+);
 
 export { spec, classes };

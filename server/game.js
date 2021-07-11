@@ -9,7 +9,9 @@ const deepcopy = (obj) => JSON.parse(JSON.stringify(obj));
 const game = {
   /* Specifies the initial state for the game and each player. */
   initialState: {
-    game: () => 0,
+    // pub (public): state visible to everyone;
+    // priv (private): state hidden from clients but visible to the server
+    game: () => ({ pub: 0, priv: false }),
     player: () => {
       clickedLast: false;
     },
@@ -20,7 +22,7 @@ const game = {
     // With an action, the user can:
     "+1": (gameState, players, playerId, payload) => ({
       // change the game state,
-      gameState: gameState + 1,
+      gameState: { ...gameState, pub: gameState.pub + 1 },
       // the player state,
       playerState: players.map(({ id, ...player }) => ({
         ...player,
@@ -35,12 +37,12 @@ const game = {
     "-1": (gameState, players, playerId, payload) => ({
       // The payload argument contains all of the data passed with the call.
       // Currently, `payload.data` contains all of the arguments passed to the function 'takeAction',
-        // so this should be good enough to pass any arbitrary data. I'd recommend the following:
-        // function call from client: takeAction("+1", { userId: 123 })
-        // retrieve userId here: payload.data[1].userId (0 is going to be the "+1")
-        // you could also call takeAction("+1", userId) and you would have the id at payload.data[1],
-        // but that may be a bit more difficult to keep track of.
-      gameState: gameState - 1,
+      // so this should be good enough to pass any arbitrary data. I'd recommend the following:
+      // function call from client: takeAction("+1", { userId: 123 })
+      // retrieve userId here: payload.data[1].userId (0 is going to be the "+1")
+      // you could also call takeAction("+1", userId) and you would have the id at payload.data[1],
+      // but that may be a bit more difficult to keep track of.
+      gameState: { ...gameState, pub: gameState.pub - 1 },
       // Currently, anything you get from the state object should be
       // provided when returning.
       // If you mess with the playerId, things will get scary.
@@ -55,7 +57,7 @@ const game = {
   },
 
   /* Determines when the game ends. */
-  endWhen: (gameState, playerStates) => gameState === 10,
+  endWhen: (gameState, playerStates) => gameState.pub === 10,
   /* Determines the winner(s) at the end of the game. */
   getWinners: (gameState, players) =>
     players.filter(({ state }) => state.clickedLast),
