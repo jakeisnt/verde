@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
 import theme from "./theme";
 import { Home, Room, Create, Join, Profile, About } from "./pages";
+import { BottomBanner } from "./components";
 import { UserProvider } from "./context/userContext";
 
 /** The root of our application. Provides a user configuration on load
@@ -37,6 +38,9 @@ function App() {
               </Route>
             </Switch>
           </Router>
+          <BottomBanner
+            text="This website uses cookies."
+          />
         </UserProvider>
       </ThemeProvider>
     </div>
