@@ -24,7 +24,6 @@ function PlayerList({ users, capacity, myId, userIsMod }) {
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
-                  userIsSpectator
                   playerList
                 />
               )
