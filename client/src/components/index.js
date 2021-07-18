@@ -7,6 +7,7 @@ import Text from "./Text";
 import TextInput from "./TextInput";
 import Page from "./Page";
 import Box from "./Box";
+import BottomBanner from "./BottomBanner";
 
 export {
   BackButton,
@@ -18,4 +19,5 @@ export {
   TextInput,
   Page,
   Box,
+  BottomBanner
 };
