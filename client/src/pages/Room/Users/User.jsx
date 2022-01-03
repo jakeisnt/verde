@@ -5,9 +5,9 @@ import useStyles from "./styles";
 import { useGameActions } from "../../../context";
 import { Button } from "../../../components";
 
-/** Renders a single user in a list of users.
-* Offers options to spectate, unspectate, edit name, etc. based on the player's status.
-* */
+/* Renders a single user in a list of users.
+ * Offers options to spectate, unspectate, edit name, etc. based on the player's status.
+ */
 
 function User({
   name,

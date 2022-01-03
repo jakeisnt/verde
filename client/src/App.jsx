@@ -6,7 +6,8 @@ import { BottomBanner } from "./components";
 import { UserProvider } from "./context/userContext";
 
 /** The root of our application. Provides a user configuration on load
-* and client side routing for all of the pages.*/
+ * and client side routing for all of the pages.
+ */
 
 function App() {
   return (
@@ -38,9 +39,7 @@ function App() {
               </Route>
             </Routes>
           </Router>
-          <BottomBanner
-            text="This website uses cookies."
-          />
+          <BottomBanner text="This website uses cookies." />
         </UserProvider>
       </ThemeProvider>
     </div>

@@ -42,14 +42,14 @@ const useStyles = createUseStyles((theme) => ({
   bottomBanner: {
     display: "flex",
     jusifyContent: "space-between",
-    bottom: '3em',
-    left: '3em',
+    bottom: "3em",
+    left: "3em",
     position: "absolute",
     verticalAlign: "center",
     border: `3px solid ${theme.black}`,
     color: theme.black,
     backgroundColor: theme.white,
-  }
+  },
 }));
 
 export default useStyles;

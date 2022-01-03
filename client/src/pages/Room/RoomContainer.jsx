@@ -13,6 +13,8 @@ function RoomContainer() {
   useEffect(() => {
     window.onbeforeunload = () =>
       "Are you sure that you want to leave the room?";
+
+    /* eslint-disable-next-line */
     return () => (window.beforeunload = undefined);
   }, []);
 

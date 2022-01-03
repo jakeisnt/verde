@@ -9,9 +9,9 @@ import {
 import PropTypes from "prop-types";
 import useWebSocket from "react-use-websocket";
 import { useUser } from "./userContext";
-import { clientConfig } from 'server';
-const spec = clientConfig;
+import { clientConfig } from "server";
 
+const spec = clientConfig;
 const SocketContext = createContext(null);
 
 /** Generate the server-side websocket URL from a room and userId. */
@@ -76,8 +76,8 @@ SocketProvider.propTypes = {
 };
 
 /**
-* Provides messages, status and a dispatching function for the websocket.
-*/
+ * Provides messages, status and a dispatching function for the websocket.
+ */
 function useSocket(messageTypes) {
   const context = useContext(SocketContext);
 
@@ -109,8 +109,8 @@ function useSocket(messageTypes) {
 }
 
 /**
-* Generates endpoint functions for common game actions from a configuration.
-*/
+ * Generates endpoint functions for common game actions from a configuration.
+ */
 function generateEndpoints(config, sendMessage) {
   return Object.keys(config).reduce((funcs, funcName) => {
     return {

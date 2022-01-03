@@ -4,7 +4,7 @@ import useStyles from "./styles";
 
 /** A text-based back button that navigates through the website's history. */
 function BackButton({ text }) {
-  const history = useNavigage();
+  const history = useNavigate();
   const classes = useStyles();
 
   return (

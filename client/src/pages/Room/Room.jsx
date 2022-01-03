@@ -6,8 +6,8 @@ import { UserList, SpectatorList, PlayerList } from "./Users";
 import Game from "./Game";
 
 /** The main room of the application; also known as the lobby.
-* This component and its descendants contain most of the networking and game logic.
-* */
+ * This component and its descendants contain most of the networking and game logic.
+ */
 
 import { Button, Page } from "../../components";
 
@@ -42,7 +42,7 @@ function Room() {
       lastMessage.banned.map(({ id }) => id).includes(me.id) // better than object comparison
     )
       history.push(
-        // eslint-disable-next-line prefer-template
+        /* eslint-disable */
         "/home/" +
         encodeURIComponent(`You have been banned from room ${roomName}.`)
       );
@@ -97,7 +97,9 @@ function Room() {
             userIsMod={userIsMod}
             myId={me.id}
           />
-          {userIsPlayer && lastMessage.players.length > 1 && <Button title="Spectate" onClick={spectate} />}
+          {userIsPlayer && lastMessage.players.length > 1 && (
+            <Button title="Spectate" onClick={spectate} />
+          )}
           <Game userIsMod={userIsMod} />
         </>
       )}

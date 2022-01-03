@@ -58,11 +58,16 @@ function Game({ userIsMod }) {
       {lastMessage.isOver && lastMessage.winners && (
         <Box>
           <Subtitle>Winners</Subtitle>
-          {lastMessage.winners.length > 0 ? lastMessage.winners.map(({ name, id }) => (
-            <Text key={`winner-${id}`}>{name}</Text>
-          )) :
-            <Text key={`no-winners`}>There weren't any winners this round.</Text>
-          }
+          {lastMessage.winners.length > 0 ? (
+            lastMessage.winners.map(({ name, id }) => (
+              <Text key={`winner-${id}`}>{name}</Text>
+            ))
+          ) : (
+            <Text key="no-winners">
+              {/* eslint-disable-next-line */}
+              {"There weren't any winners this round."}
+            </Text>
+          )}
         </Box>
       )}
       {lastMessage.isOver && userIsMod && (
