@@ -1,11 +1,11 @@
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useStyles from "./styles";
 
 import { Button } from "../components";
 
 /** This is the homepage of the application - providing links to available user actions. */
 function Home() {
-  const history = useHistory();
+  const history = useNavigate();
   const { error } = useParams();
   const classes = useStyles();
 

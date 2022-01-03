@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
 import theme from "./theme";
 import { Home, Room, Create, Join, Profile, About } from "./pages";
@@ -14,7 +14,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <UserProvider>
           <Router>
-            <Switch>
+            <Routes>
               <Route path="/room/:name">
                 <Room />
               </Route>
@@ -36,7 +36,7 @@ function App() {
               <Route path="/">
                 <Home />
               </Route>
-            </Switch>
+            </Routes>
           </Router>
           <BottomBanner
             text="This website uses cookies."

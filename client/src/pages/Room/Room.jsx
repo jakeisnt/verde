@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useStyles from "../styles";
 import { useSocket, useUser, useGameActions } from "../../context";
 import { UserList, SpectatorList, PlayerList } from "./Users";
@@ -23,7 +23,7 @@ function Room() {
   const { user: me } = useUser();
   const classes = useStyles();
   const [room, setRoom] = useState(null);
-  const history = useHistory();
+  const history = useNavigate();
 
   useEffect(() => {
     fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)

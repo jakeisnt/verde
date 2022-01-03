@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { Button, TextInput, Page } from "../components";
 
@@ -8,7 +8,7 @@ import { Button, TextInput, Page } from "../components";
 function Create() {
   const { userId } = useUser();
   const [capacity, setCapacity] = useState("");
-  const history = useHistory();
+  const history = useNavigate();
 
   const createRoom = useCallback(() => {
     if (userId) {
