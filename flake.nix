@@ -35,11 +35,10 @@
 
       # 3. Build the full package to let the client deploy the server
       # (just writing a script)
-      client-code = (pkgs.mkYarnPackage {
-        src = "${./client}";
-        packageJSON = "${docsrc}/client/package.json";
-        yarnLock = "${docsrc}/client/package.json";
-
+      server-code = (pkgs.mkYarnPackage {
+        src = "${./server}";
+        packageJSON = "${docsrc}/server/package.json";
+        yarnLock = "${docsrc}/server/yarn.lock";
       }).overrideAttrs (oldAttrs:
         let pname = oldAttrs.pname;
         in {
@@ -57,12 +56,42 @@
             runHook postBuild
           '';
           installPhase = ''
-          runHook preInstall
+            runHook preInstall
 
-          mv deps/${pname}/build $out
+            mv deps/${pname}/build $out
 
-          runHook postInstall
-        '';
+            runHook postInstall
+          '';
+        });
+
+
+      client-code = (pkgs.mkYarnPackage {
+        src = "${./client}";
+        packageJSON = "${docsrc}/client/package.json";
+        yarnLock = "${docsrc}/client/yarn.lock";
+      }).overrideAttrs (oldAttrs:
+        let pname = oldAttrs.pname;
+        in {
+          doDist = false;
+          buildPhase = ''
+            runHook preBuild
+            shopt -s dotglob
+
+            rm deps/${pname}/node_modules
+            mkdir deps/${pname}/node_modules
+            pushd deps/${pname}/node_modules
+            ln -s ../../../node_modules/* .
+            popd
+            yarn --offline build
+            runHook postBuild
+          '';
+          installPhase = ''
+            runHook preInstall
+
+            mv deps/${pname}/build $out
+
+            runHook postInstall
+          '';
         });
 
       # run this service as a nixos module
