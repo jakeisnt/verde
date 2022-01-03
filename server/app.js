@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const dirname = path.resolve(path.dirname(""));
-app.use(express.static(path.join(dirname, "public")));
+app.use(express.static(path.join(dirname, "build")));
 
 // api requests won't work without this
 // TODO: remove this for security reasons later
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", indexRouter);
+// app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/room", roomRouter);
 

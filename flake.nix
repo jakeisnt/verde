@@ -65,13 +65,16 @@
           };
         }
       ;
+      # 1. `yarn` in root directory to install dependencies
+      # 2. yarn build
 
     in rec {
       # packages.turn-game = isntweb-bundle;
       # apps.turn-game = packages.isntweb-home;
       # defaultPackage.${system} = isntweb-bundle;
-      # nixosModules.turn-game = isntwebHomeModule;
-      # nixosModule = nixosModules.turn-game;
+
+      nixosModules.turn-game = turnBasedGameModule;
+      nixosModule = nixosModules.turn-game;
 
       devShell.${system} = with pkgs; mkShell {
         buildInputs = [

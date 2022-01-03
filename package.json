@@ -3,14 +3,14 @@
   "name": "react-turn-based-game",
   "version": "0.0.0",
   "type": "module",
-  "workspaces": [
-    "client",
-    "server"
-  ],
+  "workspaces": ["client", "server"],
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "build": "yarn workspace client build && cp -r client/build/ server/",
+    "server-start": "yarn build && yarn workspace server start",
+    "build-clean": "rm -rf client/build && rm -rf server/build",
     "lint": "eslint . --fix",
     "clean": "rm -rf node_modules && rm -rf client/node_modules && yarn install"
   },
