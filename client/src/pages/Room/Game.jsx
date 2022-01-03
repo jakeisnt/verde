@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
-import { useMemo } from "react";
+import React from "react";
 import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
 import { Button, Box, Subtitle, Text } from "../../components";
+
+const { useMemo } = React;
 
 /** This component and its descendants contain all of the logic for playing a game. */
 

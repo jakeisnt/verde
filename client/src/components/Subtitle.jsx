@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "./prop-types";
 
 /* A Subtitle component. Use this instead of a <p/> or <h4/>

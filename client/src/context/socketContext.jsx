@@ -8,8 +8,8 @@ import {
 } from "react";
 import PropTypes from "prop-types";
 import useWebSocket from "react-use-websocket";
-import { useUser } from "./userContext";
 import { clientConfig } from "server";
+import { useUser } from "./userContext";
 
 const spec = clientConfig;
 const SocketContext = createContext(null);

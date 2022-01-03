@@ -1,7 +1,9 @@
-import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 import { useUser } from "../context/userContext";
 import { Button, TextInput, Page } from "../components";
+
+const { useState, useCallback } = React;
 
 /** This page allows the user to create a room. */
 

@@ -1,13 +1,8 @@
-import {
-  createContext,
-  useEffect,
-  useState,
-  useCallback,
-  useContext,
-} from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
 
+const { createContext, useEffect, useState, useCallback, useContext } = React;
 const UserContext = createContext(null);
 
 /** Generates a new user, informing the backend of their existence. */

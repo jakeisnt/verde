@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "./prop-types";
 
 /* A Title component. Use this instead of a <h1/> or <h2/>

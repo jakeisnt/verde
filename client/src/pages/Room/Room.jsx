@@ -1,15 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import useStyles from "../styles";
 import { useSocket, useUser, useGameActions } from "../../context";
 import { UserList, SpectatorList, PlayerList } from "./Users";
 import Game from "./Game";
+import { Button, Page } from "../../components";
+
+const { useEffect, useState, useMemo } = React;
 
 /** The main room of the application; also known as the lobby.
  * This component and its descendants contain most of the networking and game logic.
  */
-
-import { Button, Page } from "../../components";
 
 /** Determines whether the list of players contains a spectator with the provided userId. */
 function hasPlayer(userId, players) {

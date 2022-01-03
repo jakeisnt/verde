@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
+import React from "react";
 import theme from "./theme";
 import { Home, Room, Create, Join, Profile, About } from "./pages";
 import { BottomBanner } from "./components";
@@ -16,27 +17,13 @@ function App() {
         <UserProvider>
           <Router>
             <Routes>
-              <Route path="/room/:name">
-                <Room />
-              </Route>
-              <Route path="/create">
-                <Create />
-              </Route>
-              <Route path="/join">
-                <Join />
-              </Route>
-              <Route path="/profile">
-                <Profile />
-              </Route>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/home/:error">
-                <Home />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
+              <Route path="room/:name" element={<Room />} />
+              <Route path="create" element={<Create />} />
+              <Route path="join" element={<Join />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/home/:error" element={<Home />} />
+              <Route path="/" element={<Home />} />
             </Routes>
           </Router>
           <BottomBanner text="This website uses cookies." />

@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "./prop-types";
 import useStyles from "./styles";
 import Title from "./Subtitle";

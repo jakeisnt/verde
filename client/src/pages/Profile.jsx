@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React from "react";
 import { useUser } from "../context/userContext";
 import { Button, TextInput, Page, Title, Subtitle } from "../components";
 
+const { useState } = React;
 /** This is the Profile page - it allows users to view and configure their user profile
  * outside of the context of a game. */
 
