@@ -31,10 +31,10 @@
       #    stash the client util file in the build
 
       # 2. Build the client dependencies
-      #    Bake the server util file in so the import resolves
+      #    Bake the server util file in so the import resolves as the static files are generated
 
-      # 3. Build the full package to let the client deploy the server
-      # (just writing a script)
+      # 3. Build the server
+      #    Move the client dependencies to the proper folder relative to the server
       server-code = (pkgs.mkYarnPackage {
         src = "${./server}";
         packageJSON = "${./server/package.json}";
