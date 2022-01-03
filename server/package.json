@@ -7,13 +7,14 @@
   "scripts": {
     "start": "nodemon --experimental-specifier-resolution=node ./bin/www.js"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "cookie-parser": "1.4.4",
     "debug": "2.6.9",
-    "express": "4.16.1",
     "http-errors": "1.6.3",
+    "ws": "7.4.6",
     "winston": "3.3.3",
-    "express-winston": "4.1.0",
-    "ws": "7.4.6"
+    "express": "4.16.1",
+    "express-winston": "4.1.0"
   }
 }

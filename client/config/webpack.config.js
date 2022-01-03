@@ -393,6 +393,11 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
+              exclude: [
+                path.join(paths.appSrc, "/build"),
+                path.join(paths.appSrc, "/config"),
+                path.join(paths.appSrc, "/scripts"),
+              ],
               loader: require.resolve("babel-loader"),
               options: {
                 customize: require.resolve(
