@@ -26,35 +26,44 @@
 
       docsrc = ./.;
 
+      # 1. Install the server yarn dependencies
+      #    build the client util file
+      #    stash the client util file in the build
+
+      # 2. Build the client dependencies
+      #    Bake the server util file in so the import resolves
+
+      # 3. Build the full package to let the client deploy the server
+      # (just writing a script)
       client-code = (pkgs.mkYarnPackage {
         src = "${./client}";
         packageJSON = "${docsrc}/client/package.json";
         yarnLock = "${docsrc}/client/package.json";
 
-      });
+      }).overrideAttrs (oldAttrs:
+        let pname = oldAttrs.pname;
+        in {
+          doDist = false;
+          buildPhase = ''
+            runHook preBuild
+            shopt -s dotglob
 
-        .overrideAttrs (oldAttrs: let pname = oldAttrs.pname; in {
-                                        doDist = false;
-                                        buildPhase = ''
-        runHook preBuild
-        shopt -s dotglob
+            rm deps/${pname}/node_modules
+            mkdir deps/${pname}/node_modules
+            pushd deps/${pname}/node_modules
+            ln -s ../../../node_modules/* .
+            popd
+            yarn --offline build
+            runHook postBuild
+          '';
+          installPhase = ''
+          runHook preInstall
 
-        rm deps/${pname}/node_modules
-        mkdir deps/${pname}/node_modules
-        pushd deps/${pname}/node_modules
-        ln -s ../../../node_modules/* .
-        popd
-        yarn --offline build
-        runHook postBuild
-      '';
-                                        installPhase = ''
-        runHook preInstall
+          mv deps/${pname}/build $out
 
-        mv deps/${pname}/build $out
-
-        runHook postInstall
-      '';
-                                      });
+          runHook postInstall
+        '';
+        });
 
       # run this service as a nixos module
       turnBasedGameModule = { config, options, lib, pkgs, ... }:
