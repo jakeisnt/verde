@@ -4,11 +4,17 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     utils.url = "github:numtide/flake-utils";
+    # inputs.gitignore = {
+    #   url = "github:hercules-ci/gitignore.nix";
+    #   # Use the same nixpkgs
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = { self, nixpkgs, utils, ... }:
     # utils.lib.eachDefaultSystem (system:
     let
+      # inherit (gitignore.lib) gitignoreSource;
       system = "x86_64-linux";
 
       inherit (lib) attrValues;
@@ -18,11 +24,37 @@
       };
       lib = pkgs.lib;
 
-      client = pkgs.stdenv.mkDerivation {
-        name = "turn-game-client";
-        src = ./.;
+      docsrc = ./.;
 
-      };
+      client-code = (pkgs.mkYarnPackage {
+        src = "${./client}";
+        packageJSON = "${docsrc}/client/package.json";
+        yarnLock = "${docsrc}/client/package.json";
+
+      });
+
+        .overrideAttrs (oldAttrs: let pname = oldAttrs.pname; in {
+                                        doDist = false;
+                                        buildPhase = ''
+        runHook preBuild
+        shopt -s dotglob
+
+        rm deps/${pname}/node_modules
+        mkdir deps/${pname}/node_modules
+        pushd deps/${pname}/node_modules
+        ln -s ../../../node_modules/* .
+        popd
+        yarn --offline build
+        runHook postBuild
+      '';
+                                        installPhase = ''
+        runHook preInstall
+
+        mv deps/${pname}/build $out
+
+        runHook postInstall
+      '';
+                                      });
 
       # run this service as a nixos module
       turnBasedGameModule = { config, options, lib, pkgs, ... }:
@@ -67,6 +99,7 @@
       ;
       # 1. `yarn` in root directory to install dependencies
       # 2. yarn build
+
 
     in rec {
       # packages.turn-game = isntweb-bundle;
