@@ -20,9 +20,9 @@ function App() {
               <Route path="room/:name" element={<Room />} />
               <Route path="create" element={<Create />} />
               <Route path="join" element={<Join />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/home/:error" element={<Home />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="about" element={<About />} />
+              <Route path="home/:error" element={<Home />} />
               <Route path="/" element={<Home />} />
             </Routes>
           </Router>

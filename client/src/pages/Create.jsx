@@ -10,7 +10,7 @@ const { useState, useCallback } = React;
 function Create() {
   const { userId } = useUser();
   const [capacity, setCapacity] = useState("");
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const createRoom = useCallback(() => {
     if (userId) {
@@ -22,9 +22,9 @@ function Create() {
         })}`
       )
         .then((res) => res.json())
-        .then((room) => history.push(`/room/${room.name}`));
+        .then((room) => navigate(`/room/${room.name}`));
     }
-  }, [userId, history, capacity]);
+  }, [userId, navigate, capacity]);
 
   return (
     <Page>

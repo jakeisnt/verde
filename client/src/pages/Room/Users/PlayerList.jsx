@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "prop-types";
 import User from "./User";
 import { Box } from "../../../components";

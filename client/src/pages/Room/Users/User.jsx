@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-
+import React from "react";
 import PropTypes from "prop-types";
 import useStyles from "./styles";
 import { useGameActions } from "../../../context";
 import { Button } from "../../../components";
+
+const { useState, useEffect, useCallback, useRef } = React;
 
 /* Renders a single user in a list of users.
  * Offers options to spectate, unspectate, edit name, etc. based on the player's status.

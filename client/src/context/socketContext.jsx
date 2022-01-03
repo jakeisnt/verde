@@ -1,16 +1,17 @@
-import {
+import React from "react";
+import PropTypes from "prop-types";
+import useWebSocket from "react-use-websocket";
+import clientConfig from "../api_schema.json";
+import { useUser } from "./userContext";
+
+const {
   createContext,
   useEffect,
   useState,
   useCallback,
   useContext,
   useMemo,
-} from "react";
-import PropTypes from "prop-types";
-import useWebSocket from "react-use-websocket";
-import { clientConfig } from "server";
-import { useUser } from "./userContext";
-
+} = React;
 const spec = clientConfig;
 const SocketContext = createContext(null);
 

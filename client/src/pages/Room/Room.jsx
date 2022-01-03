@@ -24,7 +24,7 @@ function Room() {
   const { user: me } = useUser();
   const classes = useStyles();
   const [room, setRoom] = useState(null);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)
@@ -33,8 +33,8 @@ function Room() {
         throw new Error(`Room ${roomName} does not exist.`);
       })
       .then((res) => setRoom(res))
-      .catch((err) => history.push(`/home/${err.message}`));
-  }, [roomName, setRoom, history]);
+      .catch((err) => navigate(`/home/${err.message}`));
+  }, [roomName, setRoom, navigate]);
 
   useEffect(() => {
     if (
@@ -42,12 +42,12 @@ function Room() {
       lastMessage.banned &&
       lastMessage.banned.map(({ id }) => id).includes(me.id) // better than object comparison
     )
-      history.push(
+      navigate(
         /* eslint-disable */
         "/home/" +
         encodeURIComponent(`You have been banned from room ${roomName}.`)
       );
-  }, [lastMessage, roomName, history, me]);
+  }, [lastMessage, roomName, navigate, me]);
 
   useEffect(() => {
     console.log(JSON.stringify(lastMessage));

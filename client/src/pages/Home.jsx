@@ -5,7 +5,7 @@ import { Button } from "../components";
 
 /** This is the homepage of the application - providing links to available user actions. */
 function Home() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { error } = useParams();
   const classes = useStyles();
 
@@ -16,10 +16,10 @@ function Home() {
       )}
       <h1 className={classes.title}>Fun Game</h1>
       <img alt="add logo here" className={classes.fakePic} />
-      <Button title="Create Room" onClick={() => history.push("/create")} />
-      <Button title="Join Room" onClick={() => history.push("/join")} />
-      <Button title="Profile" onClick={() => history.push("/profile")} />
-      <Button title="About" onClick={() => history.push("/about")} />
+      <Button title="Create Room" onClick={() => navigate("/create")} />
+      <Button title="Join Room" onClick={() => navigate("/join")} />
+      <Button title="Profile" onClick={() => navigate("/profile")} />
+      <Button title="About" onClick={() => navigate("/about")} />
     </div>
   );
 }

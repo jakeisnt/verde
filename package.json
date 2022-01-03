@@ -7,8 +7,9 @@
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
-    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "build": "yarn workspace client build && cp -r client/build/ server/",
+    "gen-api": "node --experimental-specifier-resolution=node ./gen-api.js",
+    "start": "yarn gen-api && concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "build": "yarn gen-api && yarn workspace client build && cp -r client/build/ server/",
     "server-start": "yarn build && yarn workspace server start",
     "build-clean": "rm -rf client/build && rm -rf server/build",
     "lint": "eslint . --fix",

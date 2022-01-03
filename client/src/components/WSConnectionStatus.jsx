@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import { ReadyState } from "react-use-websocket";
 import { createUseStyles } from "react-jss";
 import RippleLoader from "./RippleLoader";
 import { useSocket } from "../context/socketContext";
+
+const { useState, useEffect } = React;
 
 /** Component that displays a status message if websocket connections aren't working out. */
 
