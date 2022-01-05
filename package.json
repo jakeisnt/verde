@@ -3,26 +3,27 @@
   "name": "react-turn-based-game",
   "version": "0.0.0",
   "type": "module",
-  "workspaces": [
-    "client",
-    "server"
-  ],
+  "workspaces": ["client", "server"],
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
-    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "gen-api": "node --experimental-specifier-resolution=node ./gen-api.js",
+    "start": "yarn gen-api && concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "build": "yarn gen-api && yarn workspace client build && cp -r client/build/ server/",
+    "server-start": "yarn build && yarn workspace server start",
+    "build-clean": "rm -rf client/build && rm -rf server/build",
     "lint": "eslint . --fix",
-    "clean": "rm -rf node_modules && rm -rf client/node_modules && yarn install"
+    "clean": "rm -rf node_modules && rm -rf client/node_modules",
+    "reset": "yarn clean && yarn install"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "concurrently": "6.0.0",
     "javascript-typescript-langserver": "2.11.3",
     "lerna": "4.0.0",
     "nodemon": "2.0.12",
     "typescript": "4.3.4",
-    "typescript-language-server": "0.5.1"
-  },
-  "devDependencies": {
+    "typescript-language-server": "0.5.1",
     "@babel/eslint-parser": "7.13.14",
     "customize-cra": "^1.0.0",
     "eslint": "7.11.0",

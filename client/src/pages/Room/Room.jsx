@@ -1,15 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import useStyles from "../styles";
 import { useSocket, useUser, useGameActions } from "../../context";
 import { UserList, SpectatorList, PlayerList } from "./Users";
 import Game from "./Game";
+import { Button, Page } from "../../components";
+
+const { useEffect, useState, useMemo } = React;
 
 /** The main room of the application; also known as the lobby.
-* This component and its descendants contain most of the networking and game logic.
-* */
-
-import { Button, Page } from "../../components";
+ * This component and its descendants contain most of the networking and game logic.
+ */
 
 /** Determines whether the list of players contains a spectator with the provided userId. */
 function hasPlayer(userId, players) {
@@ -23,7 +24,7 @@ function Room() {
   const { user: me } = useUser();
   const classes = useStyles();
   const [room, setRoom] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)
@@ -32,8 +33,8 @@ function Room() {
         throw new Error(`Room ${roomName} does not exist.`);
       })
       .then((res) => setRoom(res))
-      .catch((err) => history.push(`/home/${err.message}`));
-  }, [roomName, setRoom, history]);
+      .catch((err) => navigate(`/home/${err.message}`));
+  }, [roomName, setRoom, navigate]);
 
   useEffect(() => {
     if (
@@ -41,12 +42,12 @@ function Room() {
       lastMessage.banned &&
       lastMessage.banned.map(({ id }) => id).includes(me.id) // better than object comparison
     )
-      history.push(
-        // eslint-disable-next-line prefer-template
+      navigate(
+        /* eslint-disable */
         "/home/" +
         encodeURIComponent(`You have been banned from room ${roomName}.`)
       );
-  }, [lastMessage, roomName, history, me]);
+  }, [lastMessage, roomName, navigate, me]);
 
   useEffect(() => {
     console.log(JSON.stringify(lastMessage));
@@ -97,7 +98,9 @@ function Room() {
             userIsMod={userIsMod}
             myId={me.id}
           />
-          {userIsPlayer && lastMessage.players.length > 1 && <Button title="Spectate" onClick={spectate} />}
+          {userIsPlayer && lastMessage.players.length > 1 && (
+            <Button title="Spectate" onClick={spectate} />
+          )}
           <Game userIsMod={userIsMod} />
         </>
       )}

@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
-import { useMemo } from "react";
+import React from "react";
 import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
 import { Button, Box, Subtitle, Text } from "../../components";
+
+const { useMemo } = React;
 
 /** This component and its descendants contain all of the logic for playing a game. */
 
@@ -58,11 +60,16 @@ function Game({ userIsMod }) {
       {lastMessage.isOver && lastMessage.winners && (
         <Box>
           <Subtitle>Winners</Subtitle>
-          {lastMessage.winners.length > 0 ? lastMessage.winners.map(({ name, id }) => (
-            <Text key={`winner-${id}`}>{name}</Text>
-          )) :
-            <Text key={`no-winners`}>There weren't any winners this round.</Text>
-          }
+          {lastMessage.winners.length > 0 ? (
+            lastMessage.winners.map(({ name, id }) => (
+              <Text key={`winner-${id}`}>{name}</Text>
+            ))
+          ) : (
+            <Text key="no-winners">
+              {/* eslint-disable-next-line */}
+              {"There weren't any winners this round."}
+            </Text>
+          )}
         </Box>
       )}
       {lastMessage.isOver && userIsMod && (

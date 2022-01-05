@@ -4,7 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { expressLogger } from "./logger";
 
-import indexRouter from "./routes/index";
+// import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import roomRouter from "./routes/room";
 
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const dirname = path.resolve(path.dirname(""));
-app.use(express.static(path.join(dirname, "public")));
+app.use(express.static(path.join(dirname, "build")));
 
 // api requests won't work without this
 // TODO: remove this for security reasons later
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", indexRouter);
+// app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/room", roomRouter);
 

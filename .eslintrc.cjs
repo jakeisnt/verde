@@ -17,9 +17,9 @@ module.exports = {
       modules: true,
       experimentalObjectRestSpread: true,
     },
-    babelOptions: {
-      configFile: path.join(__dirname, "babel.config.json"),
-    },
+    // babelOptions: {
+    //   configFile: path.join(__dirname, "babel.config.json"),
+    // },
   },
   extends: [
     "airbnb",

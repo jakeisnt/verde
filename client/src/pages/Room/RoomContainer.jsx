@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import WSConnectionStatus from "../../components/WSConnectionStatus";
 import Room from "./Room";
 import { SocketProvider } from "../../context/socketContext";
+
+const { useEffect } = React;
 
 /** Wraps a room to ensure the user is warned before the page is left. */
 function RoomContainer() {
@@ -13,6 +15,8 @@ function RoomContainer() {
   useEffect(() => {
     window.onbeforeunload = () =>
       "Are you sure that you want to leave the room?";
+
+    /* eslint-disable-next-line */
     return () => (window.beforeunload = undefined);
   }, []);
 

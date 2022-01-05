@@ -1,14 +1,16 @@
-import { useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import React from "react";
 import { useUser } from "../context/userContext";
 import { Button, TextInput, Page } from "../components";
+
+const { useState, useCallback } = React;
 
 /** This page allows the user to create a room. */
 
 function Create() {
   const { userId } = useUser();
   const [capacity, setCapacity] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const createRoom = useCallback(() => {
     if (userId) {
@@ -20,9 +22,9 @@ function Create() {
         })}`
       )
         .then((res) => res.json())
-        .then((room) => history.push(`/room/${room.name}`));
+        .then((room) => navigate(`/room/${room.name}`));
     }
-  }, [userId, history, capacity]);
+  }, [userId, navigate, capacity]);
 
   return (
     <Page>

@@ -1,4 +1,6 @@
-import { useCallback, useState } from "react";
+import React from "react";
+
+const { useCallback, useState } = React;
 
 /** A simple hook to toggle between true and false states. */
 function useToggle(initialState = false) {

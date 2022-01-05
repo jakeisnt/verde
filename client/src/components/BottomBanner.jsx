@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "./prop-types";
 import useStyles from "./styles";
 import Title from "./Subtitle";
@@ -11,9 +12,7 @@ function BottomBanner({ text, children }) {
 
   return closed ? null : (
     <div className={classes.bottomBanner}>
-      <Title>
-        {text}
-      </Title>
+      <Title> {text} </Title>
       {children}
       <Button title="ok" onClick={toggleClosed} />
     </div>

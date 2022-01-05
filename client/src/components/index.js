@@ -19,5 +19,5 @@ export {
   TextInput,
   Page,
   Box,
-  BottomBanner
+  BottomBanner,
 };
