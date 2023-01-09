@@ -14,7 +14,7 @@ function Home() {
       {error && (
         <div className={classes.errorBox}>{decodeURIComponent(error)}</div>
       )}
-      <h1 className={classes.title}>Fun Game</h1>
+      <h1 className={classes.title}>Verde</h1>
       <img alt="add logo here" className={classes.fakePic} />
       <Button title="Create Room" onClick={() => navigate("/create")} />
       <Button title="Join Room" onClick={() => navigate("/join")} />
