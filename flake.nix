@@ -26,6 +26,7 @@
           inherit name description;
           buildInputs = [
             nodejs
+            yarn
           ];
         };
       });
