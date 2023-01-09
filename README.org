@@ -7,6 +7,8 @@ This is a standard full stack JavaScript monorepo build with `yarn` and organize
 Frontend and backend are found in `client/` and `server/`, respectively.
 
 ** Start developing:
+If you have `nix` and `direnv` set up, just open this directory. Everything will 'just work'. Otherwise:
+
 1. Make sure you have `yarn` [[https://classic.yarnpkg.com/en/docs/install/#debian-stable][installed globally]] and an [[https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint][`eslint`]] plugin, or a language server protocol plugin that will allow you to use `tsserver`, installed for your editor of choice. VSCode is your go-to option if you're newer to software development.
 2. Run `yarn install` in the root directory of the entire project to install all dependencies.
 3. Run `yarn start` in the root directory to start up the hot reloading process.
