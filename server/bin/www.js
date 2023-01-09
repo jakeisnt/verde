@@ -3,6 +3,9 @@
  * Module dependencies.
  */
 
+
+console.log("\nWelcome to Verde! Starting the web server...")
+
 import debugM from "debug";
 
 import http from "http";
@@ -88,3 +91,5 @@ server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
 server.on("upgrade", onUpgrade);
+
+console.log("Server started. Enjoy!");
