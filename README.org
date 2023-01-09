@@ -22,3 +22,6 @@ If you have `nix` and `direnv` set up, just open this directory. Everything will
 ** Ops
 - All-in-one, strongly opinionated ESLint + Prettier linting and fixing. Feel free to convert errors into warnings if something is annoying you.
 - Some sort of deployment infrastructure
+
+* Design language
+Mondrianesque, de Stijl inspired
