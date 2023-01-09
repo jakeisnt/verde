@@ -1,6 +1,6 @@
-#+TITLE: Build a React Turn-Based Game!
+#+TITLE: Verde
 
-This sets out to be a complete starter kit for building React and Node.js turn-based games.
+A reasonable starter kit for building React and Node.js turn-based games.
 
 * Development
 This is a standard full stack JavaScript monorepo build with `yarn` and organized with lerna.
