@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
-import React from "react";
 import theme from "./theme";
 import { Home, Room, Create, Join, Profile, About } from "./pages";
 import { BottomBanner } from "./components";

@@ -10,6 +10,12 @@ const theme = {
   warn: "orange",
   error: "red",
   green: "green",
+
+  font: {
+    title: 'Bungee Shade',
+    heading: 'Bungee',
+    body: 'Belleza',
+  }
 };
 
 export default theme;

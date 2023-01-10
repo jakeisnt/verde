@@ -1,4 +1,3 @@
-import React from "react";
 import { createUseStyles } from "react-jss";
 
 /** A fancy animated ripple loader. */

@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
-import React from "react";
 import useStyles from "./styles";
-import { Button } from "../components";
+import { Title, Button } from "../components";
 
 /** This is the homepage of the application - providing links to available user actions. */
 function Home() {
@@ -14,7 +13,7 @@ function Home() {
       {error && (
         <div className={classes.errorBox}>{decodeURIComponent(error)}</div>
       )}
-      <h1 className={classes.title}>Verde</h1>
+      <Title>Verde</Title>
       <img alt="add logo here" className={classes.fakePic} />
       <Button title="Create Room" onClick={() => navigate("/create")} />
       <Button title="Join Room" onClick={() => navigate("/join")} />

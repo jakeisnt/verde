@@ -1,7 +1,6 @@
-import React from "react";
 import PropTypes from "./prop-types";
 import useStyles from "./styles";
-import Title from "./Subtitle";
+import Text from "./Text";
 import Button from "./Button";
 import { useToggle } from "../context";
 
@@ -12,7 +11,7 @@ function BottomBanner({ text, children }) {
 
   return closed ? null : (
     <div className={classes.bottomBanner}>
-      <Title> {text} </Title>
+      <Text> {text} </Text>
       {children}
       <Button title="Ok." onClick={toggleClosed} />
     </div>

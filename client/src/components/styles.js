@@ -17,6 +17,18 @@ const useStyles = createUseStyles((theme) => ({
     color: theme.black,
     backgroundColor: theme.white,
   },
+  title: {
+    fontFamily: theme.font.title,
+    fontSize: '6em',
+    color: 'green',
+    textAlign: "center",
+  },
+  subtitle: {
+    fontFamily: theme.font.heading,
+    color: theme.black,
+    fontSize: '2em',
+    textAlign: "center",
+  },
   button: {
     padding: "1em",
     margin: "1em",

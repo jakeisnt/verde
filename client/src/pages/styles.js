@@ -33,7 +33,7 @@ export default createUseStyles((theme) => ({
     backgroundColor: theme.white,
   },
   title: {
-    fontFamily: 'Bungee Shade',
+    fontFamily: theme.font.title,
     fontSize: '6em',
     color: 'green',
     textAlign: "center",

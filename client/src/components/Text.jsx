@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "./prop-types";
 
 /* A Text component. Use this instead of a <p/>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Title, Text, Page } from "../components";
 
 /** This page provides some information about the game, its creators, etc. */
