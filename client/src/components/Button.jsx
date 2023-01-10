@@ -10,7 +10,7 @@ function Button({ onClick, title }) {
     <button
       tabIndex={0}
       type="button"
-      className={classes.box}
+      className={classes.button}
       onClick={onClick}
     >
       {title}

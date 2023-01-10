@@ -17,6 +17,17 @@ const useStyles = createUseStyles((theme) => ({
     color: theme.black,
     backgroundColor: theme.white,
   },
+  button: {
+    padding: "1em",
+    margin: "1em",
+    textAlign: "center",
+    border: `2px solid ${theme.black}`,
+    color: theme.black,
+    backgroundColor: theme.white,
+    '&:hover': {
+      boxShadow: "5px 5px black",
+    }
+  },
   errorBox: {
     padding: "1em",
     margin: "1em",
