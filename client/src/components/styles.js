@@ -36,6 +36,7 @@ const useStyles = createUseStyles((theme) => ({
     border: `3px solid ${theme.black}`,
     color: theme.black,
     backgroundColor: theme.white,
+    fontFamily: theme.font.body,
     '&:hover': {
       border: `3px solid ${theme.black}`,
       boxShadow: "8px 8px black",
