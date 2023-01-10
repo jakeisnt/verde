@@ -33,7 +33,9 @@ export default createUseStyles((theme) => ({
     backgroundColor: theme.white,
   },
   title: {
-    fontSize: "4em",
+    fontFamily: 'Bungee Shade',
+    fontSize: '6em',
+    color: 'green',
     textAlign: "center",
   },
   fakePic: {
