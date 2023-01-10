@@ -25,7 +25,7 @@ const useStyles = createUseStyles((theme) => ({
     color: theme.black,
     backgroundColor: theme.white,
     '&:hover': {
-      boxShadow: "5px 5px black",
+      boxShadow: "8px 8px black",
     }
   },
   errorBox: {
@@ -58,6 +58,7 @@ const useStyles = createUseStyles((theme) => ({
     position: "absolute",
     verticalAlign: "center",
     border: `3px solid ${theme.black}`,
+    paddingLeft: '1em',
     color: theme.black,
     backgroundColor: theme.white,
   },

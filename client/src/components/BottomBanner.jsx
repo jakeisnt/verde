@@ -14,7 +14,7 @@ function BottomBanner({ text, children }) {
     <div className={classes.bottomBanner}>
       <Title> {text} </Title>
       {children}
-      <Button title="ok" onClick={toggleClosed} />
+      <Button title="Ok." onClick={toggleClosed} />
     </div>
   );
 }
