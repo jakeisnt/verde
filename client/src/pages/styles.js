@@ -32,12 +32,6 @@ export default createUseStyles((theme) => ({
     border: `2px solid ${theme.red}`,
     backgroundColor: theme.white,
   },
-  title: {
-    fontFamily: theme.font.title,
-    fontSize: '6em',
-    color: 'green',
-    textAlign: "center",
-  },
   fakePic: {
     border: `2px solid ${theme.black}`,
     width: "25vw",

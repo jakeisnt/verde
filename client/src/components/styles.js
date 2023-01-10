@@ -5,7 +5,7 @@ import { createUseStyles } from "react-jss";
 const useStyles = createUseStyles((theme) => ({
   backButton: {
     border: "none",
-    backgroundColor: theme.white,
+    backgroundColor: "rgba(0,0,0,0)",
     color: theme.black,
     textAlign: "left",
   },
@@ -27,7 +27,6 @@ const useStyles = createUseStyles((theme) => ({
     fontFamily: theme.font.heading,
     color: theme.black,
     fontSize: '2em',
-    textAlign: "center",
   },
   button: {
     padding: "1em",
