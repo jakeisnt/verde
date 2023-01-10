@@ -22,7 +22,9 @@ const useStyles = createUseStyles((theme) => ({
     fontSize: '6em',
     color: 'green',
     textAlign: "center",
-    margin: '0.5em auto',
+    margin: '0.5em 0.5em',
+    padding: 0,
+    border: `1px solid ${theme.black}`,
   },
   subtitle: {
     fontFamily: theme.font.heading,
