@@ -34,8 +34,8 @@ export default createUseStyles((theme) => ({
   },
   fakePic: {
     border: `2px solid ${theme.black}`,
-    width: "25vw",
-    height: "25vh",
+    // width: "25vw",
+    // height: "25vh",
     textAlign: "center",
     margin: "auto",
     marginBottom: "2em",
