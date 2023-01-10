@@ -21,10 +21,20 @@ const useStyles = createUseStyles((theme) => ({
     padding: "1em",
     margin: "1em",
     textAlign: "center",
-    border: `2px solid ${theme.black}`,
+    fontSize: '16px',
+    border: `3px solid ${theme.black}`,
     color: theme.black,
     backgroundColor: theme.white,
     '&:hover': {
+      border: `3px solid ${theme.black}`,
+      boxShadow: "8px 8px black",
+    },
+    '&:focus': {
+      border: `3px solid ${theme.black}`,
+      boxShadow: "8px 8px black",
+    },
+    '&:active': {
+      border: `3px solid ${theme.black}`,
       boxShadow: "8px 8px black",
     }
   },
