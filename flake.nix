@@ -27,6 +27,7 @@
           buildInputs = [
             nodejs
             yarn
+            nodePackages_latest.typescript
           ];
         };
       });
