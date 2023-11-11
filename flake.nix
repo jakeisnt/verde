@@ -25,8 +25,7 @@
         devShell = with pkgs; mkShell {
           inherit name description;
           buildInputs = [
-            nodejs
-            yarn
+            bun
             nodePackages_latest.typescript
           ];
         };
