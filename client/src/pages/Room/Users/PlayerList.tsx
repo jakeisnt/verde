@@ -1,11 +1,27 @@
-import PropTypes from "prop-types";
 import User from "./User";
 import { Box } from "../../../components";
+
+type UserType = {
+  userIsSpectator: boolean;
+  inactiveUser: boolean;
+  id: string;
+  name: string;
+};
 
 /* A list of active players in the game.
  * Assume every user provided in the list of users is a player.
  */
-function PlayerList({ users, capacity, myId, userIsMod }) {
+function PlayerList({
+  users,
+  capacity,
+  myId,
+  userIsMod,
+}: {
+  users: UserType[];
+  capacity: number | null;
+  myId: string;
+  userIsMod: boolean;
+}) {
   return users && users.length > 0 ? (
     <>
       <div>
@@ -24,7 +40,6 @@ function PlayerList({ users, capacity, myId, userIsMod }) {
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
-                  playerList
                 />
               )
           )}
@@ -32,21 +47,5 @@ function PlayerList({ users, capacity, myId, userIsMod }) {
     </>
   ) : null;
 }
-
-PlayerList.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  capacity: PropTypes.number,
-  myId: PropTypes.string.isRequired,
-  userIsMod: PropTypes.bool.isRequired,
-};
-
-PlayerList.defaultProps = {
-  capacity: null,
-};
 
 export default PlayerList;

@@ -8,7 +8,7 @@ const { useEffect } = React;
 
 /** Wraps a room to ensure the user is warned before the page is left. */
 function RoomContainer() {
-  const { name: roomName } = useParams();
+  const { name: roomName } = useParams<{name: string}>();
 
   /* When the page loads, add a message warning when unloading.
    * When it unloads, remove the warning. */
@@ -16,9 +16,14 @@ function RoomContainer() {
     window.onbeforeunload = () =>
       "Are you sure that you want to leave the room?";
 
-    /* eslint-disable-next-line */
-    return () => (window.beforeunload = undefined);
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, []);
+
+  if (!roomName) {
+    return null;
+  }
 
   return (
     <SocketProvider roomName={roomName}>

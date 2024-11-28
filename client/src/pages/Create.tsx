@@ -1,8 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { Button, TextInput, Page } from "../components";
-
 
 /** This page allows the user to create a room. */
 
@@ -30,8 +29,12 @@ function Create() {
       <TextInput
         value={capacity}
         placeholder="Enter a room capacity (empty for infinite)"
-        onKeyUp={(e) => e.key === "Enter" && createRoom()}
-        onInput={(e) => setCapacity(e.target.value.toUpperCase())}
+        onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) =>
+          e.key === "Enter" && createRoom()
+        }
+        onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setCapacity(e.target.value.toUpperCase())
+        }
       />
       <Button title="Create Lobby" onClick={createRoom} />
     </Page>

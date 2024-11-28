@@ -1,8 +1,7 @@
-import PropTypes from "prop-types";
 import useStyles from "./styles";
 
 /** A basic button component. */
-function Button({ onClick, title }) {
+function Button({ onClick, title }: { onClick: () => void; title: string }) {
   const classes = useStyles();
 
   return (
@@ -16,10 +15,5 @@ function Button({ onClick, title }) {
     </button>
   );
 }
-
-Button.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-};
 
 export default Button;

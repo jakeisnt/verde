@@ -1,11 +1,16 @@
-import PropTypes from "./prop-types";
 import useStyles from "./styles";
 import Text from "./Text";
 import Button from "./Button";
 import { useToggle } from "../context";
+import { ReactNode } from "react";
+
+type BottomBannerProps = {
+  text: string;
+  children?: ReactNode;
+}
 
 /** A bottom banner displayed on the site. */
-function BottomBanner({ text, children }) {
+function BottomBanner({ text, children }: BottomBannerProps) {
   const classes = useStyles();
   const [closed, toggleClosed] = useToggle(false);
 
@@ -13,18 +18,9 @@ function BottomBanner({ text, children }) {
     <div className={classes.bottomBanner}>
       <Text> {text} </Text>
       {children}
-      <Button title="Ok." onClick={toggleClosed} />
+      <Button title="Ok." onClick={() => toggleClosed()} />
     </div>
   );
 }
-
-BottomBanner.propTypes = {
-  text: PropTypes.string.isRequired,
-  children: PropTypes.children,
-};
-
-BottomBanner.defaultProps = {
-  children: undefined,
-};
 
 export default BottomBanner;

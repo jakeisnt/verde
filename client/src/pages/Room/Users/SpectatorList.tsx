@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useGameActions } from "../../../context";
 import User from "./User";
 import useStyles from "./styles";
@@ -8,7 +7,17 @@ import { Button, Box } from "../../../components";
  * Assume every user provided in the list of users is a spectator.
  */
 
-function SpectatorList({ users, capacity, myId, userIsMod }) {
+function SpectatorList({
+  users,
+  capacity,
+  myId,
+  userIsMod,
+}: {
+  users: UserType[];
+  capacity: number | null;
+  myId: string;
+  userIsMod: boolean;
+}) {
   const classes = useStyles();
   const { unspectateAll } = useGameActions();
 
@@ -41,21 +50,5 @@ function SpectatorList({ users, capacity, myId, userIsMod }) {
     </>
   ) : null;
 }
-
-SpectatorList.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  capacity: PropTypes.number,
-  myId: PropTypes.string.isRequired,
-  userIsMod: PropTypes.bool.isRequired,
-};
-
-SpectatorList.defaultProps = {
-  capacity: null,
-};
 
 export default SpectatorList;

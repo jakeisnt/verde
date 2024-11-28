@@ -10,41 +10,57 @@ import { Button, Page } from "../../components";
  * This component and its descendants contain most of the networking and game logic.
  */
 
+interface Player {
+  id: string;
+  name: string;
+  spectate?: boolean;
+}
+
+interface RoomData {
+  capacity: number;
+}
+
+interface UsersMessage {
+  players: Player[];
+  spectators: Player[];
+  inactives: Player[];
+  banned?: Player[];
+}
+
 /** Determines whether the list of players contains a spectator with the provided userId. */
-function hasPlayer(userId, players) {
+function hasPlayer(userId: string, players: Player[]): boolean {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully.spectate;
 }
 
 function Room() {
-  const { error, lastMessage, roomName } = useSocket("users");
+  const { error, lastMessage, roomName } = useSocket<UsersMessage>("users");
   const { spectate } = useGameActions();
   const { user: me } = useUser();
   const classes = useStyles();
-  const [room, setRoom] = useState(null);
+  const [room, setRoom] = useState<RoomData | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/room/get?${new URLSearchParams({ name: roomName })}`)
+    fetch(`/room/get?${new URLSearchParams({ name: roomName || "" })}`)
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error(`Room ${roomName} does not exist.`);
       })
-      .then((res) => setRoom(res))
+      .then((res: RoomData) => setRoom(res))
       .catch((err) => navigate(`/home/${err.message}`));
   }, [roomName, setRoom, navigate]);
 
   useEffect(() => {
     if (
-      lastMessage &&
-      lastMessage.banned &&
-      lastMessage.banned.map(({ id }) => id).includes(me.id) // better than object comparison
-    )
+      lastMessage?.banned?.map(({ id }) => id).includes(me?.id) // better than object comparison
+    ) {
       navigate(
         /* eslint-disable */
         "/home/" +
         encodeURIComponent(`You have been banned from room ${roomName}.`)
       );
+    }
   }, [lastMessage, roomName, navigate, me]);
 
   useEffect(() => {
@@ -55,49 +71,45 @@ function Room() {
   // but to avoid redundant computation it's best to handle here for now.
   const userIsMod = useMemo(
     () =>
-      me &&
-      me.id &&
-      lastMessage &&
-      lastMessage.players &&
-      lastMessage.players[0] &&
-      lastMessage.players[0].id === me.id,
+      me?.id != null &&
+      lastMessage?.players?.[0]?.id === me.id,
     [me, lastMessage]
   );
 
   const userIsPlayer = useMemo(
     () =>
-      me &&
-      me.id &&
-      lastMessage &&
-      lastMessage.players &&
+      me?.id != null &&
+      lastMessage?.players != null &&
       hasPlayer(me.id, lastMessage.players),
     [me, lastMessage]
   );
 
   return (
-    <Page backButtonText="exit">
+    <Page backButtonName="exit">
       <div className={classes.box}>{error || `This is room ${roomName}.`}</div>
       {!error && lastMessage && (
         <>
           <PlayerList
             users={lastMessage.players}
-            capacity={room && room.capacity}
+            capacity={room?.capacity ?? null}
             userIsMod={userIsMod}
-            myId={me.id}
+            myId={me?.id ?? ""}
           />
           <SpectatorList
             users={lastMessage.spectators}
+            capacity={null}
             userIsMod={userIsMod}
-            myId={me.id}
+            myId={me?.id ?? ""}
           />
           <UserList
             users={lastMessage.inactives}
             title="Inactive Users"
+            capacity={null}
             userIsMod={userIsMod}
-            myId={me.id}
+            myId={me?.id ?? ""}
           />
           {userIsPlayer && lastMessage.players.length > 1 && (
-            <Button title="Spectate" onClick={spectate} />
+            <Button title="Spectate" onClick={() => spectate()} />
           )}
           <Game userIsMod={userIsMod} />
         </>

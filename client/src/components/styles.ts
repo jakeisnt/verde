@@ -2,7 +2,18 @@ import { createUseStyles } from "react-jss";
 
 /** Styles shared by various components. */
 
-const useStyles = createUseStyles((theme) => ({
+type Theme = {
+  black: string;
+  white: string;
+  red: string;
+  font: {
+    title: string;
+    heading: string;
+    body: string;
+  }
+}
+
+const useStyles = createUseStyles((theme: Theme) => ({
   backButton: {
     border: "none",
     backgroundColor: "rgba(0,0,0,0)",

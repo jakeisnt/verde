@@ -6,11 +6,11 @@ import { useSocket } from "../context/socketContext";
 
 /** Component that displays a status message if websocket connections aren't working out. */
 
-const Status = {
-  ERR: "error",
-  WARN: "warn",
-  OK: "ok",
-};
+enum Status {
+  ERR = "error",
+  WARN = "warn",
+  OK = "ok",
+}
 
 const connectionStatus = {
   [ReadyState.OPEN]: Status.OK,

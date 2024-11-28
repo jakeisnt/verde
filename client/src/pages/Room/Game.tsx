@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useMemo } from "react";
 import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
@@ -6,14 +5,37 @@ import { Button, Box, Subtitle, Text } from "../../components";
 
 /** This component and its descendants contain all of the logic for playing a game. */
 
+interface Player {
+  id: string;
+  name: string;
+  spectate?: boolean;
+}
+
+interface Winner {
+  id: string;
+  name: string;
+}
+
+interface GameMessage {
+  game: string;
+  players: Player[];
+  curPlayer: string;
+  isOver: boolean;
+  winners?: Winner[];
+}
+
 /** Determines whether the list of players contains a player with the provided userId. */
-function hasPlayer(userId, players) {
+function hasPlayer(userId: string, players: Player[]): boolean {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully.spectate;
 }
 
-function Game({ userIsMod }) {
-  const { lastMessage } = useSocket("game");
+interface GameProps {
+  userIsMod: boolean;
+}
+
+function Game({ userIsMod }: GameProps) {
+  const { lastMessage } = useSocket<GameMessage>("game");
   const { passTurn, stopGame, startGame, takeAction } = useGameActions();
   const { user: me } = useUser();
 
@@ -76,9 +98,5 @@ function Game({ userIsMod }) {
     </Box>
   );
 }
-
-Game.propTypes = {
-  userIsMod: PropTypes.bool.isRequired,
-};
 
 export default Game;

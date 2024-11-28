@@ -1,22 +1,26 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import PropTypes from "prop-types";
-import useWebSocket from "react-use-websocket";
+import useWebSocket, { ReadyState, SendJsonMessage } from "react-use-websocket";
 import clientConfig from "../api_schema.json";
 import { useUser } from "./userContext";
 
-const {
-  createContext,
-  useEffect,
-  useState,
-  useCallback,
-  useContext,
-  useMemo,
-} = React;
+const { createContext, useEffect, useState, useCallback, useContext, useMemo } =
+  React;
 const spec = clientConfig;
-const SocketContext = createContext(null);
+
+interface SocketContextType {
+  error: string | null;
+  sendMessage: SendJsonMessage;
+  lastMessage: any;
+  lastMessages: Record<string, any>;
+  socketState: ReadyState;
+  roomName: string;
+}
+
+const SocketContext = createContext<SocketContextType | null>(null);
 
 /** Generate the server-side websocket URL from a room and userId. */
-function makeUrl(room, userId) {
+function makeUrl(room: string, userId: string): string {
   return `ws://localhost:4000/?${new URLSearchParams({ userId, room })}`;
 }
 
@@ -24,20 +28,20 @@ function makeUrl(room, userId) {
  * Provides a WebSocket connection to the server when mounted.
  * Required to use the `useSocket` hook.
  */
-function SocketProvider({ children, roomName }) {
-  const [error, setError] = useState(null);
-  const [lastMessages, setLastMessages] = useState({});
+function SocketProvider({ children, roomName }: { children: ReactNode; roomName: string }) {
+  const [error, setError] = useState<string | null>(null);
+  const [lastMessages, setLastMessages] = useState<Record<string, any>>({});
   const { userId } = useUser();
 
   const getSocketUrl = useCallback(() => {
-    return new Promise((resolve) => {
+    return new Promise<string>((resolve) => {
       if (userId) resolve(makeUrl(roomName, userId));
     });
   }, [roomName, userId]);
 
   const {
     sendJsonMessage: sendMessage,
-    lastJsonMessage: lastMessage, // We don't care about non-JSON messages
+    lastJsonMessage: lastMessage,
     readyState: socketState,
   } = useWebSocket(getSocketUrl, {
     onOpen: () =>
@@ -79,7 +83,7 @@ SocketProvider.propTypes = {
 /**
  * Provides messages, status and a dispatching function for the websocket.
  */
-function useSocket(messageTypes) {
+function useSocket(messageTypes?: string | string[]) {
   const context = useContext(SocketContext);
 
   if (context === undefined) {
@@ -89,18 +93,9 @@ function useSocket(messageTypes) {
   if (messageTypes) {
     const { lastMessage, lastMessages } = context;
     const newLastMessage = (() => {
-      // If the argument is a string, lastMessage will only contain messages of that type.
       if (typeof messageTypes === "string") {
         return lastMessages[messageTypes] ? lastMessages[messageTypes] : null;
       }
-
-      // Otherwise, lastMessage will default to being the last message overall.
-      // Future work: if messageTypes is an array, the last message will only be
-      // the last message received by something of one of those message types.
-      //
-      // Not implementing this now because this can be achieved by deconstructing
-      // 'lastMessages' and is fairly computationally intensive
-      // (must order lastMessages in list and enforce invariants on it rather than using dictionary).
       return lastMessage;
     })();
     return { ...context, lastMessage: newLastMessage };
@@ -109,17 +104,21 @@ function useSocket(messageTypes) {
   return context;
 }
 
+interface EndpointConfig {
+  [key: string]: string[];
+}
+
 /**
  * Generates endpoint functions for common game actions from a configuration.
  */
-function generateEndpoints(config, sendMessage) {
-  return Object.keys(config).reduce((funcs, funcName) => {
+function generateEndpoints(config: EndpointConfig, sendMessage: SendJsonMessage) {
+  return Object.keys(config).reduce((funcs: Record<string, Function>, funcName: string) => {
     return {
       ...funcs,
-      [funcName]: (...args) => {
+      [funcName]: (...args: any[]) => {
         const message = {
           type: funcName,
-          payload: config[funcName].reduce((pload, argname, i) => {
+          payload: config[funcName].reduce((pload: Record<string, any>, argname: string, i: number) => {
             return { ...pload, [argname]: args[i] };
           }, {}),
         };
@@ -132,12 +131,13 @@ function generateEndpoints(config, sendMessage) {
 }
 
 /** Provides a standard library of game action functions to use, as imported from the server. */
-function useGameActions(messageTypes) {
+function useGameActions(messageTypes?: string | string[]) {
   const { sendMessage } = useSocket(messageTypes);
 
-  const stdlib = useMemo(() => generateEndpoints(spec, sendMessage), [
-    sendMessage,
-  ]);
+  const stdlib = useMemo(
+    () => generateEndpoints(spec, sendMessage),
+    [sendMessage]
+  );
 
   return stdlib;
 }

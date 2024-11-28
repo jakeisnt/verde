@@ -4,7 +4,19 @@ import { Box } from "../../../components";
 
 /** A list of users in the game. */
 
-function UserList({ users, title, capacity, myId, userIsMod }) {
+function UserList({
+  users,
+  title,
+  capacity,
+  myId,
+  userIsMod,
+}: {
+  users: User[];
+  title: string;
+  capacity: number | null;
+  myId: string;
+  userIsMod: boolean;
+}) {
   return users && users.length > 0 ? (
     <>
       {title}
@@ -29,22 +41,5 @@ function UserList({ users, title, capacity, myId, userIsMod }) {
     </>
   ) : null;
 }
-
-UserList.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  title: PropTypes.string.isRequired,
-  capacity: PropTypes.number,
-  myId: PropTypes.string.isRequired,
-  userIsMod: PropTypes.bool.isRequired,
-};
-
-UserList.defaultProps = {
-  capacity: null,
-};
 
 export default UserList;

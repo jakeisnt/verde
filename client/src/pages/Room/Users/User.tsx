@@ -13,8 +13,15 @@ function User({
   userId,
   myId,
   userIsMod,
-  userIsSpectator,
-  inactiveUser,
+  userIsSpectator = false,
+  inactiveUser = false,
+}: {
+  name: string;
+  userId: string;
+  myId: string;
+  userIsMod: boolean;
+  userIsSpectator: boolean;
+  inactiveUser: boolean;
 }) {
   const { unspectateUser, banUser, nominateMod, changeName } = useGameActions();
   const classes = useStyles();
@@ -83,19 +90,5 @@ function User({
     </div>
   );
 }
-
-User.propTypes = {
-  name: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
-  myId: PropTypes.string.isRequired,
-  userIsMod: PropTypes.bool.isRequired,
-  userIsSpectator: PropTypes.bool,
-  inactiveUser: PropTypes.bool,
-};
-
-User.defaultProps = {
-  userIsSpectator: false,
-  inactiveUser: false,
-};
 
 export default User;

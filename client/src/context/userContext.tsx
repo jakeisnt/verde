@@ -1,14 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { ReactNode } from "react";
 import Cookies from "universal-cookie";
 
 const { createContext, useEffect, useState, useCallback, useContext } = React;
-const UserContext = createContext(null);
+
+interface User {
+  id: string;
+  name?: string;
+}
+
+interface UserContextType {
+  userId: string | null;
+  user: User | null;
+  setUserName: (name: string) => void;
+}
+
+const UserContext = createContext<UserContextType | null>(null);
 
 /** Generates a new user, informing the backend of their existence. */
-async function getUser() {
+async function getUser(): Promise<User> {
   const cookies = new Cookies();
-  async function getNewUser() {
+  async function getNewUser(): Promise<User> {
     return fetch(`/users/new`)
       .then((res) => res.json())
       .then((res) => {
@@ -26,18 +37,20 @@ async function getUser() {
 }
 
 /** Provides a userId to the client when the Provider is rendered. */
-function UserProvider({ children }) {
-  const [userId, setUserId] = useState(null);
-  const [user, setUser] = useState(null);
+function UserProvider({ children }: { children: ReactNode }) {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   // Runs once at beginning and whenever user ID cookie is updated
-  useEffect(() => getUser().then((res) => setUser(res)), []);
+  useEffect(() => {
+    getUser().then((res) => setUser(res));
+  }, []);
 
   useEffect(() => console.log(`USER: ${JSON.stringify(user)}`), [user]);
 
   /** Requests to rename the user. */
   const setUserName = useCallback(
-    (name) => {
+    (name: string) => {
       if (user) {
         const params = new URLSearchParams({ id: user.id, name });
         fetch(`/users/setName?${params}`, { method: "PUT" })
@@ -63,14 +76,10 @@ function UserProvider({ children }) {
   );
 }
 
-UserProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
 /** Provides a context containing a stateful user and functions to modify it. */
-function useUser() {
+function useUser(): UserContextType {
   const context = useContext(UserContext);
-  if (context === undefined) {
+  if (context === undefined || context === null) {
     throw new Error("useUser must be used within a UserProvider");
   }
   return context;

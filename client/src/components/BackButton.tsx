@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import PropTypes from "./prop-types";
 import useStyles from "./styles";
 
 /** A text-based back button that navigates through the website's history. */
-function BackButton({ text }) {
+function BackButton({ text = "Back" }: { text?: string }) {
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -17,13 +16,5 @@ function BackButton({ text }) {
     </button>
   );
 }
-
-BackButton.propTypes = {
-  text: PropTypes.string,
-};
-
-BackButton.defaultProps = {
-  text: "Back",
-};
 
 export default BackButton;
