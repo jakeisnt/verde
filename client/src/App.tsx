@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "react-jss";
 import theme from "./theme";
@@ -9,7 +10,7 @@ import { UserProvider } from "./context/userContext";
  * and client side routing for all of the pages.
  */
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -30,6 +31,6 @@ function App() {
       </ThemeProvider>
     </div>
   );
-}
+};
 
 export default App;

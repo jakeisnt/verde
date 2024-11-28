@@ -2,22 +2,21 @@ import game from "../game";
 import Users from "./users";
 import { logger } from "../logger";
 
-interface Player {
+type Player = {
   id: string;
   [key: string]: any;
-}
+};
 
-interface GameState {
+type GameState = {
   pub: any;
-  priv: any;
   [key: string]: any;
-}
+};
 
-interface ActionResult {
+type ActionResult = {
   gameState?: GameState;
   playerState?: GamePlayer[];
   passTurn?: boolean;
-}
+};
 
 /** Get the initial state of the players. */
 function getInitialPlayerState(player: Player): any {

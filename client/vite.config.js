@@ -17,5 +17,8 @@ export default defineConfig({
     rollupOptions: {
       input: './src/main.jsx'
     }
+  },
+  esbuild: {
+    jsxInject: `import React from 'react'`
   }
 })
