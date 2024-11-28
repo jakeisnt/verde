@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "bun run --watch bin/www.js"
+    "start": "bun run --watch bin/www.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "cookie-parser": "1.4.4",
@@ -16,9 +17,12 @@
     "ws": "7.4.6"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.8",
-    "@types/express": "^5.0.0",
-    "@types/http-server": "^0.12.4",
-    "@types/ws": "^8.5.13"
+    "@types/cookie-parser": "^1.4.7",
+    "@types/debug": "^4.1.12",
+    "@types/express": "^4.17.21",
+    "@types/http-errors": "^2.0.4",
+    "@types/node": "^20.11.24",
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.3.3"
   }
 }
