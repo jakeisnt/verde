@@ -1,13 +1,4 @@
-#!/usr/bin/env node --experimental-specifier-resolution=node
-/**
- * Module dependencies.
- */
-
-
-console.log("\nWelcome to Verde! Starting the web server...")
-
 import debugM from "debug";
-
 import http from "http";
 import app from "../app";
 import onUpgrade from "../sockets/socket";

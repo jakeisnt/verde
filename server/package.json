@@ -1,11 +1,10 @@
 {
-  "name": "server",
+  "name": "@verde/server",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "nodemon --experimental-specifier-resolution=node ./bin/www.js"
+    "start": "bun run --watch bin/www.js"
   },
   "dependencies": {
     "cookie-parser": "1.4.4",
