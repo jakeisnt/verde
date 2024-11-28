@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import { expressLogger } from "./logger";
@@ -20,7 +20,7 @@ app.use(express.static(path.join(dirname, "build")));
 
 // api requests won't work without this
 // TODO: remove this for security reasons later
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -34,12 +34,12 @@ app.use("/users", usersRouter);
 app.use("/room", roomRouter);
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   next(createError(404));
 });
 
 // error handler
-app.use((err, req, res) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

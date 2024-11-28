@@ -1,7 +1,14 @@
 import winston from "winston";
 import expressWinston from "express-winston";
 
-const loggerSettings = {
+type LoggerSettings = {
+  level: string;
+  format: winston.Logform.Format;
+  defaultMeta: { service: string };
+  transports: winston.transport[];
+}
+
+const loggerSettings: LoggerSettings = {
   level: "info",
   format: winston.format.combine(
     winston.format.colorize(),

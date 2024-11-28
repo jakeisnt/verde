@@ -1,11 +1,14 @@
 /** Converts the classes to APIs for use here and externally. */
 
 import Users from "./users";
-import Game from "./games";
+import Game from "./games.ts";
 import Connect from "./connect";
 import { getParamNames, getFuncsOfClass } from "./utils";
 
-function classToAPI(clss) {
+/**
+ * Converts a class to an API.
+ */
+function classToAPI(clss: any) {
   return getFuncsOfClass(clss).reduce((acc, funcName) => {
     return {
       ...acc,

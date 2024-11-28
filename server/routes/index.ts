@@ -1,8 +1,8 @@
-import express from "express";
+import express, { type Router } from "express";
 import path from "path";
 
-const router = express.Router();
-const dirname = path.join(process.cwd(), "/build"); // build";
+const router: Router = express.Router();
+const dirname: string = path.join(process.cwd(), "/build"); // build";
 // const dirname = "./routes";
 
 /** Provides routes to access the home page of the application.
@@ -10,7 +10,7 @@ const dirname = path.join(process.cwd(), "/build"); // build";
  * */
 
 /* GET home page. */
-router.get("/", (req, res) => {
+router.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(dirname, "/index.html"));
 });
 

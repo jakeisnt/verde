@@ -5,15 +5,19 @@ import { logger } from "../logger";
  * include a static method here that accepts a name, playerid and an optional payload (js object)
  * to make it available for the client to call and send a message with. */
 class Game {
-  static startGame(name, modId) {
+  static startGame(name: string, modId: string): boolean | undefined {
     return Rooms.getRoom(name)?.startGame(modId);
   }
 
-  static stopGame(name, modId) {
+  static stopGame(name: string, modId: string): boolean | undefined {
     return Rooms.getRoom(name)?.getGame(modId)?.stop(modId);
   }
 
-  static takeAction(name, playerId, { type, ...payload }) {
+  static takeAction(
+    name: string,
+    playerId: string,
+    { type, ...payload }: { type: string; [key: string]: any }
+  ): boolean | undefined {
     logger.info(
       `${name}: ${playerId}: takeAction ${type} ${JSON.stringify(
         payload,
@@ -24,11 +28,11 @@ class Game {
     return Rooms.getRoom(name)?.getGame()?.takeAction(playerId, type, payload);
   }
 
-  static passTurn(name, playerId) {
+  static passTurn(name: string, playerId: string): boolean | undefined {
     return Rooms.getRoom(name)?.getGame()?.passTurn(playerId);
   }
 
-  static getGameState(name) {
+  static getGameState(name: string): any | undefined {
     return Rooms.getRoom(name)?.getGameState();
   }
 }

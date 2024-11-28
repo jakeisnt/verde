@@ -3,7 +3,7 @@ import Game from "./games";
 import { logger } from "../logger";
 
 /** Bijective hash on 32-bit ints */
-function hashInt32(x) {
+function hashInt32(x: number): number {
   let h = x | 0;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
   h = ((h >> 16) ^ h) * 0x45d9f3b;
@@ -13,9 +13,21 @@ function hashInt32(x) {
 
 const nameLen = 4;
 
+interface User {
+  id: string;
+  name: string;
+  [key: string]: any;
+}
+
 // represents a user in a room
 class RoomUser {
-  constructor(id) {
+  id: string;
+  present: boolean;
+  spectate: boolean;
+  banned: boolean;
+  count: number;
+
+  constructor(id: string) {
     this.id = id;
     this.present = true;
     this.spectate = false;
@@ -24,9 +36,22 @@ class RoomUser {
   }
 }
 
+interface RoomUsers {
+  players: User[];
+  inactives: User[];
+  spectators: User[];
+  banned: User[];
+}
+
 // represents a room in the game
 class Room {
-  constructor(name, capacity = -1) {
+  name: string;
+  capacity: number;
+  users: RoomUser[];
+  locked: boolean;
+  game: Game | null;
+
+  constructor(name: string, capacity: number = -1) {
     this.name = name;
     this.capacity = capacity;
     this.users = [];
@@ -35,20 +60,20 @@ class Room {
   }
 
   // gets number of players
-  getNumPlayers() {
+  getNumPlayers(): number {
     return this.getUsers().players.length;
   }
 
-  getGame() {
+  getGame(): Game | null {
     return this.game;
   }
 
   // fetches all the user information about the game
-  getUsers() {
-    const players = [];
-    const inactives = [];
-    const bannedUsers = [];
-    const spectators = [];
+  getUsers(): RoomUsers {
+    const players: User[] = [];
+    const inactives: User[] = [];
+    const bannedUsers: User[] = [];
+    const spectators: User[] = [];
     this.users.forEach(({ id, present, spectate, banned }) => {
       const user = Users.getUser(id);
       if (user) {
@@ -62,18 +87,18 @@ class Room {
   }
 
   // determines whether an arbitrary user can join as a player
-  canJoinAsPlayer() {
+  canJoinAsPlayer(): boolean {
     if (this.locked) return false;
     return this.capacity < 0 || this.getNumPlayers() < this.capacity;
   }
 
   // gets all the game's current players
-  getCurrentPlayers() {
+  getCurrentPlayers(): RoomUser[] {
     return this.users.filter(({ present, spectate }) => present && !spectate);
   }
 
   // determines whether a provided userId is a game moderator
-  isModerator(userId) {
+  isModerator(userId: string): boolean {
     // The moderator is the first added active player.
     return (
       this.getNumPlayers() > 0 && userId === this.getCurrentPlayers()[0].id
@@ -81,23 +106,23 @@ class Room {
   }
 
   // determines whether a player is banned
-  isBanned(userId) {
-    return this.getUser(userId)?.banned;
+  isBanned(userId: string): boolean {
+    return this.getUser(userId)?.banned ?? false;
   }
 
   // gets a user given their userId
-  getUser(userId) {
+  getUser(userId: string): RoomUser | undefined {
     const index = this.users.findIndex(({ id }) => id === userId);
     return index >= 0 ? this.users[index] : undefined;
   }
 
   // fetches a user, creating a user with that userId if they don't exist
-  getOrMakeUser(userId) {
+  getOrMakeUser(userId: string): RoomUser {
     return this.getUser(userId) || new RoomUser(userId);
   }
 
   // connect a user to the game
-  join(userId) {
+  join(userId: string): RoomUser | undefined {
     // The user can take no actions in this room if they are banned
     if (this.isBanned(userId)) return undefined;
 
@@ -122,14 +147,15 @@ class Room {
   }
 
   // promote a spectator to a player of the game to moderator as needed
-  promoteSpectator() {
+  promoteSpectator(): void {
     // if there are no more players, promote a spectator
     if (this.getNumPlayers() === 0) {
       const { spectators } = this.getUsers();
       if (spectators.length > 0) {
         const upgradee = spectators[0].id;
         logger.info(`Upgrading spectator ${upgradee} to moderator!`);
-        this.getUser(upgradee).spectate = false;
+        const user = this.getUser(upgradee);
+        if (user) user.spectate = false;
         // but if there are no more spectators, close the room
       } else {
         logger.info(
@@ -141,7 +167,7 @@ class Room {
   }
 
   // have the user with the provided userId leave the room
-  leave(userId) {
+  leave(userId: string): RoomUser | undefined {
     // The user can take no actions in this room if they are banned
     if (this.isBanned(userId)) return undefined;
 
@@ -160,18 +186,15 @@ class Room {
   }
 
   // ban the player with id banneeId, assumming bannerId has the proper credentials
-  ban(bannerId, banneeId) {
+  ban(bannerId: string, banneeId: string): void | undefined {
     if (!this.isModerator(bannerId)) return undefined;
-    const bannedUser = this.users.forEach((user) => {
-      /* eslint-disable-next-line no-param-reassign */
+    this.users.forEach((user) => {
       if (user.id === banneeId) user.banned = true;
     });
-
-    return bannedUser;
   }
 
   // set the spectate status of a user
-  setSpectate(userId, spectate, byMod) {
+  setSpectate(userId: string, spectate: boolean, byMod: boolean): RoomUser | undefined {
     logger.info(`Setting ${userId}'s spectate status to ${spectate}`);
     if (this.isBanned(userId)) return undefined;
     const index = this.users.findIndex(({ id }) => id === userId);
@@ -197,13 +220,13 @@ class Room {
   }
 
   // Allow moderator to set spectate status for another user
-  modSetSpectate(modId, userId, spectate) {
+  modSetSpectate(modId: string, userId: string, spectate: boolean): RoomUser | undefined {
     if (!this.isModerator(modId)) return undefined;
     return this.setSpectate(userId, spectate, true);
   }
 
   // unspectate all users, bringing them all into the game
-  unspectateAll(modId) {
+  unspectateAll(modId: string): RoomUsers | undefined {
     if (!this.isModerator(modId)) return undefined;
 
     const { spectators } = this.getUsers();
@@ -213,7 +236,7 @@ class Room {
   }
 
   // allow a moderator to nominate another moderator to replace them
-  nominateMod(modId, newModId) {
+  nominateMod(modId: string, newModId: string): RoomUser | undefined {
     logger.info(`${modId} has nominated ${newModId} to be the new mod`);
     if (!this.isModerator(modId) || this.isBanned(newModId)) return undefined;
 
@@ -230,7 +253,7 @@ class Room {
   }
 
   // start the game if a mod
-  startGame(modId) {
+  startGame(modId: string): any | undefined {
     if (!this.isModerator(modId)) return undefined;
     const { players } = this.getUsers();
     this.game = new Game(players);
@@ -238,13 +261,13 @@ class Room {
   }
 
   // stop the game if a moderator
-  stopGame(modId) {
+  stopGame(modId: string): any | undefined {
     if (!this.isModerator(modId)) return undefined;
     return this.game?.stop();
   }
 
   // provide the raw game state
-  getGameState() {
+  getGameState(): any | undefined {
     return this.game ? this.game.getGameState() : undefined;
   }
 }
@@ -253,12 +276,12 @@ class Room {
 class Rooms {
   static count = Math.floor(Math.random() * 9001) | 0;
 
-  static rooms = {};
+  static rooms: Record<string, Room> = {};
 
   // generate a name for the next room
-  static nextName() {
+  static nextName(): string {
     let h = hashInt32(this.count);
-    const name = [];
+    const name: string[] = [];
     for (let i = 0; i < nameLen; i += 1) {
       name.push(String.fromCharCode("A".charCodeAt(0) + (h % 26)));
       h = (h / 26) | 0;
@@ -268,7 +291,7 @@ class Rooms {
   }
 
   // create a new room
-  static createRoom(userId, capacity = -1) {
+  static createRoom(userId: string, capacity: number = -1): Room {
     const name = this.nextName();
     const room = new Room(name, capacity);
     this.rooms[name] = room;
@@ -276,72 +299,72 @@ class Rooms {
   }
 
   // delete a room
-  static deleteRoom(name) {
+  static deleteRoom(name: string): void {
     if (name in this.rooms) delete this.rooms[name];
   }
 
   // fetch the room with the given name
-  static getRoom(name) {
+  static getRoom(name: string): Room | undefined {
     return this.rooms[name];
   }
 
   // user with userid joins room with name
-  static joinRoom(name, userId) {
+  static joinRoom(name: string, userId: string): RoomUser | undefined {
     return this.getRoom(name)?.join(userId);
   }
 
   // user with userid leaves room with name
-  static leaveRoom(name, userId) {
+  static leaveRoom(name: string, userId: string): RoomUser | undefined {
     return this.getRoom(name)?.leave(userId);
   }
 
   // get all of the users in a room
-  static getUsers(name) {
+  static getUsers(name: string): RoomUsers | undefined {
     return this.getRoom(name)?.getUsers();
   }
 
   // ban a user from a room
-  static banUser(name, userId, toBanId) {
+  static banUser(name: string, userId: string, toBanId: string): void | undefined {
     return this.getRoom(name)?.ban(userId, toBanId);
   }
 
   // set the spectate status of another player
-  static modSetSpectate(name, modId, toSetId, spectate) {
+  static modSetSpectate(name: string, modId: string, toSetId: string, spectate: boolean): RoomUser | undefined {
     return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
   }
 
   // make every spectator a player
-  static unspectateAllUsers(name, modId) {
+  static unspectateAllUsers(name: string, modId: string): RoomUsers | undefined {
     return this.getRoom(name)?.unspectateAll(modId);
   }
 
   // allow mod to elect a new moderator to replace them
-  static nominateMod(name, modId, newModId) {
+  static nominateMod(name: string, modId: string, newModId: string): RoomUser | undefined {
     return this.getRoom(name)?.nominateMod(modId, newModId);
   }
 
   // start the game
-  static startGame(name, modId) {
+  static startGame(name: string, modId: string): any | undefined {
     return this.getRoom(name)?.startGame(modId);
   }
 
   // stop the game
-  static stopGame(name, modId) {
+  static stopGame(name: string, modId: string): any | undefined {
     return this.getRoom(name)?.stopGame(modId);
   }
 
   // allow the player with the provided playerId to take a game action
-  static takeAction(name, playerId, action) {
+  static takeAction(name: string, playerId: string, action: any): any | undefined {
     return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
   }
 
   // pass the turn from the player with the given playerId
-  static passTurn(name, playerId) {
+  static passTurn(name: string, playerId: string): any | undefined {
     return this.getRoom(name)?.getGame()?.passTurn(playerId);
   }
 
   // produce the room's current game state
-  static getGameState(name) {
+  static getGameState(name: string): any | undefined {
     return this.getRoom(name)?.getGameState();
   }
 }

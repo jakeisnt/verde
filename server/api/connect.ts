@@ -6,11 +6,11 @@ import Rooms from "../engine/rooms";
  * will be callable as a socket action from the client side.
  */
 class Connect {
-  static connect(name, userId) {
+  static connect(name: string, userId: string): boolean {
     return Rooms.joinRoom(name, userId);
   }
 
-  static disconnect(name, userId) {
+  static disconnect(name: string, userId: string): boolean {
     return Rooms.leaveRoom(name, userId);
   }
 }
