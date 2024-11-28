@@ -40,6 +40,9 @@ function PlayerList({
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
+                  // SHORTCUT: not defined on the component (? maybe fix it)
+                  userIsSpectator={false}
+                  inactiveUser={false}
                 />
               )
           )}

@@ -1,9 +1,12 @@
-import PropTypes from "prop-types";
 import User from "./User";
 import { Box } from "../../../components";
 
-/** A list of users in the game. */
+type UserType = {
+  id: string;
+  name: string;
+};
 
+/** A list of users in the game. */
 function UserList({
   users,
   title,
@@ -11,7 +14,7 @@ function UserList({
   myId,
   userIsMod,
 }: {
-  users: User[];
+  users: UserType[];
   title: string;
   capacity: number | null;
   myId: string;
@@ -33,6 +36,8 @@ function UserList({
                   userId={user.id}
                   myId={myId}
                   userIsMod={userIsMod}
+                  // SHORTCUT: not defined on the component (? maybe fix it)
+                  userIsSpectator={false}
                   inactiveUser
                 />
               )

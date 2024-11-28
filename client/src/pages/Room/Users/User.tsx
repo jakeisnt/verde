@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import PropTypes from "prop-types";
 import useStyles from "./styles";
 import { useGameActions } from "../../../context";
 import { Button } from "../../../components";
@@ -27,14 +26,14 @@ function User({
   const classes = useStyles();
   const [changingName, setChangingName] = useState(false);
   const [nextName, setNextName] = useState(name);
-  const editNameBoxRef = useRef();
+  const editNameBoxRef = useRef<HTMLInputElement>(null);
 
   const canChangeName = myId === userId;
 
   const setNewName = useCallback(() => {
     changeName(nextName);
     setChangingName(false);
-    editNameBoxRef.current.blur();
+    if (editNameBoxRef.current) editNameBoxRef.current.blur();
   }, [changeName, nextName, setChangingName, editNameBoxRef]);
 
   const startChangingName = useCallback(() => {
@@ -43,7 +42,7 @@ function User({
   }, [setChangingName]);
 
   useEffect(() => {
-    if (changingName) editNameBoxRef.current.focus();
+    if (changingName && editNameBoxRef.current) editNameBoxRef.current.focus();
   }, [changingName]);
 
   return (
@@ -55,9 +54,10 @@ function User({
           value={nextName}
           onKeyUp={(e) =>
             e.key === "Enter" &&
+            // this was commented out
             (changingName ? setNewName() : startChangingName())
           }
-          onInput={(e) => setNextName(e.target.value)}
+          onInput={(e) => setNextName((e.target as HTMLInputElement).value)}
           disabled={!canChangeName || !changingName}
           ref={editNameBoxRef}
         />
@@ -65,10 +65,11 @@ function User({
           <Button
             title={changingName ? "Save" : "Edit Name"}
             onClick={() => (changingName ? setNewName() : startChangingName())}
-            onKeyUp={(e) =>
-              e.key === "Enter" &&
-              (changingName ? setNewName() : startChangingName())
-            }
+            // SHORTCUT: not defined on the component (? maybe fix it)
+            // onKeyUp={(e) =>
+            //   e.key === "Enter" &&
+            //   (changingName ? setNewName() : startChangingName())
+            // }
           />
         )}
       </div>

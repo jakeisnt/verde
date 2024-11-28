@@ -12,7 +12,9 @@
     "dev:server": "cd server && bun run start",
     "build": "bun run build:all",
     "build:all": "bun run build:client",
-    "build:client": "cd client && bun run build"
+    "build:client": "cd client && bun run build",
+    "typecheck": "bun run typecheck:client",
+    "typecheck:client": "cd client && bun run typecheck"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.21.0",

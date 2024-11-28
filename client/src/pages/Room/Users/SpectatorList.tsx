@@ -3,6 +3,11 @@ import User from "./User";
 import useStyles from "./styles";
 import { Button, Box } from "../../../components";
 
+type UserType = {
+  id: string;
+  name: string;
+};
+
 /** A list of spectators in the game.
  * Assume every user provided in the list of users is a spectator.
  */
@@ -29,7 +34,9 @@ function SpectatorList({
           {capacity &&
             `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
         </div>
-        {userIsMod && <Button title="Admit All" onClick={unspectateAll} />}
+        {userIsMod && (
+          <Button title="Admit All" onClick={() => unspectateAll()} />
+        )}
       </div>
       <Box>
         {users &&
@@ -43,6 +50,7 @@ function SpectatorList({
                   myId={myId}
                   userIsMod={userIsMod}
                   userIsSpectator
+                  inactiveUser={false}
                 />
               )
           )}

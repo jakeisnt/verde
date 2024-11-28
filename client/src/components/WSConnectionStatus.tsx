@@ -12,7 +12,15 @@ enum Status {
   OK = "ok",
 }
 
-const connectionStatus = {
+interface Theme {
+  white: string;
+}
+
+interface StyleProps {
+  status: Status;
+}
+
+const connectionStatus: Record<ReadyState, Status> = {
   [ReadyState.OPEN]: Status.OK,
   [ReadyState.CONNECTING]: Status.WARN,
   [ReadyState.CLOSING]: Status.WARN,
@@ -20,7 +28,7 @@ const connectionStatus = {
   [ReadyState.CLOSED]: Status.ERR,
 };
 
-const connStyles = createUseStyles((theme) => ({
+const connStyles = createUseStyles<string, StyleProps, Theme>((theme) => ({
   connectionBanner: {},
   wsConnection: {
     display: "flex",
@@ -29,11 +37,11 @@ const connStyles = createUseStyles((theme) => ({
     bottom: 0,
     zIndex: 999,
   },
-  connMessage: ({ status }) => ({
-    display: status === Status.ERR ? "block" : "none",
+  connMessage: {
+    display: ({ status }) => (status === Status.ERR ? "block" : "none"),
     marginLeft: "3em",
     paddingTop: "1em",
-  }),
+  },
   connMessageWrapper: {
     flexGrow: 1,
   },
@@ -51,7 +59,8 @@ const connStyles = createUseStyles((theme) => ({
 }));
 
 function WSConnectionStatus() {
-  const { socketState: state } = useSocket();
+  const socket = useSocket();
+  const state = socket?.socketState ?? ReadyState.UNINSTANTIATED;
   const status = connectionStatus[state];
   const classes = connStyles({ status });
   const [open, setOpen] = useState(false);
@@ -64,23 +73,21 @@ function WSConnectionStatus() {
     }
   }, [status]);
 
-  return (
-    status !== Status.OK && (
-      <>
-        <div className={classes.wsConnection}>
-          <div className={classes.connMessageWrapper}>
-            {status === Status.ERR && open && (
-              <div className={classes.connMessage}>
-                You&apos;ve lost your connection and may have to rejoin.
-              </div>
-            )}
-          </div>
-          <div className={classes.loadingSpinner}>
-            <RippleLoader />
-          </div>
+  return status === Status.OK ? null : (
+    <>
+      <div className={classes.wsConnection}>
+        <div className={classes.connMessageWrapper}>
+          {status === Status.ERR && open && (
+            <div className={classes.connMessage}>
+              You&apos;ve lost your connection and may have to rejoin.
+            </div>
+          )}
         </div>
-      </>
-    )
+        <div className={classes.loadingSpinner}>
+          <RippleLoader />
+        </div>
+      </div>
+    </>
   );
 }
 

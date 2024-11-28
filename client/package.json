@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "bunx --bun vite",
     "build": "bunx --bun vite build",
-    "preview": "bunx --bun vite preview"
+    "preview": "bunx --bun vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "prop-types": "15.7.2",

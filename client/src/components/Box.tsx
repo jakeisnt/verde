@@ -11,7 +11,8 @@ function Box({
   text?: string;
   children?: ReactNode;
 }) {
-  const classes = useStyles(error);
+  // SHORTCUT: had error() arg
+  const classes = useStyles();
   return (
     <div className={error ? classes.errorBox : classes.box}>
       {error || text}

@@ -58,7 +58,7 @@ function Room() {
       navigate(
         /* eslint-disable */
         "/home/" +
-        encodeURIComponent(`You have been banned from room ${roomName}.`)
+          encodeURIComponent(`You have been banned from room ${roomName}.`)
       );
     }
   }, [lastMessage, roomName, navigate, me]);
@@ -70,9 +70,7 @@ function Room() {
   // This might be better served in some sort of global state solution (a provider?),
   // but to avoid redundant computation it's best to handle here for now.
   const userIsMod = useMemo(
-    () =>
-      me?.id != null &&
-      lastMessage?.players?.[0]?.id === me.id,
+    () => me?.id != null && lastMessage?.players?.[0]?.id === me.id,
     [me, lastMessage]
   );
 

@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import PropTypes from "prop-types";
 import useWebSocket, { ReadyState, SendJsonMessage } from "react-use-websocket";
 import clientConfig from "../api_schema.json";
 import { useUser } from "./userContext";
@@ -28,7 +27,13 @@ function makeUrl(room: string, userId: string): string {
  * Provides a WebSocket connection to the server when mounted.
  * Required to use the `useSocket` hook.
  */
-function SocketProvider({ children, roomName }: { children: ReactNode; roomName: string }) {
+function SocketProvider({
+  children,
+  roomName,
+}: {
+  children: ReactNode;
+  roomName: string;
+}) {
   const [error, setError] = useState<string | null>(null);
   const [lastMessages, setLastMessages] = useState<Record<string, any>>({});
   const { userId } = useUser();
@@ -75,11 +80,6 @@ function SocketProvider({ children, roomName }: { children: ReactNode; roomName:
   );
 }
 
-SocketProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-  roomName: PropTypes.string.isRequired,
-};
-
 /**
  * Provides messages, status and a dispatching function for the websocket.
  */
@@ -111,23 +111,34 @@ interface EndpointConfig {
 /**
  * Generates endpoint functions for common game actions from a configuration.
  */
-function generateEndpoints(config: EndpointConfig, sendMessage: SendJsonMessage) {
-  return Object.keys(config).reduce((funcs: Record<string, Function>, funcName: string) => {
-    return {
-      ...funcs,
-      [funcName]: (...args: any[]) => {
-        const message = {
-          type: funcName,
-          payload: config[funcName].reduce((pload: Record<string, any>, argname: string, i: number) => {
-            return { ...pload, [argname]: args[i] };
-          }, {}),
-        };
-        const finalMessage = { ...message, data: args[1] };
-        console.log(`Sending message ${JSON.stringify(finalMessage, null, 2)}`);
-        return sendMessage && sendMessage(finalMessage);
-      },
-    };
-  }, {});
+function generateEndpoints(
+  config: EndpointConfig,
+  sendMessage: SendJsonMessage
+) {
+  return Object.keys(config).reduce(
+    (funcs: Record<string, Function>, funcName: string) => {
+      return {
+        ...funcs,
+        [funcName]: (...args: any[]) => {
+          const message = {
+            type: funcName,
+            payload: config[funcName].reduce(
+              (pload: Record<string, any>, argname: string, i: number) => {
+                return { ...pload, [argname]: args[i] };
+              },
+              {}
+            ),
+          };
+          const finalMessage = { ...message, data: args[1] };
+          console.log(
+            `Sending message ${JSON.stringify(finalMessage, null, 2)}`
+          );
+          return sendMessage && sendMessage(finalMessage);
+        },
+      };
+    },
+    {}
+  );
 }
 
 /** Provides a standard library of game action functions to use, as imported from the server. */

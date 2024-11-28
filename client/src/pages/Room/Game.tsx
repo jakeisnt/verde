@@ -16,18 +16,10 @@ interface Winner {
   name: string;
 }
 
-interface GameMessage {
-  game: string;
-  players: Player[];
-  curPlayer: string;
-  isOver: boolean;
-  winners?: Winner[];
-}
-
 /** Determines whether the list of players contains a player with the provided userId. */
 function hasPlayer(userId: string, players: Player[]): boolean {
   const meHopefully = players.filter(({ id }) => id === userId);
-  return meHopefully && meHopefully[0] && !meHopefully.spectate;
+  return meHopefully && meHopefully[0] && !meHopefully[0].spectate;
 }
 
 interface GameProps {
@@ -35,7 +27,7 @@ interface GameProps {
 }
 
 function Game({ userIsMod }: GameProps) {
-  const { lastMessage } = useSocket<GameMessage>("game");
+  const { lastMessage } = useSocket("game");
   const { passTurn, stopGame, startGame, takeAction } = useGameActions();
   const { user: me } = useUser();
 
@@ -59,7 +51,7 @@ function Game({ userIsMod }: GameProps) {
     lastMessage.curPlayer === me.id;
 
   if (!gameStarted && userIsMod)
-    return <Button title="Start Game" onClick={startGame} />;
+    return <Button title="Start Game" onClick={() => startGame()} />;
 
   if (!gameStarted)
     return <Subtitle>Waiting for the game to start...</Subtitle>;
@@ -71,11 +63,11 @@ function Game({ userIsMod }: GameProps) {
         <>
           <Button title="-1" onClick={() => takeAction("-1")} />
           <Button title="+1" onClick={() => takeAction("+1")} />
-          <Button title="Pass Turn" onClick={passTurn} />
+          <Button title="Pass Turn" onClick={() => passTurn()} />
         </>
       )}
       {!lastMessage.isOver && userIsMod && (
-        <Button title="End Game" onClick={stopGame} />
+        <Button title="End Game" onClick={() => stopGame()} />
       )}
       {lastMessage.isOver && lastMessage.winners && (
         <Box>
@@ -93,7 +85,7 @@ function Game({ userIsMod }: GameProps) {
         </Box>
       )}
       {lastMessage.isOver && userIsMod && (
-        <Button title="Start Game" onClick={startGame} />
+        <Button title="Start Game" onClick={() => startGame()} />
       )}
     </Box>
   );
