@@ -2,34 +2,57 @@ import game from "../game";
 import Users from "./users";
 import { logger } from "../logger";
 
+interface Player {
+  id: string;
+  [key: string]: any;
+}
+
+interface GameState {
+  pub: any;
+  priv: any;
+  [key: string]: any;
+}
+
+interface ActionResult {
+  gameState?: GameState;
+  playerState?: GamePlayer[];
+  passTurn?: boolean;
+}
+
 /** Get the initial state of the players. */
-function getInitialPlayerState(player) {
-  return game.initialState.player(player);
+function getInitialPlayerState(player: Player): any {
+  return game.initialState.player();
 }
 
 /** Get the initial state of the game. */
-function getInitialGameState(players) {
-  return game.initialState.game(players);
+function getInitialGameState(players: Player[]): GameState {
+  return game.initialState.game();
 }
 
 // Apply the game action to the game state.
-function takeAction(action, gameState, players, playerId, payload) {
+function takeAction(
+  action: string,
+  gameState: GameState,
+  players: GamePlayer[],
+  playerId: string,
+  payload: any
+): ActionResult {
   if (!(action in game.actions)) {
     logger.error(`${action} could not be taken! It's not a valid action.`);
-    return gameState;
+    return { gameState };
   }
 
   return game.actions[action](gameState, players, playerId, payload);
 }
 
 // Determine when the game is over
-function isGameOver(gameState, playerState) {
+function isGameOver(gameState: GameState, playerState: GamePlayer[]): boolean {
   return game.endWhen(gameState, playerState);
 }
 
 // Determine the winner of the game
-function getWinners(gameState, playerState) {
-  return game.getWinners(gameState, playerState).map(({ id, ...rest }) => {
+function getWinners(gameState: GameState, playerState: GamePlayer[]): Player[] {
+  return game.getWinners(gameState, playerState).map(({ id, ...rest }: Player) => {
     const user = Users.getUser(id);
     return { ...rest, ...user, id };
   });
@@ -37,7 +60,11 @@ function getWinners(gameState, playerState) {
 
 // Represents a player who has been in the game
 class GamePlayer {
-  constructor(player) {
+  id: string;
+  inGame: boolean;
+  state: any;
+
+  constructor(player: Player) {
     this.id = player.id;
     this.inGame = true;
     this.state = getInitialPlayerState(player);
@@ -46,7 +73,12 @@ class GamePlayer {
 
 // Represents the game
 class Game {
-  constructor(players) {
+  players: GamePlayer[];
+  curPlayer: number;
+  gameState: GameState;
+  stopped: boolean;
+
+  constructor(players: Player[]) {
     this.players = players.map((player) => new GamePlayer(player));
     this.curPlayer = 0;
     this.gameState = getInitialGameState(players);
@@ -54,17 +86,23 @@ class Game {
   }
 
   // is the game over?
-  isOver() {
+  isOver(): boolean {
     return this.stopped || isGameOver(this.gameState, this.players);
   }
 
   // add a player to the game
-  addPlayer(player) {
+  addPlayer(player: Player): void {
     this.players.push(new GamePlayer(player));
   }
 
   // produce the game state
-  getGameState() {
+  getGameState(): {
+    players: GamePlayer[];
+    curPlayer: string;
+    game: any;
+    isOver: boolean;
+    winners: Player[] | false;
+  } {
     return {
       players: this.players,
       curPlayer: this.players[this.curPlayer].id,
@@ -75,22 +113,22 @@ class Game {
   }
 
   // start the game
-  start() {
+  start(): void {
     this.stopped = false;
   }
 
   // stop the game
-  stop() {
+  stop(): void {
     this.stopped = true;
   }
 
   // determines whether the provided playerId is the current player
-  isCurrentPlayer(playerId) {
+  isCurrentPlayer(playerId: string): boolean {
     return playerId === this.players[this.curPlayer].id;
   }
 
   // pass the turn from playerId to the next player in turn
-  passTurn(playerId) {
+  passTurn(playerId: string): GamePlayer | undefined {
     if (!this.isCurrentPlayer(playerId)) return undefined;
     this.curPlayer = (this.curPlayer + 1) % this.players.length;
     let cp = this.players[this.curPlayer];
@@ -102,7 +140,7 @@ class Game {
   }
 
   // commit a declared game action with the provided payload as context
-  takeAction(playerId, action, payload) {
+  takeAction(playerId: string, action: string, payload: any): GameState | undefined {
     if (!this.isCurrentPlayer(playerId)) return undefined;
     const { gameState, playerState, passTurn } = takeAction(
       action,

@@ -194,7 +194,11 @@ class Room {
   }
 
   // set the spectate status of a user
-  setSpectate(userId: string, spectate: boolean, byMod: boolean): RoomUser | undefined {
+  setSpectate(
+    userId: string,
+    spectate: boolean,
+    byMod: boolean
+  ): RoomUser | undefined {
     logger.info(`Setting ${userId}'s spectate status to ${spectate}`);
     if (this.isBanned(userId)) return undefined;
     const index = this.users.findIndex(({ id }) => id === userId);
@@ -220,7 +224,11 @@ class Room {
   }
 
   // Allow moderator to set spectate status for another user
-  modSetSpectate(modId: string, userId: string, spectate: boolean): RoomUser | undefined {
+  modSetSpectate(
+    modId: string,
+    userId: string,
+    spectate: boolean
+  ): RoomUser | undefined {
     if (!this.isModerator(modId)) return undefined;
     return this.setSpectate(userId, spectate, true);
   }
@@ -253,7 +261,7 @@ class Room {
   }
 
   // start the game if a mod
-  startGame(modId: string): any | undefined {
+  startGame(modId: string): void | undefined {
     if (!this.isModerator(modId)) return undefined;
     const { players } = this.getUsers();
     this.game = new Game(players);
@@ -261,7 +269,7 @@ class Room {
   }
 
   // stop the game if a moderator
-  stopGame(modId: string): any | undefined {
+  stopGame(modId: string): void | undefined {
     if (!this.isModerator(modId)) return undefined;
     return this.game?.stop();
   }
@@ -324,38 +332,59 @@ class Rooms {
   }
 
   // ban a user from a room
-  static banUser(name: string, userId: string, toBanId: string): void | undefined {
+  static banUser(
+    name: string,
+    userId: string,
+    toBanId: string
+  ): void | undefined {
     return this.getRoom(name)?.ban(userId, toBanId);
   }
 
   // set the spectate status of another player
-  static modSetSpectate(name: string, modId: string, toSetId: string, spectate: boolean): RoomUser | undefined {
+  static modSetSpectate(
+    name: string,
+    modId: string,
+    toSetId: string,
+    spectate: boolean
+  ): RoomUser | undefined {
     return this.getRoom(name)?.modSetSpectate(modId, toSetId, spectate);
   }
 
   // make every spectator a player
-  static unspectateAllUsers(name: string, modId: string): RoomUsers | undefined {
+  static unspectateAllUsers(
+    name: string,
+    modId: string
+  ): RoomUsers | undefined {
     return this.getRoom(name)?.unspectateAll(modId);
   }
 
   // allow mod to elect a new moderator to replace them
-  static nominateMod(name: string, modId: string, newModId: string): RoomUser | undefined {
+  static nominateMod(
+    name: string,
+    modId: string,
+    newModId: string
+  ): RoomUser | undefined {
     return this.getRoom(name)?.nominateMod(modId, newModId);
   }
 
   // start the game
-  static startGame(name: string, modId: string): any | undefined {
+  static startGame(name: string, modId: string): void | undefined {
     return this.getRoom(name)?.startGame(modId);
   }
 
   // stop the game
-  static stopGame(name: string, modId: string): any | undefined {
+  static stopGame(name: string, modId: string): void | undefined {
     return this.getRoom(name)?.stopGame(modId);
   }
 
   // allow the player with the provided playerId to take a game action
-  static takeAction(name: string, playerId: string, action: any): any | undefined {
-    return this.getRoom(name)?.getGame()?.takeAction(playerId, action);
+  static takeAction(
+    name: string,
+    playerId: string,
+    action: string,
+    payload: any
+  ): any | undefined {
+    return this.getRoom(name)?.getGame()?.takeAction(playerId, action, payload);
   }
 
   // pass the turn from the player with the given playerId
