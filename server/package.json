@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "bun run --watch bin/www.js",
+    "start": "bun run --watch bin/www.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
