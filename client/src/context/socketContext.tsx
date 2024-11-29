@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import useWebSocket, { ReadyState, SendJsonMessage } from "react-use-websocket";
+import useWebSocket, { ReadyState, SendMessage } from "react-use-websocket";
 import clientConfig from "../api_schema.json";
 import { useUser } from "./userContext";
 
@@ -9,7 +9,7 @@ const spec = clientConfig;
 
 interface SocketContextType {
   error: string | null;
-  sendMessage: SendJsonMessage;
+  sendMessage: SendMessage;
   lastMessage: any;
   lastMessages: Record<string, any>;
   socketState: ReadyState;
@@ -86,7 +86,7 @@ function SocketProvider({
 function useSocket(messageTypes?: string | string[]) {
   const context = useContext(SocketContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useSocket must be used within a SocketProvider");
   }
 
@@ -111,10 +111,7 @@ interface EndpointConfig {
 /**
  * Generates endpoint functions for common game actions from a configuration.
  */
-function generateEndpoints(
-  config: EndpointConfig,
-  sendMessage: SendJsonMessage
-) {
+function generateEndpoints(config: EndpointConfig, sendMessage: SendMessage) {
   return Object.keys(config).reduce(
     (funcs: Record<string, Function>, funcName: string) => {
       return {
@@ -133,7 +130,7 @@ function generateEndpoints(
           console.log(
             `Sending message ${JSON.stringify(finalMessage, null, 2)}`
           );
-          return sendMessage && sendMessage(finalMessage);
+          return sendMessage && sendMessage(finalMessage as any);
         },
       };
     },

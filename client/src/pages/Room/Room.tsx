@@ -20,21 +20,14 @@ interface RoomData {
   capacity: number;
 }
 
-interface UsersMessage {
-  players: Player[];
-  spectators: Player[];
-  inactives: Player[];
-  banned?: Player[];
-}
-
 /** Determines whether the list of players contains a spectator with the provided userId. */
 function hasPlayer(userId: string, players: Player[]): boolean {
   const meHopefully = players.filter(({ id }) => id === userId);
-  return meHopefully && meHopefully[0] && !meHopefully.spectate;
+  return meHopefully && meHopefully[0] && !meHopefully[0].spectate;
 }
 
 function Room() {
-  const { error, lastMessage, roomName } = useSocket<UsersMessage>("users");
+  const { error, lastMessage, roomName } = useSocket("users");
   const { spectate } = useGameActions();
   const { user: me } = useUser();
   const classes = useStyles();
@@ -53,7 +46,7 @@ function Room() {
 
   useEffect(() => {
     if (
-      lastMessage?.banned?.map(({ id }) => id).includes(me?.id) // better than object comparison
+      lastMessage?.banned?.map(({ id }: Player) => id).includes(me?.id) // better than object comparison
     ) {
       navigate(
         /* eslint-disable */

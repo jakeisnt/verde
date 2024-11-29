@@ -73,12 +73,11 @@ function Game({ userIsMod }: GameProps) {
         <Box>
           <Subtitle>Winners</Subtitle>
           {lastMessage.winners.length > 0 ? (
-            lastMessage.winners.map(({ name, id }) => (
+            lastMessage.winners.map(({ name, id }: Winner) => (
               <Text key={`winner-${id}`}>{name}</Text>
             ))
           ) : (
             <Text key="no-winners">
-              {/* eslint-disable-next-line */}
               {"There weren't any winners this round."}
             </Text>
           )}
