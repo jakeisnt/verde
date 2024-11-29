@@ -24,10 +24,7 @@
       in rec {
         devShell = with pkgs; mkShell {
           inherit name description;
-          buildInputs = [
-            bun
-            nodePackages_latest.typescript
-          ];
+          buildInputs = [ bun ];
         };
       });
 }
