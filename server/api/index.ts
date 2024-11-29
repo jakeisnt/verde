@@ -1,7 +1,7 @@
 /** Converts the classes to APIs for use here and externally. */
 
 import Users from "./users";
-import Game from "./games.ts";
+import Game from "./games";
 import Connect from "./connect";
 import { getParamNames, getFuncsOfClass } from "./utils";
 
@@ -26,7 +26,7 @@ const classes = {
 const spec = Object.keys(classes).reduce(
   (curSpec, nextKey) => ({
     ...curSpec,
-    [nextKey]: classToAPI(classes[nextKey]),
+    [nextKey]: classToAPI(classes[nextKey as keyof typeof classes]),
   }),
   {}
 );

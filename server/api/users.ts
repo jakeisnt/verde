@@ -26,11 +26,11 @@ class UserAPI {
   }
 
   static spectate(name: string, userId: string) {
-    return Rooms.getRoom(name)?.setSpectate(userId, true);
+    return Rooms.getRoom(name)?.setSpectate(userId, true, false);
   }
 
   static unspectate(name: string, userId: string) {
-    return Rooms.getRoom(name)?.setSpectate(userId, false);
+    return Rooms.getRoom(name)?.setSpectate(userId, false, false);
   }
 
   static getUsers(name: string) {

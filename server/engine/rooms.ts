@@ -299,7 +299,7 @@ class Rooms {
   }
 
   // create a new room
-  static createRoom(userId: string, capacity: number = -1): Room {
+  static createRoom(serverId: string, capacity: number = -1): Room {
     const name = this.nextName();
     const room = new Room(name, capacity);
     this.rooms[name] = room;
