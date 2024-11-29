@@ -6,10 +6,6 @@ import { UserList, SpectatorList, PlayerList } from "./Users";
 import Game from "./Game";
 import { Button, Page } from "../../components";
 
-/** The main room of the application; also known as the lobby.
- * This component and its descendants contain most of the networking and game logic.
- */
-
 interface Player {
   id: string;
   name: string;
@@ -20,12 +16,18 @@ interface RoomData {
   capacity: number;
 }
 
-/** Determines whether the list of players contains a spectator with the provided userId. */
+/**
+ * Determines whether the list of players contains a spectator with the provided userId.
+ */
 function hasPlayer(userId: string, players: Player[]): boolean {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully[0].spectate;
 }
 
+/**
+ * The main room of the application; also known as the lobby.
+ * This component and its descendants contain most of the networking and game logic.
+ */
 function Room() {
   const { error, lastMessage, roomName } = useSocket("users");
   const { spectate } = useGameActions();

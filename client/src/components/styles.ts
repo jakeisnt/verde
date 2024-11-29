@@ -1,17 +1,7 @@
 import { createUseStyles } from "react-jss";
+import { Theme } from "../theme/theme";
 
 /** Styles shared by various components. */
-
-type Theme = {
-  black: string;
-  white: string;
-  red: string;
-  font: {
-    title: string;
-    heading: string;
-    body: string;
-  }
-}
 
 const useStyles = createUseStyles((theme: Theme) => ({
   backButton: {
@@ -30,39 +20,39 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
   title: {
     fontFamily: theme.font.title,
-    fontSize: '6em',
-    color: 'green',
+    fontSize: "6em",
+    color: "green",
     textAlign: "center",
-    margin: '0.5em 0.5em',
+    margin: "0.5em 0.5em",
     padding: 0,
     border: `1px solid ${theme.black}`,
   },
   subtitle: {
     fontFamily: theme.font.heading,
     color: theme.black,
-    fontSize: '2em',
+    fontSize: "2em",
   },
   button: {
     padding: "1em",
     margin: "1em",
     textAlign: "center",
-    fontSize: '18px',
+    fontSize: "18px",
     border: `3px solid ${theme.black}`,
     color: theme.black,
     backgroundColor: theme.white,
     fontFamily: theme.font.body,
-    '&:hover': {
+    "&:hover": {
       border: `3px solid ${theme.black}`,
       boxShadow: "8px 8px black",
     },
-    '&:focus': {
+    "&:focus": {
       border: `3px solid ${theme.black}`,
       boxShadow: "8px 8px black",
     },
-    '&:active': {
+    "&:active": {
       border: `3px solid ${theme.black}`,
       boxShadow: "8px 8px black",
-    }
+    },
   },
   errorBox: {
     padding: "1em",
@@ -94,7 +84,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
     position: "absolute",
     verticalAlign: "center",
     border: `4px solid ${theme.black}`,
-    paddingLeft: '1em',
+    paddingLeft: "1em",
     color: theme.black,
     backgroundColor: theme.white,
   },

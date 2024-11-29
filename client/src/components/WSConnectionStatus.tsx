@@ -4,16 +4,14 @@ import { createUseStyles } from "react-jss";
 import RippleLoader from "./RippleLoader";
 import { useSocket } from "../context/socketContext";
 
+import { Theme } from "../theme/theme";
+
 /** Component that displays a status message if websocket connections aren't working out. */
 
 enum Status {
   ERR = "error",
   WARN = "warn",
   OK = "ok",
-}
-
-interface Theme {
-  white: string;
 }
 
 interface StyleProps {

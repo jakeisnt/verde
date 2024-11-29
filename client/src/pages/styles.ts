@@ -1,6 +1,7 @@
 import { createUseStyles } from "react-jss";
+import { Theme } from "../theme/theme";
 
-export default createUseStyles((theme) => ({
+export default createUseStyles<string, {}, Theme>((theme) => ({
   home: {
     display: "flex",
     justifyContent: "center",

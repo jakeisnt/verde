@@ -1,4 +1,4 @@
-#+TITLE: API
+# API
 
 This is where all of the websocket actions are declared.
 

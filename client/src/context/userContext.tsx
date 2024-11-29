@@ -1,7 +1,12 @@
-import React, { ReactNode } from "react";
+import {
+  createContext,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+  ReactNode,
+} from "react";
 import Cookies from "universal-cookie";
-
-const { createContext, useEffect, useState, useCallback, useContext } = React;
 
 interface User {
   id: string;

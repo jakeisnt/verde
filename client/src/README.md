@@ -1,4 +1,4 @@
-#+TITLE: Source
+# Source
 
 This is where all of the core presentational and business logic for our application is defined.
 

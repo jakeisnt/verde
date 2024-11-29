@@ -2,7 +2,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import useStyles from "./styles";
 import { Title, Button } from "../components";
 
-/** This is the homepage of the application - providing links to available user actions. */
+/**
+ * The homepage of the application - providing links to available user actions.
+ */
 function Home() {
   const navigate = useNavigate();
   const { error } = useParams();
@@ -15,7 +17,13 @@ function Home() {
       )}
       <Title>Verde</Title>
       <div className={classes.home}>
-        <img alt="Verde logo" width="200" height="200" className={classes.fakePic} src="../../mondrian.jpg" />
+        <img
+          alt="Verde logo"
+          width="200"
+          height="200"
+          className={classes.fakePic}
+          src="../../mondrian.jpg"
+        />
         <Button title="Create Room" onClick={() => navigate("/create")} />
         <Button title="Join Room" onClick={() => navigate("/join")} />
         <Button title="Profile" onClick={() => navigate("/profile")} />

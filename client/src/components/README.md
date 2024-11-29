@@ -1,4 +1,4 @@
-#+TITLE: Components
+# Components
 
 This folder contains React components used throughout the application.
 

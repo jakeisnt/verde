@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { Button, TextInput, Page } from "../components";
 
-/** This page allows the user to create a room. */
-
+/**
+ * This page allows the user to create a room.
+ */
 function Create() {
   const { userId } = useUser();
   const [capacity, setCapacity] = useState("");

@@ -1,4 +1,4 @@
-#+TITLE: Pages
+# Pages
 
 This folder contains all of the toplevel pages of the application.
 

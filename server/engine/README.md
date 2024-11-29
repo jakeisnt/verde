@@ -1,4 +1,4 @@
-#+TITLE: Engine
+# Engine
 
 This is the core of our application - containing most of its logic.
 

@@ -1,10 +1,16 @@
-import React, { ReactNode } from "react";
+import {
+  ReactNode,
+  createContext,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+  useMemo,
+} from "react";
 import useWebSocket, { ReadyState, SendMessage } from "react-use-websocket";
 import clientConfig from "../api_schema.json";
 import { useUser } from "./userContext";
 
-const { createContext, useEffect, useState, useCallback, useContext, useMemo } =
-  React;
 const spec = clientConfig;
 
 interface SocketContextType {

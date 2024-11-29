@@ -12,10 +12,13 @@ const theme = {
   green: "green",
 
   font: {
-    title: 'Bungee Shade',
-    heading: 'Bungee',
-    body: 'Belleza',
-  }
+    title: "Bungee Shade",
+    heading: "Bungee",
+    body: "Belleza",
+  },
 };
 
+type Theme = typeof theme;
+
+export type { Theme };
 export default theme;

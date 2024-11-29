@@ -3,8 +3,6 @@ import { useSocket, useGameActions } from "../../context/socketContext";
 import { useUser } from "../../context/userContext";
 import { Button, Box, Subtitle, Text } from "../../components";
 
-/** This component and its descendants contain all of the logic for playing a game. */
-
 interface Player {
   id: string;
   name: string;
@@ -16,17 +14,18 @@ interface Winner {
   name: string;
 }
 
-/** Determines whether the list of players contains a player with the provided userId. */
+/**
+ * Determines whether the list of players contains a player with the provided userId.
+ */
 function hasPlayer(userId: string, players: Player[]): boolean {
   const meHopefully = players.filter(({ id }) => id === userId);
   return meHopefully && meHopefully[0] && !meHopefully[0].spectate;
 }
 
-interface GameProps {
-  userIsMod: boolean;
-}
-
-function Game({ userIsMod }: GameProps) {
+/**
+ * This component and its descendants contain all of the logic for playing a game.
+ */
+function Game({ userIsMod }: { userIsMod: boolean }) {
   const { lastMessage } = useSocket("game");
   const { passTurn, stopGame, startGame, takeAction } = useGameActions();
   const { user: me } = useUser();

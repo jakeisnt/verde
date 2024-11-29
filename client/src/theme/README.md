@@ -1,4 +1,4 @@
-#+TITLE: Theme
+# Theme
 
 This is the theme of our application - where things like color schemes should be declared.
 

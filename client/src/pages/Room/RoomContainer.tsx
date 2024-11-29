@@ -1,14 +1,12 @@
-import React from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import WSConnectionStatus from "../../components/WSConnectionStatus";
 import Room from "./Room";
 import { SocketProvider } from "../../context/socketContext";
 
-const { useEffect } = React;
-
 /** Wraps a room to ensure the user is warned before the page is left. */
 function RoomContainer() {
-  const { name: roomName } = useParams<{name: string}>();
+  const { name: roomName } = useParams<{ name: string }>();
 
   /* When the page loads, add a message warning when unloading.
    * When it unloads, remove the warning. */

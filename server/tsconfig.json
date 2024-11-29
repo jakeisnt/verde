@@ -12,6 +12,7 @@
     "checkJs": true,
     "noEmit": true,
     "types": ["bun-types"],
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }

@@ -1,4 +1,4 @@
-#+TITLE: Routes
+# Routes
 
 These files declare the HTTP routes of the application, used when users are not connected to a live socket.
 

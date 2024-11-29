@@ -6,7 +6,9 @@ type UserType = {
   name: string;
 };
 
-/** A list of users in the game. */
+/**
+ * A list of users in the game.
+ */
 function UserList({
   users,
   title,

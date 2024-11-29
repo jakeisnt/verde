@@ -1,11 +1,7 @@
 import { createUseStyles } from "react-jss";
+import { Theme } from "../theme/theme";
 
 /** A fancy animated ripple loader. */
-
-interface Theme {
-  black: string;
-}
-
 const useStyles = createUseStyles((theme: Theme) => ({
   ripple: {
     display: "inline-block",
@@ -13,7 +9,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
     height: "4em",
     width: "4em",
     "& div": {
-      position: "absolute", 
+      position: "absolute",
       border: `4px solid ${theme.black}`,
       opacity: 1,
       borderRadius: "50%",
@@ -26,7 +22,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
   "@keyframes ripple": {
     from: {
       top: "36px",
-      left: "36px", 
+      left: "36px",
       width: 0,
       height: 0,
       opacity: 1,
