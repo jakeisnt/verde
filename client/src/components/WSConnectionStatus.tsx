@@ -47,7 +47,7 @@ const connStyles = createUseStyles<string, StyleProps, Theme>((theme) => ({
     border: "1px solid black",
     padding: "0.5em 1em",
     margin: "0.5em",
-    backgroundColor: theme.white,
+    backgroundColor: theme.colors.background.paper,
   },
   loadingSpinner: {
     marginRight: "2em",

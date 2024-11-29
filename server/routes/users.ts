@@ -11,23 +11,17 @@ router.get("/new", (_req: Request, res: Response) => {
 });
 
 /* GET existing user. */
-router.get("/get", (req: Request<{ id?: string }>, res: Response) => {
+router.get("/get", (req: any, res: any) => {
   const user = Users.getUser(req.query.id as string);
   if (user) return res.json(user);
   return res.status(404).send(`User ${req.query.id} not found`);
 });
 
 /* PUT user name. */
-router.put(
-  "/setName",
-  (req: Request<{}, {}, {}, { id?: string; name?: string }>, res: Response) => {
-    const user = Users.setName(
-      req.query.id as string,
-      req.query.name as string
-    );
-    if (user) return res.json(user);
-    return res.status(404).send(`User ${req.query.id} not found`);
-  }
-);
+router.put("/setName", (req: any, res: any) => {
+  const user = Users.setName(req.query.id as string, req.query.name as string);
+  if (user) return res.json(user);
+  return res.status(404).send(`User ${req.query.id} not found`);
+});
 
 export default router;

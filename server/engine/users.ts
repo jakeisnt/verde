@@ -12,6 +12,7 @@ const idLen = 9;
 interface User {
   id: string;
   name: string;
+  inGame: boolean;
 }
 
 // represents all of the users in the game
@@ -35,7 +36,7 @@ class Users {
   // create a user
   static createUser(): User {
     const id = this.nextId();
-    const user: User = { id, name: `user${id}` };
+    const user: User = { id, name: `user${id}`, inGame: false };
     this.users[id] = user;
     return user;
   }

@@ -16,7 +16,7 @@ const nameLen = 4;
 interface User {
   id: string;
   name: string;
-  [key: string]: any;
+  inGame: boolean;
 }
 
 // represents a user in a room

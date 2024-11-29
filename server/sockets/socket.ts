@@ -37,10 +37,16 @@ function makeRoomSocket(name: string): WebSocketServer {
         request.url ? (url.parse(request.url).query as string) : ""
       );
 
-      socketActions.connect(wss, null, {
-        roomName: name,
-        userId: userId as string,
-      });
+      socketActions.connect(
+        wss,
+        {
+          type: "connect",
+        },
+        {
+          roomName: name,
+          userId: userId as string,
+        }
+      );
 
       /* eslint-disable no-param-reassign */
       ws.userId = userId as string;
@@ -53,10 +59,16 @@ function makeRoomSocket(name: string): WebSocketServer {
       /** When the websocket connection closes, the user has left the room. */
       ws.on("close", () => {
         logger.info(`User with id ${ws.userId} left room ${name}.`);
-        socketActions.disconnect(wss, null, {
-          roomName: name,
-          userId: ws.userId as string,
-        });
+        socketActions.disconnect(
+          wss,
+          {
+            type: "disconnect",
+          },
+          {
+            roomName: name,
+            userId: ws.userId as string,
+          }
+        );
       });
 
       /** When receiving a websocket message, call an action with the provided type. */
@@ -68,7 +80,13 @@ function makeRoomSocket(name: string): WebSocketServer {
             logger.debug(
               `Sending socket message associated with type "${message.type}"`
             );
-            socketActions[message.type](wss, message, args);
+
+            const { userId } = args;
+
+            socketActions[message.type](wss, message, {
+              ...args,
+              userId: userId as string,
+            });
           } else {
             logger.error(
               `"${message.type}" is not a valid socket message type.`
@@ -130,7 +148,7 @@ function onUpgrade(request: any, socket: any, head: any): void {
   );
 
   if (!Rooms.getRoom(room as string)) {
-    socket.on("error", (err) => logger.error(JSON.stringify(err)));
+    socket.on("error", (err: any) => logger.error(JSON.stringify(err)));
     socket.destroy({ error: `Room ${room} not found` });
     return;
   }

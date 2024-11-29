@@ -16,6 +16,7 @@ interface PlayerState {
 
 interface Player {
   id: string;
+  inGame: boolean;
   state: PlayerState;
 }
 
@@ -33,14 +34,19 @@ const game = {
     // priv (private): state hidden from clients but visible to the server
     game: (): GameState => ({ pub: 0, priv: false }),
     player: (): PlayerState => ({
-      clickedLast: false
+      clickedLast: false,
     }),
   },
 
   /* Specifies the different actions that players can take during the game. */
   actions: {
     // With an action, the user can:
-    "+1": (gameState: GameState, players: Player[], playerId: string, payload: any): ActionResult => ({
+    "+1": (
+      gameState: GameState,
+      players: Player[],
+      playerId: string,
+      payload: any
+    ): ActionResult => ({
       // change the game state,
       gameState: { ...gameState, pub: gameState.pub + 1 },
       // the player state,
@@ -54,7 +60,12 @@ const game = {
       // They aren't required to provide any of these parameters,
       // as if they are not defined they just won't be used.
     }),
-    "-1": (gameState: GameState, players: Player[], playerId: string, payload: any): ActionResult => ({
+    "-1": (
+      gameState: GameState,
+      players: Player[],
+      playerId: string,
+      payload: any
+    ): ActionResult => ({
       // The payload argument contains all of the data passed with the call.
       // Currently, `payload.data` contains all of the arguments passed to the function 'takeAction',
       // so this should be good enough to pass any arbitrary data. I'd recommend the following:
@@ -77,7 +88,8 @@ const game = {
   },
 
   /* Determines when the game ends. */
-  endWhen: (gameState: GameState, playerStates: Player[]): boolean => gameState.pub === 10,
+  endWhen: (gameState: GameState, playerStates: Player[]): boolean =>
+    gameState.pub === 10,
   /* Determines the winner(s) at the end of the game. */
   getWinners: (gameState: GameState, players: Player[]): Player[] =>
     players.filter(({ state }) => state.clickedLast),

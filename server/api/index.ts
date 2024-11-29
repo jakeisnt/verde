@@ -23,7 +23,7 @@ const classes = {
   connect_disconnect: Connect,
 };
 
-const spec = Object.keys(classes).reduce(
+const spec: Record<string, any> = Object.keys(classes).reduce(
   (curSpec, nextKey) => ({
     ...curSpec,
     [nextKey]: classToAPI(classes[nextKey as keyof typeof classes]),

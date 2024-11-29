@@ -23,19 +23,31 @@ function broadcast(wss: WebSocketServer, message: Message): void {
 }
 
 /** Broadcast a 'users' message to the websocket. */
-function users(wss: WebSocketServer, message: Message, { roomName }: SocketArgs): void {
+function users(
+  wss: WebSocketServer,
+  message: Message,
+  { roomName }: SocketArgs
+): void {
   logger.debug("Groadcasting user's message");
   broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
 }
 
 /** Broadcast a 'game' message - typically a game action - to the socket. */
-function game(wss: WebSocketServer, message: Message, { roomName }: SocketArgs): void {
+function game(
+  wss: WebSocketServer,
+  message: Message,
+  { roomName }: SocketArgs
+): void {
   logger.debug("Broadcasting game message");
   broadcast(wss, { type: "game", payload: Rooms.getGameState(roomName) });
 }
 
 /** Broadcast a 'game' message - typically a game action - to the socket. */
-function connectDisconnect(wss: WebSocketServer, message: Message, { roomName }: SocketArgs): void {
+function connectDisconnect(
+  wss: WebSocketServer,
+  message: Message,
+  { roomName }: SocketArgs
+): void {
   logger.debug(
     "Broadcasting 'users' and 'game' messages: user has connected or disconnected"
   );
@@ -44,7 +56,10 @@ function connectDisconnect(wss: WebSocketServer, message: Message, { roomName }:
 }
 
 // The two functions must belong to an object to index into them with a string.
-const Actions: Record<string, (wss: WebSocketServer, message: Message, args: SocketArgs) => void> = {
+const Actions: Record<
+  string,
+  (wss: WebSocketServer, message: Message, args: SocketArgs) => void
+> = {
   users,
   game,
   connect_disconnect: connectDisconnect,
@@ -58,9 +73,13 @@ function generateEndpoints(config: Record<string, Record<string, any>>) {
     const newFuncs = Object.keys(config[type]).reduce((funcs, funcName) => {
       return {
         ...funcs,
-        [funcName]: (wss: WebSocketServer, message: Message, { roomName, userId }: SocketArgs) => {
+        [funcName]: (
+          wss: WebSocketServer,
+          message: Message,
+          { roomName, userId }: SocketArgs
+        ) => {
           logger.info(`${roomName}: ${userId}: ${funcName}`);
-          classes[type][funcName](
+          (config[type][funcName] as any)(
             roomName,
             userId,
             (message && message.payload) || undefined
@@ -74,6 +93,9 @@ function generateEndpoints(config: Record<string, Record<string, any>>) {
     return { ...allfuncs, ...newFuncs };
   }, {});
 }
-const socketActions = generateEndpoints(spec);
+const socketActions = generateEndpoints(spec) as Record<
+  string,
+  (wss: WebSocketServer, message: Message, args: SocketArgs) => void
+>;
 
 export default socketActions;

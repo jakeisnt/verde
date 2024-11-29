@@ -10,7 +10,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
     width: "4em",
     "& div": {
       position: "absolute",
-      border: `4px solid ${theme.black}`,
+      border: `4px solid ${theme.colors.divider}`,
       opacity: 1,
       borderRadius: "50%",
       animation: "$ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite",

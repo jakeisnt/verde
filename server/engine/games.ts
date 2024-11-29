@@ -3,11 +3,13 @@ import Users from "./users";
 import { logger } from "../logger";
 
 type Player = {
+  inGame: boolean;
   id: string;
   [key: string]: any;
 };
 
 type GameState = {
+  priv: any;
   pub: any;
   [key: string]: any;
 };
@@ -41,7 +43,12 @@ function takeAction(
     return { gameState };
   }
 
-  return game.actions[action](gameState, players, playerId, payload);
+  return game.actions[action as keyof typeof game.actions](
+    gameState,
+    players,
+    playerId,
+    payload
+  );
 }
 
 // Determine when the game is over
@@ -51,10 +58,12 @@ function isGameOver(gameState: GameState, playerState: GamePlayer[]): boolean {
 
 // Determine the winner of the game
 function getWinners(gameState: GameState, playerState: GamePlayer[]): Player[] {
-  return game.getWinners(gameState, playerState).map(({ id, ...rest }: Player) => {
-    const user = Users.getUser(id);
-    return { ...rest, ...user, id };
-  });
+  return game
+    .getWinners(gameState, playerState)
+    .map(({ id, ...rest }: Player) => {
+      const user = Users.getUser(id);
+      return { ...rest, ...user, id };
+    });
 }
 
 // Represents a player who has been in the game
@@ -139,9 +148,13 @@ class Game {
   }
 
   // commit a declared game action with the provided payload as context
-  takeAction(playerId: string, action: string, payload: any): GameState | undefined {
+  takeAction(
+    playerId: string,
+    action: string,
+    payload: any
+  ): GameState | undefined {
     if (!this.isCurrentPlayer(playerId)) return undefined;
-    const { gameState, playerState, passTurn } = takeAction(
+    const result: ActionResult = takeAction(
       action,
       this.gameState,
       this.players,
@@ -150,10 +163,10 @@ class Game {
     );
 
     // in js, 0 is falsy (as is false), and those are both valid gameStates
-    if (gameState != null) this.gameState = gameState;
-    if (playerState != null) this.players = playerState;
+    if (result.gameState != null) this.gameState = result.gameState;
+    if (result.playerState != null) this.players = result.playerState;
     // passTurn is true or false, so we're not checking for null or undefined
-    if (passTurn) this.passTurn(playerId);
+    if (result.passTurn) this.passTurn(playerId);
     return this.gameState;
   }
 }

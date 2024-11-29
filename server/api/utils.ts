@@ -13,15 +13,13 @@ function getParamNames(func: Function): string[] {
       .slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")"))
       .match(ARGUMENT_NAMES) || []
   );
-
   // Converts parameters of object destructors to arrays of strings.
-  // NOTE:  Does not work for nested destructors yet.
+  // NOTE: Does not work for nested destructors yet.
   while (result.indexOf("{") !== -1) {
     const objStart = result.indexOf("{");
     const objEnd = result.indexOf("}");
-    const slice = result.slice(objStart + 1, objEnd);
-    result.splice(objStart, objEnd - objStart);
-    result[objStart] = slice;
+    const slice = result.slice(objStart + 1, objEnd).join(',');
+    result.splice(objStart, objEnd - objStart + 1, slice);
   }
   return result;
 }
