@@ -26,6 +26,6 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^20.17.24"
+    "@types/node": "^20.17.25"
   }
 }
