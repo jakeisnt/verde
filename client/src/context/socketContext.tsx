@@ -63,11 +63,13 @@ function SocketProvider({
   });
 
   useEffect(() => {
-    if (lastMessage)
+    if (lastMessage) {
+      const msg = lastMessage as any;
       setLastMessages((prev) => ({
         ...prev,
-        [lastMessage.type]: lastMessage.payload,
+        [msg.type]: msg.payload,
       }));
+    }
   }, [lastMessage]);
 
   return (
@@ -111,7 +113,14 @@ function useSocket(messageTypes?: string | string[]) {
 }
 
 interface EndpointConfig {
-  [key: string]: string[];
+  [key: string]: string[] | string;
+}
+
+/** Normalize an endpoint config value to an array of argument names. */
+function normalizeArgs(value: string[] | string): string[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string" && value.length > 0) return value.split(",");
+  return [];
 }
 
 /**
@@ -119,13 +128,14 @@ interface EndpointConfig {
  */
 function generateEndpoints(config: EndpointConfig, sendMessage: SendMessage) {
   return Object.keys(config).reduce(
-    (funcs: Record<string, Function>, funcName: string) => {
+    (funcs: Record<string, (...args: any[]) => void>, funcName: string) => {
+      const argNames = normalizeArgs(config[funcName]);
       return {
         ...funcs,
         [funcName]: (...args: any[]) => {
           const message = {
             type: funcName,
-            payload: config[funcName].reduce(
+            payload: argNames.reduce(
               (pload: Record<string, any>, argname: string, i: number) => {
                 return { ...pload, [argname]: args[i] };
               },

@@ -1,7 +1,9 @@
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
 /** Where our app mounts. */
-
-ReactDOM.render(<App />, document.getElementById("root"));
+const root = document.getElementById("root");
+if (root) {
+  createRoot(root).render(<App />);
+}

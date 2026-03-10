@@ -28,7 +28,7 @@ function users(
   message: Message,
   { roomName }: SocketArgs
 ): void {
-  logger.debug("Groadcasting user's message");
+  logger.debug("Broadcasting users message");
   broadcast(wss, { type: "users", payload: Rooms.getUsers(roomName) });
 }
 

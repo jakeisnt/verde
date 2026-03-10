@@ -6,7 +6,11 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     proxy: {
-      "/api": {
+      "/users": {
+        target: "http://localhost:4000",
+        changeOrigin: true,
+      },
+      "/room": {
         target: "http://localhost:4000",
         changeOrigin: true,
       },
