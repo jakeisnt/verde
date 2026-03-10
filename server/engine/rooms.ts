@@ -55,7 +55,7 @@ class Room {
     this.name = name;
     this.capacity = capacity;
     this.users = [];
-    this.locked = true;
+    this.locked = false;
     this.game = null;
   }
 

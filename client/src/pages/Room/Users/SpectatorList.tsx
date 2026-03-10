@@ -31,7 +31,7 @@ function SpectatorList({
       <div className={classes.flexRow}>
         <div>
           Spectators
-          {capacity &&
+          {capacity != null &&
             `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
         </div>
         {userIsMod && (

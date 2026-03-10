@@ -74,7 +74,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
   bottomBanner: {
     display: "flex",
-    jusifyContent: "space-between",
+    justifyContent: "space-between",
     bottom: "3em",
     left: "3em",
     position: "absolute",

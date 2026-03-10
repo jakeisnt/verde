@@ -1,7 +1,6 @@
 import { createUseStyles } from "react-jss";
 import { Theme } from "../../theme/theme";
 import { Outlet } from "react-router-dom";
-import WSConnectionStatus from "../WSConnectionStatus";
 
 const useStyles = createUseStyles((theme: Theme) => ({
   root: {
@@ -48,7 +47,6 @@ export const Layout = () => {
           <a href="/" className={classes.logo}>
             Verde
           </a>
-          <WSConnectionStatus />
         </div>
       </header>
       <main className={classes.main}>

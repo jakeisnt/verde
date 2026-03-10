@@ -138,10 +138,13 @@ class Game {
   // pass the turn from playerId to the next player in turn
   passTurn(playerId: string): GamePlayer | undefined {
     if (!this.isCurrentPlayer(playerId)) return undefined;
+    const startPlayer = this.curPlayer;
     this.curPlayer = (this.curPlayer + 1) % this.players.length;
     let cp = this.players[this.curPlayer];
     while (!cp.inGame) {
       this.curPlayer = (this.curPlayer + 1) % this.players.length;
+      // If we've looped back to where we started, no active players remain
+      if (this.curPlayer === startPlayer) return undefined;
       cp = this.players[this.curPlayer];
     }
     return cp;

@@ -16,16 +16,12 @@
     "typecheck": "bun run typecheck:all",
     "typecheck:all": "bun run typecheck:client && bun run typecheck:server",
     "typecheck:client": "cd client && bun run typecheck",
-    "typecheck:server": "cd server && bun run typecheck"
+    "typecheck:server": "cd server && bun run typecheck",
+    "gen-api": "bun run gen-api.ts"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^9.22.0",
-    "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",
-    "@types/eslint": "^9.6.1",
-    "@types/node": "^20.17.25"
+    "@types/node": "^22.0.0"
   }
 }

@@ -25,7 +25,7 @@ function UserList({
   return users && users.length > 0 ? (
     <>
       {title}
-      {capacity &&
+      {capacity != null &&
         `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
       <Box>
         {users &&

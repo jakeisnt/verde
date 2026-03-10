@@ -26,7 +26,7 @@ function PlayerList({
     <>
       <div>
         Players
-        {capacity &&
+        {capacity != null &&
           `: ${users && users.length}/${capacity >= 0 ? capacity : "∞"}`}
       </div>
       <Box>
