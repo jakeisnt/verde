@@ -65,12 +65,16 @@ const Actions: Record<
   connect_disconnect: connectDisconnect,
 };
 
-/** Generate various websocket endpoints from API utilities. */
+/** Generate various websocket endpoints from API class methods. */
 
-// name of function/endpoint: names of arguments expected in socket payload
-function generateEndpoints(config: Record<string, Record<string, any>>) {
-  return Object.keys(config).reduce((allfuncs, type) => {
-    const newFuncs = Object.keys(config[type]).reduce((funcs, funcName) => {
+// For each API class, generate a socket action handler that calls the actual
+// class method and then broadcasts the appropriate response.
+function generateEndpoints(
+  apiClasses: Record<string, any>,
+  apiSpec: Record<string, Record<string, any>>
+) {
+  return Object.keys(apiClasses).reduce((allfuncs, type) => {
+    const newFuncs = Object.keys(apiSpec[type]).reduce((funcs, funcName) => {
       return {
         ...funcs,
         [funcName]: (
@@ -79,7 +83,7 @@ function generateEndpoints(config: Record<string, Record<string, any>>) {
           { roomName, userId }: SocketArgs
         ) => {
           logger.info(`${roomName}: ${userId}: ${funcName}`);
-          (config[type][funcName] as any)(
+          (apiClasses[type][funcName] as any)(
             roomName,
             userId,
             (message && message.payload) || undefined
@@ -93,7 +97,7 @@ function generateEndpoints(config: Record<string, Record<string, any>>) {
     return { ...allfuncs, ...newFuncs };
   }, {});
 }
-const socketActions = generateEndpoints(spec) as Record<
+const socketActions = generateEndpoints(classes, spec) as Record<
   string,
   (wss: WebSocketServer, message: Message, args: SocketArgs) => void
 >;

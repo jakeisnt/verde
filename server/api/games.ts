@@ -9,9 +9,8 @@ class Game {
     return Rooms.getRoom(name)?.startGame(modId);
   }
 
-  static stopGame(name: string) {
-    // SHORTCUT: getGame() had modId as a parameter, but it was always the same.
-    return Rooms.getRoom(name)?.getGame()?.stop();
+  static stopGame(name: string, modId: string) {
+    return Rooms.getRoom(name)?.stopGame(modId);
   }
 
   static takeAction(
